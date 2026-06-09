@@ -4,7 +4,7 @@
 // text ('2026-06' < '2026-07'), which makes the rolling-ledger maths simple:
 // we can ask "every month before this one" with a normal string comparison.
 
-import { addMonths, format, parseISO } from 'date-fns'
+import { addMonths, differenceInCalendarMonths, format, parseISO } from 'date-fns'
 import type { MonthKey } from '../db/types'
 
 // Turn a month key into a real Date (anchored to the 1st) so date-fns can work
@@ -27,4 +27,23 @@ export function addMonthsKey(key: MonthKey, n: number): MonthKey {
 // A friendly label for the UI: '2026-06' -> 'June 2026'.
 export function formatMonthLabel(key: MonthKey): string {
   return format(keyToDate(key), 'LLLL yyyy')
+}
+
+// How many whole months from `from` to `to`. Same month -> 0, next month -> 1.
+// Used to tell how far into a fixed-term expense a given month is.
+export function monthsBetween(from: MonthKey, to: MonthKey): number {
+  return differenceInCalendarMonths(keyToDate(to), keyToDate(from))
+}
+
+// Every month key in the half-open range [start, endExclusive).
+// monthRange('2026-01', '2026-04') -> ['2026-01','2026-02','2026-03'].
+// Returns [] if start is not before endExclusive.
+export function monthRange(start: MonthKey, endExclusive: MonthKey): MonthKey[] {
+  const out: MonthKey[] = []
+  let m = start
+  while (m < endExclusive) {
+    out.push(m)
+    m = addMonthsKey(m, 1)
+  }
+  return out
 }

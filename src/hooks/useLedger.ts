@@ -1,6 +1,8 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db/db'
 import type { MonthKey } from '../db/types'
+import { expenseTotalForMonth } from '../lib/expenses'
+import { monthRange } from '../lib/month'
 import { useSettings } from './useSettings'
 
 /*
@@ -15,15 +17,12 @@ import { useSettings } from './useSettings'
   So to know a month's opening balance we add up every month's net (income −
   expenses) from the ledger's start up to — but not including — the month we're
   looking at, then add the starting balance on top.
-
-  Expenses arrive in Phase 2; for now they're always 0, but the formula already
-  leaves a slot for them so Phase 2 just fills it in.
 */
 
 export interface LedgerSummary {
   carryIn: number // balance brought in from previous months
   income: number // income recorded in the selected month
-  expenses: number // expenses in the selected month (0 until Phase 2)
+  expenses: number // expenses that apply to the selected month
   carryOut: number // closing balance = carry-in + income − expenses
   currencySymbol: string
 }
@@ -31,10 +30,11 @@ export interface LedgerSummary {
 export function useLedger(month: MonthKey): LedgerSummary {
   const settings = useSettings()
 
-  // Pull every income entry once and total it per month in memory. For a
-  // single-user personal app this stays tiny, so it's simpler and plenty fast
-  // to compute live rather than maintain a cache.
+  // Pull every income entry and every expense once. For a single-user personal
+  // app these stay tiny, so it's simpler and plenty fast to compute the ledger
+  // live rather than maintain a cache.
   const entries = useLiveQuery(() => db.incomeEntries.toArray(), []) ?? []
+  const expenseDefs = useLiveQuery(() => db.expenses.toArray(), []) ?? []
 
   const incomeByMonth = new Map<MonthKey, number>()
   for (const e of entries) {
@@ -43,20 +43,19 @@ export function useLedger(month: MonthKey): LedgerSummary {
 
   const start = settings.ledgerStartMonth
 
-  // Sum income for every month from the ledger start up to (not including) the
-  // selected month. Because month keys are 'YYYY-MM' strings, a plain >=/<
-  // comparison gives us the right chronological range.
-  let priorIncome = 0
-  for (const [m, total] of incomeByMonth) {
-    if (m >= start && m < month) priorIncome += total
+  // Walk every month from the ledger start up to (not including) the selected
+  // month, accumulating each month's net so we know the opening balance. Income
+  // comes from the map; expenses are worked out from their scheduling rules.
+  let prior = 0
+  for (const m of monthRange(start, month)) {
+    const inc = incomeByMonth.get(m) ?? 0
+    const exp = expenseTotalForMonth(expenseDefs, m)
+    prior += inc - exp
   }
 
-  // Expenses are not modelled yet (Phase 2). Placeholder so the maths is ready.
-  const priorExpenses = 0
-  const expenses = 0
-
-  const carryIn = settings.startingBalance + priorIncome - priorExpenses
+  const carryIn = settings.startingBalance + prior
   const income = incomeByMonth.get(month) ?? 0
+  const expenses = expenseTotalForMonth(expenseDefs, month)
   const carryOut = carryIn + income - expenses
 
   return {

@@ -8,8 +8,10 @@ import {
   useMonthIncomeEntries,
 } from '../hooks/useIncome'
 import { useLedger } from '../hooks/useLedger'
+import { LedgerCard } from '../components/LedgerCard'
+import { MonthSwitcher } from '../components/MonthSwitcher'
 import { formatMoney } from '../lib/format'
-import { addMonthsKey, currentMonthKey, formatMonthLabel } from '../lib/month'
+import { currentMonthKey, formatMonthLabel } from '../lib/month'
 import type { IncomeStream, MonthKey } from '../db/types'
 
 export function Income() {
@@ -69,111 +71,6 @@ export function Income() {
 
       {/* Manage the streams themselves */}
       <StreamManager streams={streams} currencySymbol={ledger.currencySymbol} />
-    </div>
-  )
-}
-
-// --- Month switcher --------------------------------------------------------
-
-function MonthSwitcher({
-  month,
-  onChange,
-}: {
-  month: MonthKey
-  onChange: (m: MonthKey) => void
-}) {
-  return (
-    <div className="flex items-center gap-1">
-      <button
-        type="button"
-        aria-label="Previous month"
-        onClick={() => onChange(addMonthsKey(month, -1))}
-        className="rounded-lg border border-border px-2 py-1 text-muted hover:text-fg"
-      >
-        ‹
-      </button>
-      <span className="min-w-36 text-center text-sm font-medium">
-        {formatMonthLabel(month)}
-      </span>
-      <button
-        type="button"
-        aria-label="Next month"
-        onClick={() => onChange(addMonthsKey(month, 1))}
-        className="rounded-lg border border-border px-2 py-1 text-muted hover:text-fg"
-      >
-        ›
-      </button>
-      <button
-        type="button"
-        onClick={() => onChange(currentMonthKey())}
-        className="ml-1 rounded-lg border border-border px-2 py-1 text-xs text-muted hover:text-fg"
-      >
-        Today
-      </button>
-    </div>
-  )
-}
-
-// --- Ledger summary card ---------------------------------------------------
-
-function LedgerCard({
-  ledger,
-  month,
-}: {
-  ledger: ReturnType<typeof useLedger>
-  month: MonthKey
-}) {
-  const sym = ledger.currencySymbol
-  return (
-    <div className="mt-4 rounded-card border border-border bg-surface p-5">
-      <div className="space-y-1.5 text-sm">
-        <Line label="Carried in" value={formatMoney(ledger.carryIn, sym)} />
-        <Line
-          label="Income this month"
-          value={`+ ${formatMoney(ledger.income, sym)}`}
-          tone="positive"
-        />
-        <Line
-          label="Expenses (from Phase 2)"
-          value={`− ${formatMoney(ledger.expenses, sym)}`}
-          tone="muted"
-        />
-      </div>
-      <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-        <span className="font-medium">
-          Balance carried into {formatMonthLabel(addMonthsKey(month, 1))}
-        </span>
-        <span
-          className={`text-lg font-semibold ${
-            ledger.carryOut < 0 ? 'text-negative' : 'text-fg'
-          }`}
-        >
-          {formatMoney(ledger.carryOut, sym)}
-        </span>
-      </div>
-    </div>
-  )
-}
-
-function Line({
-  label,
-  value,
-  tone = 'fg',
-}: {
-  label: string
-  value: string
-  tone?: 'fg' | 'muted' | 'positive'
-}) {
-  const valueClass =
-    tone === 'positive'
-      ? 'text-positive'
-      : tone === 'muted'
-        ? 'text-muted'
-        : 'text-fg'
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-muted">{label}</span>
-      <span className={valueClass}>{value}</span>
     </div>
   )
 }

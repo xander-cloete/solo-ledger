@@ -16,8 +16,8 @@
 
 - [x] **Phase 0 — Foundations & scaffold** ✅ (Vite + React + TS, Tailwind theming, Dexie DB, router shell, Settings page, PWA)
 - [x] **Phase 1 — Income & the rolling ledger** ✅ (income streams CRUD, per-month entries, month switcher, live rolling-ledger balance)
-- [ ] Phase 2 — Expenses (3 types) ← **next**
-- [ ] Phase 3 — Micro-expenses (nested items)
+- [x] **Phase 2 — Expenses (3 types)** ✅ (yearly/monthly-fixed/one-off with placement rules, add/edit/delete, wired into the ledger; shared MonthSwitcher + LedgerCard components)
+- [ ] Phase 3 — Micro-expenses (nested items) ← **next**
 - [ ] Phase 4 — Investments + linked transactions
 - [ ] Phase 5 — Dashboard
 - [ ] Phase 6 — Backup (Export / Import)
@@ -67,6 +67,7 @@
 - **incomeStreams** — `id`, `name`, `defaultAmount`, `active`
 - **incomeEntries** — `id`, `streamId`, `month`, `amount`, `note?`, `sourceTxnId?`
 - **expenses** — `id`, `name`, `type` (`yearly`|`monthlyFixed`|`oneOff`), `amount`, `dueDate?`, `term?`, `startMonth`, `hasItems`, `linkedPortfolioId?`
+  (Phase 2: which months an expense lands on is computed by rules in `src/lib/expenses.ts`, not stored — yearly = due-date month each year; monthlyFixed = from `startMonth` for `term` months or until cancelled; oneOff = `startMonth` only)
 - **expenseItems** — `id`, `expenseId`, `name`, `qty`, `unitPrice`, `store`, `frequency`
 - **portfolios** — `id`, `name`, `initialDate`, `initialAmount`
 - **portfolioBalances** — `id`, `portfolioId`, `date`, `balance`
