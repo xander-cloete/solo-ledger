@@ -9,9 +9,16 @@ import type { Expense } from '../db/types'
   definitions and let those rules do the placement.
 */
 
-// All expenses, sorted by name. The page works out which apply to a given month.
+// All expenses, sorted by name. `name` isn't a Dexie index on this table, so we
+// can't use orderBy('name'); we sort in memory instead (tiny list, no problem).
 export function useExpenses(): Expense[] {
-  return useLiveQuery(() => db.expenses.orderBy('name').toArray(), []) ?? []
+  return (
+    useLiveQuery(() =>
+      db.expenses.toArray().then((rows) =>
+        rows.sort((a, b) => a.name.localeCompare(b.name)),
+      ),
+    []) ?? []
+  )
 }
 
 // Create or overwrite an expense in one call. `put` replaces the whole record,
