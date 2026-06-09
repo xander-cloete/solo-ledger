@@ -4,11 +4,19 @@
 > device (IndexedDB); nothing is stored on any server. This file is the living guide —
 > each phase has a ready-to-paste kickoff prompt.
 
+## Working conventions
+
+- **This is a living document.** Update `PROJECT_PLAN.md` (and any other docs — `README.md`,
+  course notes, etc.) as decisions, data-model fields, or plans change mid-phase.
+- **Docs are updated after _every single phase_** — both locally and committed/pushed to git.
+  No phase is "done" until the docs reflect reality and the change is on `main`. This keeps us
+  always on track and the repo always tells the truth about where we are.
+
 ## Progress
 
 - [x] **Phase 0 — Foundations & scaffold** ✅ (Vite + React + TS, Tailwind theming, Dexie DB, router shell, Settings page, PWA)
-- [ ] Phase 1 — Income & the rolling ledger ← **next**
-- [ ] Phase 2 — Expenses (3 types)
+- [x] **Phase 1 — Income & the rolling ledger** ✅ (income streams CRUD, per-month entries, month switcher, live rolling-ledger balance)
+- [ ] Phase 2 — Expenses (3 types) ← **next**
 - [ ] Phase 3 — Micro-expenses (nested items)
 - [ ] Phase 4 — Investments + linked transactions
 - [ ] Phase 5 — Dashboard
@@ -54,7 +62,8 @@
 
 ## Data model (Dexie tables — `src/db/types.ts` + `src/db/db.ts`)
 
-- **settings** — `currency`, `currencySymbol`, `startingBalance`, `activeTheme`, `notifications`
+- **settings** — `currency`, `currencySymbol`, `startingBalance`, `ledgerStartMonth`, `activeTheme`, `notifications`
+  (`ledgerStartMonth` added in Phase 1: the month `startingBalance` is the opening balance for — the ledger's anchor)
 - **incomeStreams** — `id`, `name`, `defaultAmount`, `active`
 - **incomeEntries** — `id`, `streamId`, `month`, `amount`, `note?`, `sourceTxnId?`
 - **expenses** — `id`, `name`, `type` (`yearly`|`monthlyFixed`|`oneOff`), `amount`, `dueDate?`, `term?`, `startMonth`, `hasItems`, `linkedPortfolioId?`

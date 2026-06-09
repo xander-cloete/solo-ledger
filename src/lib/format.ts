@@ -6,5 +6,5 @@ export function formatMoney(amount: number, symbol: string): string {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })
-  return `${sign}${symbol} ${abs}`
+  return `${sign}${symbol} ${abs}`
 }

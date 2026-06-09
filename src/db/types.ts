@@ -15,6 +15,7 @@ export interface Settings {
   currency: string // currency code/label, e.g. 'NAD'
   currencySymbol: string // what we show, e.g. 'N$'
   startingBalance: number // sets the rolling ledger's opening balance
+  ledgerStartMonth: MonthKey // the month startingBalance is the opening balance for
   activeTheme: string // e.g. 'clean'
   notifications: {
     yearlyThreeMonths: boolean

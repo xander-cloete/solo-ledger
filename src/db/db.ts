@@ -10,6 +10,7 @@ import type {
   Transaction,
   MonthState,
 } from './types'
+import { currentMonthKey } from '../lib/month'
 
 /*
   Dexie is a friendly wrapper around IndexedDB — the database that lives inside
@@ -55,14 +56,25 @@ export const DEFAULT_SETTINGS: Settings = {
   currency: 'NAD',
   currencySymbol: 'N$',
   startingBalance: 0,
+  ledgerStartMonth: currentMonthKey(),
   activeTheme: 'clean',
   notifications: { yearlyThreeMonths: true, yearlyOneMonth: true },
 }
 
-// Make sure the single settings row exists. Called once at startup.
+// Make sure the single settings row exists, and backfill any fields added in
+// later phases (so installs from an earlier phase keep working). Called once at
+// startup.
 export async function ensureSettings(): Promise<Settings> {
   const existing = await db.settings.get('app')
-  if (existing) return existing
-  await db.settings.put(DEFAULT_SETTINGS)
-  return DEFAULT_SETTINGS
+  if (!existing) {
+    await db.settings.put(DEFAULT_SETTINGS)
+    return DEFAULT_SETTINGS
+  }
+  // Merge defaults under the saved row: any field missing on the old row gets a
+  // sensible default, while everything the user set is preserved.
+  const merged: Settings = { ...DEFAULT_SETTINGS, ...existing }
+  if (merged.ledgerStartMonth !== existing.ledgerStartMonth) {
+    await db.settings.put(merged)
+  }
+  return merged
 }

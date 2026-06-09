@@ -1,11 +1,370 @@
-import { PagePlaceholder } from '../components/PagePlaceholder'
+import { useState } from 'react'
+import {
+  addStream,
+  deleteStream,
+  setStreamEntry,
+  updateStream,
+  useIncomeStreams,
+  useMonthIncomeEntries,
+} from '../hooks/useIncome'
+import { useLedger } from '../hooks/useLedger'
+import { formatMoney } from '../lib/format'
+import { addMonthsKey, currentMonthKey, formatMonthLabel } from '../lib/month'
+import type { IncomeStream, MonthKey } from '../db/types'
 
 export function Income() {
+  // Which month we're viewing. Starts on the current real-world month.
+  const [month, setMonth] = useState<MonthKey>(() => currentMonthKey())
+
+  const streams = useIncomeStreams()
+  const entries = useMonthIncomeEntries(month)
+  const ledger = useLedger(month)
+
+  // Fast lookup of "what did this stream pay in this month?".
+  const amountByStream = new Map(entries.map((e) => [e.streamId, e.amount]))
+  const activeStreams = streams.filter((s) => s.active)
+
   return (
-    <PagePlaceholder
-      title="Income"
-      phase="Phase 1 (next)"
-      blurb="Name your income streams and track them month to month, with leftover money rolling into the next month."
-    />
+    <div>
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-2xl font-semibold tracking-tight">Income</h1>
+        <MonthSwitcher month={month} onChange={setMonth} />
+      </div>
+
+      {/* Rolling-ledger summary for the selected month */}
+      <LedgerCard ledger={ledger} month={month} />
+
+      {/* This month's income, one row per active stream */}
+      <section className="mt-6">
+        <h2 className="text-sm font-medium text-muted">
+          Income for {formatMonthLabel(month)}
+        </h2>
+
+        {activeStreams.length === 0 ? (
+          <p className="mt-2 rounded-card border border-border bg-surface p-4 text-sm text-muted">
+            No active income streams yet. Add one below to start recording income.
+          </p>
+        ) : (
+          <div className="mt-2 divide-y divide-border rounded-card border border-border bg-surface">
+            {activeStreams.map((stream) => (
+              <StreamIncomeRow
+                // Include the month in the key so switching months remounts the
+                // row with a fresh value seeded from that month's saved entry.
+                key={`${stream.id}:${month}`}
+                stream={stream}
+                month={month}
+                savedAmount={amountByStream.get(stream.id)}
+                currencySymbol={ledger.currencySymbol}
+              />
+            ))}
+            <div className="flex items-center justify-between px-4 py-3">
+              <span className="text-sm font-medium">Total income</span>
+              <span className="text-sm font-semibold text-positive">
+                {formatMoney(ledger.income, ledger.currencySymbol)}
+              </span>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* Manage the streams themselves */}
+      <StreamManager streams={streams} currencySymbol={ledger.currencySymbol} />
+    </div>
+  )
+}
+
+// --- Month switcher --------------------------------------------------------
+
+function MonthSwitcher({
+  month,
+  onChange,
+}: {
+  month: MonthKey
+  onChange: (m: MonthKey) => void
+}) {
+  return (
+    <div className="flex items-center gap-1">
+      <button
+        type="button"
+        aria-label="Previous month"
+        onClick={() => onChange(addMonthsKey(month, -1))}
+        className="rounded-lg border border-border px-2 py-1 text-muted hover:text-fg"
+      >
+        ‹
+      </button>
+      <span className="min-w-36 text-center text-sm font-medium">
+        {formatMonthLabel(month)}
+      </span>
+      <button
+        type="button"
+        aria-label="Next month"
+        onClick={() => onChange(addMonthsKey(month, 1))}
+        className="rounded-lg border border-border px-2 py-1 text-muted hover:text-fg"
+      >
+        ›
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange(currentMonthKey())}
+        className="ml-1 rounded-lg border border-border px-2 py-1 text-xs text-muted hover:text-fg"
+      >
+        Today
+      </button>
+    </div>
+  )
+}
+
+// --- Ledger summary card ---------------------------------------------------
+
+function LedgerCard({
+  ledger,
+  month,
+}: {
+  ledger: ReturnType<typeof useLedger>
+  month: MonthKey
+}) {
+  const sym = ledger.currencySymbol
+  return (
+    <div className="mt-4 rounded-card border border-border bg-surface p-5">
+      <div className="space-y-1.5 text-sm">
+        <Line label="Carried in" value={formatMoney(ledger.carryIn, sym)} />
+        <Line
+          label="Income this month"
+          value={`+ ${formatMoney(ledger.income, sym)}`}
+          tone="positive"
+        />
+        <Line
+          label="Expenses (from Phase 2)"
+          value={`− ${formatMoney(ledger.expenses, sym)}`}
+          tone="muted"
+        />
+      </div>
+      <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
+        <span className="font-medium">
+          Balance carried into {formatMonthLabel(addMonthsKey(month, 1))}
+        </span>
+        <span
+          className={`text-lg font-semibold ${
+            ledger.carryOut < 0 ? 'text-negative' : 'text-fg'
+          }`}
+        >
+          {formatMoney(ledger.carryOut, sym)}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+function Line({
+  label,
+  value,
+  tone = 'fg',
+}: {
+  label: string
+  value: string
+  tone?: 'fg' | 'muted' | 'positive'
+}) {
+  const valueClass =
+    tone === 'positive'
+      ? 'text-positive'
+      : tone === 'muted'
+        ? 'text-muted'
+        : 'text-fg'
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-muted">{label}</span>
+      <span className={valueClass}>{value}</span>
+    </div>
+  )
+}
+
+// --- One income row for the selected month ---------------------------------
+
+function StreamIncomeRow({
+  stream,
+  month,
+  savedAmount,
+  currencySymbol,
+}: {
+  stream: IncomeStream
+  month: MonthKey
+  savedAmount: number | undefined
+  currencySymbol: string
+}) {
+  // Local text state for the input, seeded from what's saved for this month
+  // (blank if nothing is recorded yet). The parent keys this component by
+  // `${streamId}:${month}`, so switching months remounts it and re-seeds here —
+  // no effect needed to keep it in sync.
+  const [value, setValue] = useState(savedAmount != null ? String(savedAmount) : '')
+
+  // Save whatever is in the box. Empty/zero clears the entry for this month.
+  function commit(next: string) {
+    setStreamEntry(stream.id, month, Number(next))
+  }
+
+  const showDefaultHint = value.trim() === '' && stream.defaultAmount > 0
+
+  return (
+    <div className="flex items-center gap-3 px-4 py-3">
+      <div className="min-w-0 flex-1">
+        <span className="block truncate text-sm font-medium">{stream.name}</span>
+        {showDefaultHint && (
+          <button
+            type="button"
+            onClick={() => {
+              const next = String(stream.defaultAmount)
+              setValue(next)
+              commit(next)
+            }}
+            className="text-xs text-muted hover:text-primary"
+          >
+            Use default {formatMoney(stream.defaultAmount, currencySymbol)}
+          </button>
+        )}
+      </div>
+      <div className="flex items-center gap-1.5">
+        <span className="text-sm text-muted">{currencySymbol}</span>
+        <input
+          type="number"
+          inputMode="decimal"
+          step="0.01"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onBlur={(e) => commit(e.target.value)}
+          placeholder="0"
+          className="w-28 rounded-lg border border-border bg-bg px-3 py-1.5 text-right text-sm outline-none focus:border-primary"
+        />
+      </div>
+    </div>
+  )
+}
+
+// --- Stream manager (add / edit / delete streams) --------------------------
+
+function StreamManager({
+  streams,
+  currencySymbol,
+}: {
+  streams: IncomeStream[]
+  currencySymbol: string
+}) {
+  const [newName, setNewName] = useState('')
+  const [newDefault, setNewDefault] = useState('')
+
+  async function handleAdd(e: React.FormEvent) {
+    e.preventDefault()
+    if (!newName.trim()) return
+    await addStream(newName, Number(newDefault) || 0)
+    setNewName('')
+    setNewDefault('')
+  }
+
+  return (
+    <section className="mt-8">
+      <h2 className="text-sm font-medium text-muted">Income streams</h2>
+      <p className="mt-1 text-xs text-muted">
+        Your recurring sources of money. The default amount pre-fills each new
+        month so you only adjust what changed.
+      </p>
+
+      <div className="mt-2 divide-y divide-border rounded-card border border-border bg-surface">
+        {streams.length === 0 && (
+          <p className="px-4 py-3 text-sm text-muted">No streams yet.</p>
+        )}
+        {streams.map((stream) => (
+          <StreamManagerRow
+            key={stream.id}
+            stream={stream}
+            currencySymbol={currencySymbol}
+          />
+        ))}
+
+        {/* Add-a-stream form lives at the bottom of the same card */}
+        <form onSubmit={handleAdd} className="flex items-center gap-2 px-4 py-3">
+          <input
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            placeholder="New stream name (e.g. Salary)"
+            className="min-w-0 flex-1 rounded-lg border border-border bg-bg px-3 py-1.5 text-sm outline-none focus:border-primary"
+          />
+          <input
+            type="number"
+            inputMode="decimal"
+            step="0.01"
+            value={newDefault}
+            onChange={(e) => setNewDefault(e.target.value)}
+            placeholder="Default"
+            className="w-28 rounded-lg border border-border bg-bg px-3 py-1.5 text-right text-sm outline-none focus:border-primary"
+          />
+          <button
+            type="submit"
+            className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-fg transition-opacity hover:opacity-90"
+          >
+            Add
+          </button>
+        </form>
+      </div>
+    </section>
+  )
+}
+
+function StreamManagerRow({
+  stream,
+  currencySymbol,
+}: {
+  stream: IncomeStream
+  currencySymbol: string
+}) {
+  // Seeded once from the stream. The only thing that edits a stream's name or
+  // default in Phase 1 is this row itself, so local state stays authoritative.
+  const [name, setName] = useState(stream.name)
+  const [def, setDef] = useState(String(stream.defaultAmount))
+
+  async function handleDelete() {
+    const ok = window.confirm(
+      `Delete "${stream.name}"? This also removes its recorded income in every month.`,
+    )
+    if (ok) await deleteStream(stream.id)
+  }
+
+  return (
+    <div className="flex items-center gap-2 px-4 py-3">
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        onBlur={() => updateStream(stream.id, { name: name.trim() || stream.name })}
+        className="min-w-0 flex-1 rounded-lg border border-transparent bg-transparent px-2 py-1 text-sm font-medium outline-none hover:border-border focus:border-primary"
+      />
+      <div className="flex items-center gap-1">
+        <span className="text-xs text-muted">{currencySymbol}</span>
+        <input
+          type="number"
+          inputMode="decimal"
+          step="0.01"
+          value={def}
+          onChange={(e) => setDef(e.target.value)}
+          onBlur={() =>
+            updateStream(stream.id, { defaultAmount: Number(def) || 0 })
+          }
+          className="w-24 rounded-lg border border-border bg-bg px-2 py-1 text-right text-sm outline-none focus:border-primary"
+        />
+      </div>
+      <label className="flex cursor-pointer items-center gap-1 text-xs text-muted">
+        <input
+          type="checkbox"
+          checked={stream.active}
+          onChange={(e) => updateStream(stream.id, { active: e.target.checked })}
+        />
+        Active
+      </label>
+      <button
+        type="button"
+        onClick={handleDelete}
+        aria-label={`Delete ${stream.name}`}
+        className="rounded-lg px-2 py-1 text-muted hover:text-negative"
+      >
+        ✕
+      </button>
+    </div>
   )
 }
