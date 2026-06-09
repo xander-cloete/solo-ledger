@@ -1,0 +1,60 @@
+@import 'tailwindcss';
+
+/*
+  THEMING SYSTEM
+  --------------
+  Every colour the app uses is a CSS variable. A "theme" is just a different
+  set of values for these variables. To switch themes we set a data-theme
+  attribute on <html> and the whole app restyles instantly.
+
+  The @theme inline block maps our semantic variables into Tailwind utilities,
+  so we can write classes like `bg-surface`, `text-fg`, `border-border`,
+  `text-primary`, etc. The `inline` keyword tells Tailwind these reference a
+  variable that can change at runtime (theme switching) rather than baking in
+  a fixed value.
+*/
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+
+  --font-sans: var(--font-sans);
+  --radius-card: var(--radius-card);
+}
+
+/* Default theme: "clean" — a warm, calm Japandi-inspired palette. */
+:root,
+[data-theme='clean'] {
+  --bg: #f5f3ee;
+  --surface: #fffdf8;
+  --fg: #2b2a28;
+  --muted: #8a857c;
+  --border: #e4e0d7;
+  --primary: #4f6f52; /* sage green */
+  --primary-fg: #fffdf8;
+  --positive: #3f7d5a; /* money in / growth */
+  --negative: #b4533f; /* money out / loss */
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius-card: 1rem;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
