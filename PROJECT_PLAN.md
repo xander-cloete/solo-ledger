@@ -17,8 +17,8 @@
 - [x] **Phase 0 — Foundations & scaffold** ✅ (Vite + React + TS, Tailwind theming, Dexie DB, router shell, Settings page, PWA)
 - [x] **Phase 1 — Income & the rolling ledger** ✅ (income streams CRUD, per-month entries, month switcher, live rolling-ledger balance)
 - [x] **Phase 2 — Expenses (3 types)** ✅ (yearly/monthly-fixed/one-off with placement rules, add/edit/delete, wired into the ledger; shared MonthSwitcher + LedgerCard components)
-- [ ] Phase 3 — Micro-expenses (nested items) ← **next**
-- [ ] Phase 4 — Investments + linked transactions
+- [x] **Phase 3 — Micro-expenses (nested items)** ✅ (monthly expenses can be "itemised"; items have qty/unit-price/store/frequency and roll up — weekly = ×52/12, twice-monthly = ×2, monthly = ×1 — into the parent's monthly amount, kept in sync so the ledger needs no changes; plus a Monthly Staples view grouped by store)
+- [ ] Phase 4 — Investments + linked transactions ← **next**
 - [ ] Phase 5 — Dashboard
 - [ ] Phase 6 — Backup (Export / Import)
 - [ ] Phase 7 — Reminders / notifications
@@ -69,6 +69,7 @@
 - **expenses** — `id`, `name`, `type` (`yearly`|`monthlyFixed`|`oneOff`), `amount`, `dueDate?`, `term?`, `startMonth`, `hasItems`, `linkedPortfolioId?`
   (Phase 2: which months an expense lands on is computed by rules in `src/lib/expenses.ts`, not stored — yearly = due-date month each year; monthlyFixed = from `startMonth` for `term` months or until cancelled; oneOff = `startMonth` only)
 - **expenseItems** — `id`, `expenseId`, `name`, `qty`, `unitPrice`, `store`, `frequency`
+  (Phase 3: roll-up rules in `src/lib/items.ts`; an item's monthly cost = `qty × unitPrice × timesPerMonth` where weekly = 52/12, twiceMonthly = 2, monthly = 1. CRUD in `src/hooks/useItems.ts` keeps the parent expense's `amount` in sync after every change, so the rolling ledger stays untouched. An expense is itemised when `hasItems` is true — only offered for `monthlyFixed` expenses.)
 - **portfolios** — `id`, `name`, `initialDate`, `initialAmount`
 - **portfolioBalances** — `id`, `portfolioId`, `date`, `balance`
 - **transactions** — `id`, `month`, `type`, `amount`, `fromPortfolioId?`, `toPortfolioId?`, `relatedExpenseId?`, `relatedIncomeId?`

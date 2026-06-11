@@ -28,6 +28,11 @@ export async function saveExpense(expense: Expense): Promise<void> {
   await db.expenses.put(expense)
 }
 
+// Delete an expense and, in the same transaction, any micro-expense items that
+// belonged to it — so we never leave orphaned items pointing at a gone expense.
 export async function deleteExpense(id: string): Promise<void> {
-  await db.expenses.delete(id)
+  await db.transaction('rw', db.expenses, db.expenseItems, async () => {
+    await db.expenseItems.where('expenseId').equals(id).delete()
+    await db.expenses.delete(id)
+  })
 }
