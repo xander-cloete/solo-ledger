@@ -28,11 +28,28 @@ export async function saveExpense(expense: Expense): Promise<void> {
   await db.expenses.put(expense)
 }
 
-// Delete an expense and, in the same transaction, any micro-expense items that
-// belonged to it — so we never leave orphaned items pointing at a gone expense.
+// Delete an expense and, in the same transaction, anything attached to it:
+//   - its micro-expense items (no orphaned items left behind)
+//   - if it's an investment contribution (a linked `invest` transaction points
+//     at it), that transaction and the portfolio balance bump it created — so
+//     deleting from the Expenses page stays consistent with the portfolio.
 export async function deleteExpense(id: string): Promise<void> {
-  await db.transaction('rw', db.expenses, db.expenseItems, async () => {
-    await db.expenseItems.where('expenseId').equals(id).delete()
-    await db.expenses.delete(id)
-  })
+  await db.transaction(
+    'rw',
+    db.expenses,
+    db.expenseItems,
+    db.transactions,
+    db.portfolioBalances,
+    async () => {
+      await db.expenseItems.where('expenseId').equals(id).delete()
+      const linked = (await db.transactions.toArray()).filter(
+        (t) => t.relatedExpenseId === id,
+      )
+      for (const t of linked) {
+        await db.portfolioBalances.delete(`bal:${t.id}`)
+        await db.transactions.delete(t.id)
+      }
+      await db.expenses.delete(id)
+    },
+  )
 }

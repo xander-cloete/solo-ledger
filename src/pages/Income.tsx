@@ -25,6 +25,9 @@ export function Income() {
   // Fast lookup of "what did this stream pay in this month?".
   const amountByStream = new Map(entries.map((e) => [e.streamId, e.amount]))
   const activeStreams = streams.filter((s) => s.active)
+  // Income that came from divesting an investment (created on the Investments
+  // page). It has no stream, so we list it on its own — read-only here.
+  const divestEntries = entries.filter((e) => e.sourceTxnId)
 
   return (
     <div>
@@ -68,6 +71,29 @@ export function Income() {
           </div>
         )}
       </section>
+
+      {/* Income from investment withdrawals (managed on the Investments page) */}
+      {divestEntries.length > 0 && (
+        <section className="mt-6">
+          <h2 className="text-sm font-medium text-muted">From investments</h2>
+          <div className="mt-2 divide-y divide-border rounded-card border border-border bg-surface">
+            {divestEntries.map((e) => (
+              <div key={e.id} className="flex items-center gap-3 px-4 py-3">
+                <span className="min-w-0 flex-1 truncate text-sm">
+                  {e.note ?? 'Investment withdrawal'}
+                </span>
+                <span className="text-sm font-semibold text-positive">
+                  {formatMoney(e.amount, ledger.currencySymbol)}
+                </span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-1 text-xs text-muted">
+            Created when you withdraw from a portfolio. Remove it from the
+            Investments page.
+          </p>
+        </section>
+      )}
 
       {/* Manage the streams themselves */}
       <StreamManager streams={streams} currencySymbol={ledger.currencySymbol} />

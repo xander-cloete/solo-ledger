@@ -32,7 +32,7 @@ export interface IncomeStream {
 
 export interface IncomeEntry {
   id: string
-  streamId: string
+  streamId?: string // a stream-based entry belongs to a stream; divest income has none
   month: MonthKey
   amount: number
   note?: string

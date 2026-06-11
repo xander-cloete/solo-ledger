@@ -18,8 +18,8 @@
 - [x] **Phase 1 — Income & the rolling ledger** ✅ (income streams CRUD, per-month entries, month switcher, live rolling-ledger balance)
 - [x] **Phase 2 — Expenses (3 types)** ✅ (yearly/monthly-fixed/one-off with placement rules, add/edit/delete, wired into the ledger; shared MonthSwitcher + LedgerCard components)
 - [x] **Phase 3 — Micro-expenses (nested items)** ✅ (monthly expenses can be "itemised"; items have qty/unit-price/store/frequency and roll up — weekly = ×52/12, twice-monthly = ×2, monthly = ×1 — into the parent's monthly amount, kept in sync so the ledger needs no changes; plus a Monthly Staples view grouped by store)
-- [ ] Phase 4 — Investments + linked transactions ← **next**
-- [ ] Phase 5 — Dashboard
+- [x] **Phase 4 — Investments + linked transactions** ✅ (portfolios with manual balance snapshots; net-growth in N$ and % all-time + over 1mo/3mo/1yr separating gains from contributions; linked transactions — Contribute creates a one-off expense + tops up the balance, Withdraw creates income + reduces the balance, both undoable from either side)
+- [ ] Phase 5 — Dashboard ← **next**
 - [ ] Phase 6 — Backup (Export / Import)
 - [ ] Phase 7 — Reminders / notifications
 - [ ] Phase 8 — Theming engine (full)
@@ -65,14 +65,17 @@
 - **settings** — `currency`, `currencySymbol`, `startingBalance`, `ledgerStartMonth`, `activeTheme`, `notifications`
   (`ledgerStartMonth` added in Phase 1: the month `startingBalance` is the opening balance for — the ledger's anchor)
 - **incomeStreams** — `id`, `name`, `defaultAmount`, `active`
-- **incomeEntries** — `id`, `streamId`, `month`, `amount`, `note?`, `sourceTxnId?`
+- **incomeEntries** — `id`, `streamId?`, `month`, `amount`, `note?`, `sourceTxnId?`
+  (Phase 4: `streamId` is now optional — divest income has no stream and is set with `sourceTxnId`; the ledger sums all entries regardless of stream, and the Income page lists divest income in its own read-only "From investments" section)
 - **expenses** — `id`, `name`, `type` (`yearly`|`monthlyFixed`|`oneOff`), `amount`, `dueDate?`, `term?`, `startMonth`, `hasItems`, `linkedPortfolioId?`
   (Phase 2: which months an expense lands on is computed by rules in `src/lib/expenses.ts`, not stored — yearly = due-date month each year; monthlyFixed = from `startMonth` for `term` months or until cancelled; oneOff = `startMonth` only)
 - **expenseItems** — `id`, `expenseId`, `name`, `qty`, `unitPrice`, `store`, `frequency`
   (Phase 3: roll-up rules in `src/lib/items.ts`; an item's monthly cost = `qty × unitPrice × timesPerMonth` where weekly = 52/12, twiceMonthly = 2, monthly = 1. CRUD in `src/hooks/useItems.ts` keeps the parent expense's `amount` in sync after every change, so the rolling ledger stays untouched. An expense is itemised when `hasItems` is true — only offered for `monthlyFixed` expenses.)
 - **portfolios** — `id`, `name`, `initialDate`, `initialAmount`
 - **portfolioBalances** — `id`, `portfolioId`, `date`, `balance`
+  (Phase 4: manual snapshots; newest `date` = current value. Auto-bumps from a transaction use id `bal:<txnId>` and a full-ISO `date` so they sort newest and can be removed with their transaction. Growth maths in `src/lib/investments.ts`)
 - **transactions** — `id`, `month`, `type`, `amount`, `fromPortfolioId?`, `toPortfolioId?`, `relatedExpenseId?`, `relatedIncomeId?`
+  (Phase 4: `invest`/`divest` are the linked-transaction records. Contribute → one-off expense (`relatedExpenseId`, expense has `linkedPortfolioId`) + balance bump; Withdraw → income entry (`relatedIncomeId`, entry has `sourceTxnId`) + balance drop. Ops in `src/hooks/useInvestments.ts`; deleting an expense or portfolio cascades to undo the links)
 - **monthState** — `month`, `carryIn`, `carryOut`
 
 The **transactions** table makes "divest shows as income here AND a deduction there" work
