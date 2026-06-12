@@ -39,6 +39,14 @@ Everything is stored in IndexedDB under the database name `solo-ledger`. Inspect
 browser: **DevTools → Application → IndexedDB → solo-ledger**. Clearing site data wipes it,
 so the in-app Export/Import backup is how you keep it safe.
 
+## Reminders
+
+Yearly expenses (insurance, renewals…) are easy to forget, so Solo Ledger warns you ahead of
+each one. On the **Settings → Reminders** section you can switch on a heads-up **3 months** and/or
+**1 month** before a yearly expense is due. Active reminders appear in a banner at the top of the
+**Dashboard** when you open the app, and — if you click **Enable browser notifications** — your
+device can alert you too (best-effort; the in-app banner always works regardless).
+
 ## Backing up your data
 
 On the **Settings** page, the **Backup** section lets you:

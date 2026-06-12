@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useSettings, updateSettings } from '../hooks/useSettings'
 import { formatMoney } from '../lib/format'
 import { BackupSection } from '../components/BackupSection'
+import { RemindersSettings } from '../components/RemindersSettings'
 import type { Settings as SettingsType } from '../db/types'
 
 export function Settings() {
@@ -28,6 +29,8 @@ export function Settings() {
         saved={saved}
         onSaved={handleSaved}
       />
+
+      <RemindersSettings />
 
       <BackupSection />
 

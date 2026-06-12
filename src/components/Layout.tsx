@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import type { ReactNode } from 'react'
+import { useReminderNotifications } from '../hooks/useReminders'
 
 // Each tab: route path, label, and a small inline icon (kept minimal/tasteful).
 type NavItem = { to: string; label: string; icon: ReactNode }
@@ -68,6 +69,10 @@ function navLinkClasses(isActive: boolean): string {
 }
 
 export function Layout() {
+  // Fire any due browser notifications on app open (best-effort; no-op without
+  // permission). Lives here so it runs regardless of the landing page.
+  useReminderNotifications()
+
   return (
     <div className="min-h-full bg-bg text-fg">
       {/* Sidebar (desktop) */}

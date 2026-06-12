@@ -1,4 +1,5 @@
 import { NetWorthChart } from '../components/NetWorthChart'
+import { RemindersBanner } from '../components/RemindersBanner'
 import { useDashboard } from '../hooks/useDashboard'
 import { formatMoney } from '../lib/format'
 import { currentMonthKey, formatMonthLabel } from '../lib/month'
@@ -15,6 +16,9 @@ export function Dashboard() {
       <p className="mt-1 text-sm text-muted">
         Your whole picture at a glance — {formatMonthLabel(currentMonthKey())}.
       </p>
+
+      {/* Upcoming yearly-expense reminders, shown on open. */}
+      <RemindersBanner />
 
       {!d.hasAnyData ? (
         <p className="mt-6 rounded-card border border-border bg-surface p-5 text-sm text-muted">
