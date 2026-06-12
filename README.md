@@ -39,6 +39,14 @@ Everything is stored in IndexedDB under the database name `solo-ledger`. Inspect
 browser: **DevTools → Application → IndexedDB → solo-ledger**. Clearing site data wipes it,
 so the in-app Export/Import backup is how you keep it safe.
 
+## Themes
+
+The **Customize** page has a theme switcher with three launch themes — **Clean** (warm Japandi,
+the default), **Tokyo Night** (Omarchy-inspired dark), and **Terminal** (green-on-black
+monospace). Picking one applies instantly across the whole app and is saved on your device.
+Every theme is just a block of CSS variables in `src/index.css` plus an entry in
+`src/theme/themes.ts`, so adding more later is cheap.
+
 ## Reminders
 
 Yearly expenses (insurance, renewals…) are easy to forget, so Solo Ledger warns you ahead of

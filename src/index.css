@@ -28,9 +28,18 @@
   --radius-card: var(--radius-card);
 }
 
+/*
+  Each theme below sets the same set of variables to different values. To add a
+  new theme: copy a block, give it a new [data-theme='id'], tweak the values, and
+  add a matching entry to src/theme/themes.ts (which feeds the picker). The
+  `color-scheme` line tells the browser whether to render native controls
+  (checkboxes, scrollbars) light or dark.
+*/
+
 /* Default theme: "clean" — a warm, calm Japandi-inspired palette. */
 :root,
 [data-theme='clean'] {
+  color-scheme: light;
   --bg: #f5f3ee;
   --surface: #fffdf8;
   --fg: #2b2a28;
@@ -43,6 +52,41 @@
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --radius-card: 1rem;
+}
+
+/* "tokyo-night" — Omarchy-inspired deep blues and purples (dark). */
+[data-theme='tokyo-night'] {
+  color-scheme: dark;
+  --bg: #1a1b26;
+  --surface: #24283b;
+  --fg: #c0caf5;
+  --muted: #6b7394;
+  --border: #2f3549;
+  --primary: #7aa2f7; /* blue */
+  --primary-fg: #1a1b26;
+  --positive: #9ece6a; /* green */
+  --negative: #f7768e; /* red */
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius-card: 0.75rem;
+}
+
+/* "terminal" — green-on-black monospace, like a classic CRT (dark). */
+[data-theme='terminal'] {
+  color-scheme: dark;
+  --bg: #0a0d0a;
+  --surface: #0f140f;
+  --fg: #c8f7c8;
+  --muted: #5f8a5f;
+  --border: #1f2a1f;
+  --primary: #2ee06a; /* phosphor green */
+  --primary-fg: #0a0d0a;
+  --positive: #2ee06a;
+  --negative: #ff6b6b;
+
+  --font-sans: ui-monospace, 'JetBrains Mono', 'Fira Code', 'Cascadia Code',
+    'Courier New', monospace;
+  --radius-card: 0.25rem;
 }
 
 html,
