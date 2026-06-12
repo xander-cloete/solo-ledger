@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useSettings, updateSettings } from '../hooks/useSettings'
 import { formatMoney } from '../lib/format'
+import { BackupSection } from '../components/BackupSection'
 import type { Settings as SettingsType } from '../db/types'
 
 export function Settings() {
@@ -28,10 +29,13 @@ export function Settings() {
         onSaved={handleSaved}
       />
 
+      <BackupSection />
+
       <p className="mt-6 rounded-card border border-border bg-surface p-4 text-xs text-muted">
         🔒 Your data is stored only on this device, in this browser. It never
-        leaves your device and is never sent to any server. Back it up regularly
-        (export feature coming in Phase 6).
+        leaves your device and is never sent to any server. Export a backup
+        regularly so you can restore it if you clear your browser or switch
+        devices.
       </p>
     </div>
   )

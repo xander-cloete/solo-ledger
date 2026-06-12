@@ -31,10 +31,23 @@ pnpm preview
 ## Tech
 
 Vite · React · TypeScript · Tailwind CSS (CSS-variable theming) · Dexie (IndexedDB) ·
-react-router · Recharts (dashboard charts) · vite-plugin-pwa.
+react-router · Recharts (dashboard charts) · Zod (backup validation) · vite-plugin-pwa.
 
 ## Where your data lives
 
 Everything is stored in IndexedDB under the database name `solo-ledger`. Inspect it in your
 browser: **DevTools → Application → IndexedDB → solo-ledger**. Clearing site data wipes it,
-so the in-app Export/Import backup (Phase 6) is how you keep it safe.
+so the in-app Export/Import backup is how you keep it safe.
+
+## Backing up your data
+
+On the **Settings** page, the **Backup** section lets you:
+
+- **Export backup** — download every table as one timestamped JSON file
+  (`solo-ledger-backup-YYYY-MM-DD_HHMM.json`). Keep it somewhere safe.
+- **Import backup…** — pick a backup file. It's validated with Zod first, then shows a
+  per-table count and an overwrite warning; confirming **replaces all current data** with the
+  file's contents in one all-or-nothing database transaction.
+
+To test a full round-trip: export → DevTools → Application → Clear site data → reload →
+import the file → confirm everything is back.

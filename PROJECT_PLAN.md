@@ -20,8 +20,8 @@
 - [x] **Phase 3 — Micro-expenses (nested items)** ✅ (monthly expenses can be "itemised"; items have qty/unit-price/store/frequency and roll up — weekly = ×52/12, twice-monthly = ×2, monthly = ×1 — into the parent's monthly amount, kept in sync so the ledger needs no changes; plus a Monthly Staples view grouped by store)
 - [x] **Phase 4 — Investments + linked transactions** ✅ (portfolios with manual balance snapshots; net-growth in N$ and % all-time + over 1mo/3mo/1yr separating gains from contributions; linked transactions — Contribute creates a one-off expense + tops up the balance, Withdraw creates income + reduces the balance, both undoable from either side)
 - [x] **Phase 5 — Dashboard** ✅ (read-only overview — a net-worth hero (liquid budget balance + total investment value), breakdown cards with all-time investment growth, a "this month" income/expenses/net row, and a Recharts net-worth-over-time area chart. All figures reuse the Phase 1 ledger maths and Phase 4 investment maths via a single `useDashboard` hook; the page stores **no new data** — it's a live mirror, so it can never disagree with the other pages.)
-- [ ] Phase 6 — Backup (Export / Import) ← **next**
-- [ ] Phase 7 — Reminders / notifications
+- [x] **Phase 6 — Backup (Export / Import)** ✅ (a Backup section on Settings — Export bundles every Dexie table into one versioned JSON file the user downloads; Import reads a chosen file, validates it with **Zod** before touching the DB, shows a per-table count + overwrite warning, then on confirm replaces the whole database inside a single all-or-nothing transaction. Logic in `src/lib/backup.ts`, UI in `src/components/BackupSection.tsx`. No new tables — backup just mirrors the existing ones.)
+- [ ] Phase 7 — Reminders / notifications ← **next**
 - [ ] Phase 8 — Theming engine (full)
 - [ ] Phase 9 — Gamification (optional quiet layer)
 - [ ] Phase 10 — Animation & live elements polish
