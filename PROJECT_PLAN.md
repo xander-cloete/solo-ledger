@@ -19,8 +19,8 @@
 - [x] **Phase 2 — Expenses (3 types)** ✅ (yearly/monthly-fixed/one-off with placement rules, add/edit/delete, wired into the ledger; shared MonthSwitcher + LedgerCard components)
 - [x] **Phase 3 — Micro-expenses (nested items)** ✅ (monthly expenses can be "itemised"; items have qty/unit-price/store/frequency and roll up — weekly = ×52/12, twice-monthly = ×2, monthly = ×1 — into the parent's monthly amount, kept in sync so the ledger needs no changes; plus a Monthly Staples view grouped by store)
 - [x] **Phase 4 — Investments + linked transactions** ✅ (portfolios with manual balance snapshots; net-growth in N$ and % all-time + over 1mo/3mo/1yr separating gains from contributions; linked transactions — Contribute creates a one-off expense + tops up the balance, Withdraw creates income + reduces the balance, both undoable from either side)
-- [ ] Phase 5 — Dashboard ← **next**
-- [ ] Phase 6 — Backup (Export / Import)
+- [x] **Phase 5 — Dashboard** ✅ (read-only overview — a net-worth hero (liquid budget balance + total investment value), breakdown cards with all-time investment growth, a "this month" income/expenses/net row, and a Recharts net-worth-over-time area chart. All figures reuse the Phase 1 ledger maths and Phase 4 investment maths via a single `useDashboard` hook; the page stores **no new data** — it's a live mirror, so it can never disagree with the other pages.)
+- [ ] Phase 6 — Backup (Export / Import) ← **next**
 - [ ] Phase 7 — Reminders / notifications
 - [ ] Phase 8 — Theming engine (full)
 - [ ] Phase 9 — Gamification (optional quiet layer)

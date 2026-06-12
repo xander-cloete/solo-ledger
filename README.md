@@ -31,7 +31,7 @@ pnpm preview
 ## Tech
 
 Vite · React · TypeScript · Tailwind CSS (CSS-variable theming) · Dexie (IndexedDB) ·
-react-router · vite-plugin-pwa.
+react-router · Recharts (dashboard charts) · vite-plugin-pwa.
 
 ## Where your data lives
 

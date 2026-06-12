@@ -29,6 +29,11 @@ export function formatMonthLabel(key: MonthKey): string {
   return format(keyToDate(key), 'LLLL yyyy')
 }
 
+// A compact label for tight spaces like chart axes: '2026-06' -> 'Jun 26'.
+export function formatMonthShort(key: MonthKey): string {
+  return format(keyToDate(key), 'LLL yy')
+}
+
 // How many whole months from `from` to `to`. Same month -> 0, next month -> 1.
 // Used to tell how far into a fixed-term expense a given month is.
 export function monthsBetween(from: MonthKey, to: MonthKey): number {

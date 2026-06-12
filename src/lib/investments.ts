@@ -72,6 +72,19 @@ function balanceOnOrBefore(
   return prior.length ? prior.at(-1)!.balance : fallback
 }
 
+// What a portfolio was worth at a point in time — the most recent snapshot on or
+// before `dateStr`. Before the portfolio existed it's worth 0; once it exists but
+// has no snapshot yet, it's worth what you started it with. Used by the dashboard
+// to plot net worth month by month.
+export function portfolioValueOn(
+  p: Portfolio,
+  balances: PortfolioBalance[],
+  dateStr: string,
+): number {
+  if (dateStr < p.initialDate) return 0
+  return balanceOnOrBefore(balances, dateStr, p.initialAmount)
+}
+
 // Growth over the last `months` months: how much the balance moved, minus what
 // you contributed/withdrew during that window, as a % of the balance back then.
 export function growthOverMonths(
