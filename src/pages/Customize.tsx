@@ -32,6 +32,30 @@ export function Customize() {
           />
         ))}
       </div>
+
+      {/* Phase 9 — the gamification layer is opt-out. */}
+      <section className="mt-8 rounded-card border border-border bg-surface p-6">
+        <h2 className="text-lg font-semibold tracking-tight">Progress &amp; achievements</h2>
+        <label className="mt-3 flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            checked={settings.gamification !== false}
+            onChange={() =>
+              updateSettings({ gamification: !(settings.gamification !== false) })
+            }
+            className="mt-1 h-4 w-4 accent-[var(--primary)]"
+          />
+          <span>
+            <span className="block text-sm font-medium">
+              Show the progress panel on the Dashboard
+            </span>
+            <span className="block text-xs text-muted">
+              A quiet level, savings-streak, and budget-adherence summary. Turn it
+              off for a plain, all-business dashboard.
+            </span>
+          </span>
+        </label>
+      </section>
     </div>
   )
 }

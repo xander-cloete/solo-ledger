@@ -1,12 +1,15 @@
 import { NetWorthChart } from '../components/NetWorthChart'
 import { RemindersBanner } from '../components/RemindersBanner'
+import { GamificationPanel } from '../components/GamificationPanel'
 import { useDashboard } from '../hooks/useDashboard'
+import { useSettings } from '../hooks/useSettings'
 import { formatMoney } from '../lib/format'
 import { currentMonthKey, formatMonthLabel } from '../lib/month'
 import type { ReactNode } from 'react'
 
 export function Dashboard() {
   const d = useDashboard()
+  const settings = useSettings()
   const sym = d.sym
   const monthNet = d.monthIncome - d.monthExpenses
 
@@ -54,6 +57,9 @@ export function Dashboard() {
               </StatCard>
             </div>
           </section>
+
+          {/* Quiet progress layer (Phase 9) — only when enabled in Customize. */}
+          {settings.gamification !== false && <GamificationPanel />}
 
           {/* Growth chart */}
           <section className="mt-4 rounded-card border border-border bg-surface p-5">

@@ -59,6 +59,7 @@ export const DEFAULT_SETTINGS: Settings = {
   ledgerStartMonth: currentMonthKey(),
   activeTheme: 'clean',
   notifications: { yearlyThreeMonths: true, yearlyOneMonth: true },
+  gamification: true,
 }
 
 // Make sure the single settings row exists, and backfill any fields added in
@@ -71,9 +72,14 @@ export async function ensureSettings(): Promise<Settings> {
     return DEFAULT_SETTINGS
   }
   // Merge defaults under the saved row: any field missing on the old row gets a
-  // sensible default, while everything the user set is preserved.
+  // sensible default, while everything the user set is preserved. If the saved
+  // row was missing any field we now expect (i.e. it's from an earlier phase),
+  // persist the backfilled version so later code can rely on every field.
   const merged: Settings = { ...DEFAULT_SETTINGS, ...existing }
-  if (merged.ledgerStartMonth !== existing.ledgerStartMonth) {
+  const wasMissingField = Object.keys(DEFAULT_SETTINGS).some(
+    (key) => !(key in existing),
+  )
+  if (wasMissingField) {
     await db.settings.put(merged)
   }
   return merged

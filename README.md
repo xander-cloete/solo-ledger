@@ -47,6 +47,19 @@ monospace). Picking one applies instantly across the whole app and is saved on y
 Every theme is just a block of CSS variables in `src/index.css` plus an entry in
 `src/theme/themes.ts`, so adding more later is cheap.
 
+## Progress (gamification)
+
+The Dashboard shows a quiet **Your progress** card with three gentle motivators, all derived
+from your real figures (nothing extra is stored):
+
+- **Level** — a garden that grows with your net worth (🌱 Seedling up to 👑 Magnate), with a bar
+  showing progress to the next tier.
+- **Savings streak** — how many completed months in a row you've finished without overspending.
+- **This month** — how much of this month's income your expenses have used, and whether you're
+  on track.
+
+Don't want it? Switch it off under **Customize → Progress & achievements** for a plain dashboard.
+
 ## Reminders
 
 Yearly expenses (insurance, renewals…) are easy to forget, so Solo Ledger warns you ahead of

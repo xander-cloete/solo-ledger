@@ -21,6 +21,7 @@ export interface Settings {
     yearlyThreeMonths: boolean
     yearlyOneMonth: boolean
   }
+  gamification: boolean // Phase 9: show the quiet progress layer (level/streak/budget)
 }
 
 export interface IncomeStream {

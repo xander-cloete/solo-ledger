@@ -13,7 +13,7 @@
 // corrupting the store.
 
 import { z } from 'zod'
-import { db } from '../db/db'
+import { db, DEFAULT_SETTINGS } from '../db/db'
 
 // Bump this if the data model ever changes in a backwards-incompatible way, so a
 // future import can detect "this backup is from an older/newer app version".
@@ -33,6 +33,9 @@ const settingsSchema = z.object({
     yearlyThreeMonths: z.boolean(),
     yearlyOneMonth: z.boolean(),
   }),
+  // Optional so backups exported before Phase 9 (which had no such field) still
+  // import cleanly; ensureSettings() backfills the default on next load.
+  gamification: z.boolean().optional(),
 })
 
 const incomeStreamSchema = z.object({
@@ -237,7 +240,11 @@ export async function restoreBackup(backup: Backup): Promise<void> {
   await db.transaction('rw', tables(), async () => {
     await Promise.all(tables().map((t) => t.clear()))
     await Promise.all([
-      db.settings.bulkAdd(backup.data.settings),
+      // Backfill any fields a pre-Phase-9 backup lacked (e.g. gamification) so
+      // every restored settings row is complete.
+      db.settings.bulkAdd(
+        backup.data.settings.map((s) => ({ ...DEFAULT_SETTINGS, ...s })),
+      ),
       db.incomeStreams.bulkAdd(backup.data.incomeStreams),
       db.incomeEntries.bulkAdd(backup.data.incomeEntries),
       db.expenses.bulkAdd(backup.data.expenses),
