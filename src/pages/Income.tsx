@@ -10,6 +10,7 @@ import {
 import { useLedger } from '../hooks/useLedger'
 import { LedgerCard } from '../components/LedgerCard'
 import { MonthSwitcher } from '../components/MonthSwitcher'
+import { PageHeader, SectionLabel } from '../components/ui'
 import { formatMoney } from '../lib/format'
 import { currentMonthKey, formatMonthLabel } from '../lib/month'
 import type { IncomeStream, MonthKey } from '../db/types'
@@ -31,19 +32,18 @@ export function Income() {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Income</h1>
-        <MonthSwitcher month={month} onChange={setMonth} />
-      </div>
+      <PageHeader
+        eyebrow="Money in"
+        title="Income"
+        right={<MonthSwitcher month={month} onChange={setMonth} />}
+      />
 
       {/* Rolling-ledger summary for the selected month */}
       <LedgerCard ledger={ledger} month={month} />
 
       {/* This month's income, one row per active stream */}
       <section className="mt-6">
-        <h2 className="text-sm font-medium text-muted">
-          Income for {formatMonthLabel(month)}
-        </h2>
+        <SectionLabel>Income for {formatMonthLabel(month)}</SectionLabel>
 
         {activeStreams.length === 0 ? (
           <p className="mt-2 rounded-card border border-border bg-surface p-4 text-sm text-muted">
@@ -64,7 +64,7 @@ export function Income() {
             ))}
             <div className="flex items-center justify-between px-4 py-3">
               <span className="text-sm font-medium">Total income</span>
-              <span className="text-sm font-semibold text-positive">
+              <span className="font-display text-base font-semibold tabular-nums text-positive">
                 {formatMoney(ledger.income, ledger.currencySymbol)}
               </span>
             </div>
@@ -75,7 +75,7 @@ export function Income() {
       {/* Income from investment withdrawals (managed on the Investments page) */}
       {divestEntries.length > 0 && (
         <section className="mt-6">
-          <h2 className="text-sm font-medium text-muted">From investments</h2>
+          <SectionLabel>From investments</SectionLabel>
           <div className="mt-2 divide-y divide-border rounded-card border border-border bg-surface">
             {divestEntries.map((e) => (
               <div key={e.id} className="flex items-center gap-3 px-4 py-3">
@@ -184,7 +184,7 @@ function StreamManager({
 
   return (
     <section className="mt-8">
-      <h2 className="text-sm font-medium text-muted">Income streams</h2>
+      <SectionLabel>Income streams</SectionLabel>
       <p className="mt-1 text-xs text-muted">
         Your recurring sources of money. The default amount pre-fills each new
         month so you only adjust what changed.

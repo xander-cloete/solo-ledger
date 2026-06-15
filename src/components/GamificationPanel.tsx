@@ -12,7 +12,9 @@ export function GamificationPanel() {
 
   return (
     <section className="mt-4 rounded-card border border-border bg-surface p-5">
-      <h2 className="text-sm font-medium text-muted">Your progress</h2>
+      <h2 className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
+        Your progress
+      </h2>
 
       <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Level g={g} />

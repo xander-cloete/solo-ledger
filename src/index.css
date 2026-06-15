@@ -7,11 +7,19 @@
   set of values for these variables. To switch themes we set a data-theme
   attribute on <html> and the whole app restyles instantly.
 
+  Phase 10.5 (design overhaul): a theme is now a full *personality*, not only a
+  palette. Each one also picks its own type pairing —
+    --font-sans     the body / UI face
+    --font-display  the large, expressive face for headlines and hero numbers
+  — plus its corner radius. So Terminal stays mono and sharp, Parchment is a
+  serif book page, Clean is airy editorial, etc. Two self-hosted variable fonts
+  do most of the work: "Fraunces Variable" (warm editorial serif) and "Hanken
+  Grotesk Variable" (clean modern grotesque), with system mono/serif as accents.
+
   The @theme inline block maps our semantic variables into Tailwind utilities,
-  so we can write classes like `bg-surface`, `text-fg`, `border-border`,
-  `text-primary`, etc. The `inline` keyword tells Tailwind these reference a
-  variable that can change at runtime (theme switching) rather than baking in
-  a fixed value.
+  so we can write classes like `bg-surface`, `text-fg`, `font-display`, etc. The
+  `inline` keyword tells Tailwind these reference a variable that can change at
+  runtime (theme switching) rather than baking in a fixed value.
 */
 @theme inline {
   --color-bg: var(--bg);
@@ -25,6 +33,7 @@
   --color-negative: var(--negative);
 
   --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
   --radius-card: var(--radius-card);
 }
 
@@ -36,7 +45,8 @@
   (checkboxes, scrollbars) light or dark.
 */
 
-/* Default theme: "clean" — a warm, calm Japandi-inspired palette. */
+/* Default theme: "clean" — a warm, calm Japandi-inspired palette.
+   Personality: airy editorial — Fraunces serif headlines over a grotesque body. */
 :root,
 [data-theme='clean'] {
   color-scheme: light;
@@ -50,11 +60,13 @@
   --positive: #3f7d5a; /* money in / growth */
   --negative: #b4533f; /* money out / loss */
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
   --radius-card: 1rem;
 }
 
-/* "tokyo-night" — Omarchy-inspired deep blues and purples (dark). */
+/* "tokyo-night" — Omarchy-inspired deep blues and purples (dark).
+   Personality: neon-modern — all-grotesque, tight and confident. */
 [data-theme='tokyo-night'] {
   color-scheme: dark;
   --bg: #1a1b26;
@@ -67,11 +79,13 @@
   --positive: #9ece6a; /* green */
   --negative: #f7768e; /* red */
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
   --radius-card: 0.75rem;
 }
 
-/* "terminal" — green-on-black monospace, like a classic CRT (dark). */
+/* "terminal" — green-on-black monospace, like a classic CRT (dark).
+   Personality: data-terminal — mono everywhere, sharp corners. */
 [data-theme='terminal'] {
   color-scheme: dark;
   --bg: #0a0d0a;
@@ -86,10 +100,13 @@
 
   --font-sans: ui-monospace, 'JetBrains Mono', 'Fira Code', 'Cascadia Code',
     'Courier New', monospace;
+  --font-display: ui-monospace, 'JetBrains Mono', 'Fira Code', 'Cascadia Code',
+    'Courier New', monospace;
   --radius-card: 0.25rem;
 }
 
-/* "rose-pine" — soft muted rose on deep plum (dark). */
+/* "rose-pine" — soft muted rose on deep plum (dark).
+   Personality: romantic editorial — Fraunces serif display. */
 [data-theme='rose-pine'] {
   color-scheme: dark;
   --bg: #191724;
@@ -102,11 +119,13 @@
   --positive: #9ccfd8; /* foam */
   --negative: #eb6f92; /* love */
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
   --radius-card: 0.75rem;
 }
 
-/* "gruvbox" — warm retro amber on soft charcoal (dark). */
+/* "gruvbox" — warm retro amber on soft charcoal (dark).
+   Personality: retro-warm — Fraunces serif over a soft grotesque. */
 [data-theme='gruvbox'] {
   color-scheme: dark;
   --bg: #282828;
@@ -119,11 +138,13 @@
   --positive: #b8bb26; /* green */
   --negative: #fb4934; /* red */
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
   --radius-card: 0.5rem;
 }
 
-/* "nord" — cool arctic blues (dark). */
+/* "nord" — cool arctic blues (dark).
+   Personality: Scandinavian-clean — all-grotesque, generous. */
 [data-theme='nord'] {
   color-scheme: dark;
   --bg: #2e3440;
@@ -136,11 +157,13 @@
   --positive: #a3be8c; /* green */
   --negative: #bf616a; /* red */
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
   --radius-card: 0.75rem;
 }
 
-/* "dracula" — vivid purple on dusk grey (dark). */
+/* "dracula" — vivid purple on dusk grey (dark).
+   Personality: vivid-modern — all-grotesque. */
 [data-theme='dracula'] {
   color-scheme: dark;
   --bg: #282a36;
@@ -153,11 +176,13 @@
   --positive: #50fa7b; /* green */
   --negative: #ff5555; /* red */
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
   --radius-card: 0.75rem;
 }
 
-/* "catppuccin-latte" — soft pastel mauve on warm white (light). */
+/* "catppuccin-latte" — soft pastel mauve on warm white (light).
+   Personality: soft editorial — Fraunces serif display, rounded. */
 [data-theme='catppuccin-latte'] {
   color-scheme: light;
   --bg: #eff1f5;
@@ -170,11 +195,13 @@
   --positive: #40a02b; /* green */
   --negative: #d20f39; /* red */
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
   --radius-card: 1rem;
 }
 
-/* "solarized-light" — Ethan Schoonover's warm-paper classic (light). */
+/* "solarized-light" — Ethan Schoonover's warm-paper classic (light).
+   Personality: warm editorial — Fraunces serif display. */
 [data-theme='solarized-light'] {
   color-scheme: light;
   --bg: #fdf6e3;
@@ -187,11 +214,13 @@
   --positive: #859900; /* green */
   --negative: #dc322f; /* red */
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
   --radius-card: 0.75rem;
 }
 
-/* "parchment" — sepia book page with a serif face (light). */
+/* "parchment" — sepia book page (light).
+   Personality: full editorial book — Fraunces serif for body *and* display. */
 [data-theme='parchment'] {
   color-scheme: light;
   --bg: #f4ecd8;
@@ -204,7 +233,8 @@
   --positive: #6b8e23; /* olive */
   --negative: #b22222; /* firebrick */
 
-  --font-sans: ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  --font-sans: 'Fraunces Variable', ui-serif, Georgia, Cambria, serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, Cambria, serif;
   --radius-card: 0.5rem;
 }
 
@@ -219,5 +249,28 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);
+  font-optical-sizing: auto; /* lets Fraunces adjust its shapes to size */
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* A small shared touch: text selection uses a faint tint of the theme accent,
+   so even highlighting feels on-brand across every theme. */
+::selection {
+  background: color-mix(in srgb, var(--primary) 24%, transparent);
+}
+
+/* Respect reduce-motion at the CSS layer too (belt-and-suspenders alongside the
+   JS MotionConfig): no element should animate or smooth-scroll if it's asked
+   to be still. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

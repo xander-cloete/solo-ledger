@@ -1,6 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+// Self-hosted variable fonts (bundled, so the PWA still works fully offline).
+// "Fraunces" is our editorial display face; "Hanken Grotesk" the body/UI face.
+// Themes choose which of these (or a system mono/serif) they wear — see index.css.
+import '@fontsource-variable/fraunces/index.css'
+import '@fontsource-variable/hanken-grotesk/index.css'
 import './index.css'
 import { ThemeProvider } from './theme/ThemeProvider'
 import { Layout } from './components/Layout'

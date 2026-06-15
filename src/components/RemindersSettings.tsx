@@ -32,7 +32,7 @@ export function RemindersSettings() {
 
   return (
     <section className="mt-6 rounded-card border border-border bg-surface p-6">
-      <h2 className="text-lg font-semibold tracking-tight">Reminders</h2>
+      <h2 className="font-display text-lg font-semibold tracking-tight">Reminders</h2>
       <p className="mt-1 text-sm text-muted">
         Yearly expenses are easy to forget. Get a heads-up before each one is due
         so you can set the money aside in time.

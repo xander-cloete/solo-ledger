@@ -31,8 +31,9 @@ pnpm preview
 ## Tech
 
 Vite · React · TypeScript · Tailwind CSS (CSS-variable theming) · Dexie (IndexedDB) ·
-react-router · Recharts (dashboard charts) · Framer Motion (animation) · Zod (backup
-validation) · vite-plugin-pwa.
+react-router · Recharts (dashboard charts) · Framer Motion (animation) · self-hosted
+variable fonts (@fontsource Fraunces + Hanken Grotesk) · Zod (backup validation) ·
+vite-plugin-pwa.
 
 ## Where your data lives
 
@@ -46,9 +47,14 @@ The **Customize** page has a theme switcher with **10 themes**. Four are light �
 (warm Japandi, the default), **Catppuccin Latte**, **Solarized Light**, and **Parchment** (a
 sepia, serif, book-like page) — and six are dark — **Tokyo Night**, **Terminal** (green-on-black
 monospace), **Rosé Pine**, **Gruvbox**, **Nord**, and **Dracula**. Picking one applies instantly
-across the whole app and is saved on your device. Themes can swap the font and corner radius too,
-not just colours. Every theme is just a block of CSS variables in `src/index.css` plus an entry in
-`src/theme/themes.ts`, so adding more is cheap.
+across the whole app and is saved on your device. Each theme is its own **personality**, not just a
+palette: it picks its own type pairing — a display face for headlines/numbers and a body face — plus
+corner radius. So Terminal is mono and sharp, Parchment is a serif book page, Nord/Dracula/Tokyo Night
+lean clean grotesque, and the warm themes use the Fraunces serif for display. Every theme is just a
+block of CSS variables in `src/index.css` plus an entry in `src/theme/themes.ts`, so adding more is cheap.
+
+The overall look is editorial and typography-led (think Kinfolk / Papier / Apple) with subtle,
+unobtrusive motion. Shared design primitives live in `src/components/ui.tsx`.
 
 ## Progress (gamification)
 

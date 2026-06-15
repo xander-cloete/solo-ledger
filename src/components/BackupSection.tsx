@@ -74,7 +74,7 @@ export function BackupSection() {
 
   return (
     <section className="mt-6 rounded-card border border-border bg-surface p-6">
-      <h2 className="text-lg font-semibold tracking-tight">Backup</h2>
+      <h2 className="font-display text-lg font-semibold tracking-tight">Backup</h2>
       <p className="mt-1 text-sm text-muted">
         Your data lives only in this browser. Export a backup file to keep it
         safe, and import it to restore everything on a new device or after

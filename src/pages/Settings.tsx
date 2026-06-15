@@ -3,6 +3,7 @@ import { useSettings, updateSettings } from '../hooks/useSettings'
 import { formatMoney } from '../lib/format'
 import { BackupSection } from '../components/BackupSection'
 import { RemindersSettings } from '../components/RemindersSettings'
+import { PageHeader } from '../components/ui'
 import type { Settings as SettingsType } from '../db/types'
 
 export function Settings() {
@@ -21,7 +22,7 @@ export function Settings() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
+      <PageHeader eyebrow="Preferences" title="Settings" />
 
       <SettingsForm
         key={sig}

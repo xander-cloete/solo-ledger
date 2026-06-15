@@ -15,6 +15,7 @@ import {
   usePortfolioTransactions,
 } from '../hooks/useInvestments'
 import { useSettings } from '../hooks/useSettings'
+import { PageHeader, SectionLabel } from '../components/ui'
 import {
   allTimeGrowth,
   currentBalance,
@@ -42,8 +43,8 @@ export function Investments() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight">Investments</h1>
-      <p className="mt-1 text-sm text-muted">
+      <PageHeader eyebrow="Holdings" title="Investments" />
+      <p className="mt-2 text-sm text-muted">
         Track each portfolio by recording its balance yourself — no bank linking.
         Growth separates real gains from the money you add or withdraw.
       </p>
@@ -61,9 +62,7 @@ export function Investments() {
 
       {/* Add / edit portfolio */}
       <section className="mt-8">
-        <h2 className="text-sm font-medium text-muted">
-          {editing ? 'Edit portfolio' : 'Add a portfolio'}
-        </h2>
+        <SectionLabel>{editing ? 'Edit portfolio' : 'Add a portfolio'}</SectionLabel>
         <PortfolioForm
           key={editing?.id ?? 'new'}
           editing={editing}
@@ -75,7 +74,7 @@ export function Investments() {
       {/* Quick-edit list (rename / change starting figures) */}
       {portfolios.length > 0 && (
         <section className="mt-8">
-          <h2 className="text-sm font-medium text-muted">All portfolios</h2>
+          <SectionLabel>All portfolios</SectionLabel>
           <div className="mt-2 divide-y divide-border rounded-card border border-border bg-surface">
             {portfolios.map((p) => (
               <div key={p.id} className="flex items-center gap-3 px-4 py-3">
@@ -153,7 +152,7 @@ function PortfolioCard({
           <GrowthBadge growth={allTime} currencySymbol={currencySymbol} />
         </div>
 
-        <div className="mt-1 text-2xl font-semibold tracking-tight">
+        <div className="mt-1 font-display text-3xl font-semibold tracking-tight tabular-nums">
           {formatMoney(balance, currencySymbol)}
         </div>
         <p className="text-xs text-muted">

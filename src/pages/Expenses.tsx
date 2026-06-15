@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { LedgerCard } from '../components/LedgerCard'
 import { MonthSwitcher } from '../components/MonthSwitcher'
+import { PageHeader, SectionLabel } from '../components/ui'
 import { deleteExpense, saveExpense, useExpenses } from '../hooks/useExpenses'
 import {
   deleteItem,
@@ -55,18 +56,17 @@ export function Expenses() {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Expenses</h1>
-        <MonthSwitcher month={month} onChange={setMonth} />
-      </div>
+      <PageHeader
+        eyebrow="Money out"
+        title="Expenses"
+        right={<MonthSwitcher month={month} onChange={setMonth} />}
+      />
 
       <LedgerCard ledger={ledger} month={month} />
 
       {/* What hits this specific month */}
       <section className="mt-6">
-        <h2 className="text-sm font-medium text-muted">
-          Expenses for {formatMonthLabel(month)}
-        </h2>
+        <SectionLabel>Expenses for {formatMonthLabel(month)}</SectionLabel>
 
         {applicable.length === 0 ? (
           <p className="mt-2 rounded-card border border-border bg-surface p-4 text-sm text-muted">
@@ -96,7 +96,7 @@ export function Expenses() {
             ))}
             <div className="flex items-center justify-between px-4 py-3">
               <span className="text-sm font-medium">Total expenses</span>
-              <span className="text-sm font-semibold text-negative">
+              <span className="font-display text-base font-semibold tabular-nums text-negative">
                 − {formatMoney(ledger.expenses, sym)}
               </span>
             </div>
@@ -106,9 +106,7 @@ export function Expenses() {
 
       {/* Add / edit form */}
       <section className="mt-8">
-        <h2 className="text-sm font-medium text-muted">
-          {editing ? 'Edit expense' : 'Add an expense'}
-        </h2>
+        <SectionLabel>{editing ? 'Edit expense' : 'Add an expense'}</SectionLabel>
         <ExpenseForm
           key={editing?.id ?? 'new'}
           editing={editing}
@@ -125,7 +123,7 @@ export function Expenses() {
 
       {/* The full list of expense definitions */}
       <section className="mt-8">
-        <h2 className="text-sm font-medium text-muted">All expenses</h2>
+        <SectionLabel>All expenses</SectionLabel>
         <div className="mt-2 divide-y divide-border rounded-card border border-border bg-surface">
           {expenses.length === 0 && (
             <p className="px-4 py-3 text-sm text-muted">No expenses yet.</p>
@@ -688,7 +686,7 @@ function StaplesSection({ currencySymbol }: { currencySymbol: string }) {
 
   return (
     <section className="mt-8">
-      <h2 className="text-sm font-medium text-muted">Monthly staples</h2>
+      <SectionLabel>Monthly staples</SectionLabel>
       {items.length === 0 ? (
         <p className="mt-2 rounded-card border border-border bg-surface p-4 text-sm text-muted">
           Items from your itemised expenses appear here, grouped by store.

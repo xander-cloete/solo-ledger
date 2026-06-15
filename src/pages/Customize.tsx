@@ -1,4 +1,5 @@
 import { useSettings, updateSettings } from '../hooks/useSettings'
+import { PageHeader } from '../components/ui'
 import { THEMES, type ThemeDef } from '../theme/themes'
 
 /*
@@ -16,8 +17,8 @@ export function Customize() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight">Customize</h1>
-      <p className="mt-1 text-sm text-muted">
+      <PageHeader eyebrow="Make it yours" title="Customize" />
+      <p className="mt-2 text-sm text-muted">
         Pick a theme. It applies instantly across the whole app and is saved on
         this device.
       </p>
@@ -35,7 +36,7 @@ export function Customize() {
 
       {/* Phase 9 — the gamification layer is opt-out. */}
       <section className="mt-8 rounded-card border border-border bg-surface p-6">
-        <h2 className="text-lg font-semibold tracking-tight">Progress &amp; achievements</h2>
+        <h2 className="font-display text-lg font-semibold tracking-tight">Progress &amp; achievements</h2>
         <label className="mt-3 flex cursor-pointer items-start gap-3">
           <input
             type="checkbox"
@@ -59,7 +60,7 @@ export function Customize() {
 
       {/* Phase 10 — motion is on by default, but can be calmed here. */}
       <section className="mt-8 rounded-card border border-border bg-surface p-6">
-        <h2 className="text-lg font-semibold tracking-tight">Motion</h2>
+        <h2 className="font-display text-lg font-semibold tracking-tight">Motion</h2>
         <label className="mt-3 flex cursor-pointer items-start gap-3">
           <input
             type="checkbox"
@@ -95,7 +96,7 @@ function ThemeCard({
     <button
       onClick={onSelect}
       aria-pressed={active}
-      className={`rounded-card border p-4 text-left transition-colors ${
+      className={`rounded-card border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 ${
         active
           ? 'border-primary ring-2 ring-primary/40'
           : 'border-border hover:border-primary/60'

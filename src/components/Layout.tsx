@@ -125,7 +125,7 @@ export function Layout() {
       <aside className="fixed inset-y-0 left-0 hidden w-60 flex-col border-r border-border bg-surface p-4 md:flex">
         <div className="mb-8 flex items-center gap-2 px-2">
           <img src="/sl-icon.svg" alt="" className="h-8 w-8 rounded-lg" />
-          <span className="text-lg font-semibold tracking-tight">Solo Ledger</span>
+          <span className="font-display text-lg font-semibold tracking-tight">Solo Ledger</span>
         </div>
         <nav className="flex flex-col gap-1">
           {navItems.map((item) => (

@@ -3,6 +3,7 @@ import { NetWorthChart } from '../components/NetWorthChart'
 import { RemindersBanner } from '../components/RemindersBanner'
 import { GamificationPanel } from '../components/GamificationPanel'
 import { CountUp } from '../components/CountUp'
+import { Eyebrow, hoverLift } from '../components/ui'
 import { useDashboard } from '../hooks/useDashboard'
 import { useSettings } from '../hooks/useSettings'
 import { formatMoney } from '../lib/format'
@@ -10,6 +11,17 @@ import { staggerContainer, fadeItem } from '../lib/motion'
 import { currentMonthKey, formatMonthLabel } from '../lib/month'
 import type { ReactNode } from 'react'
 
+/*
+  Dashboard — the flagship page of the design overhaul.
+
+  Aesthetic: editorial + refined-fintech. A quiet uppercase "eyebrow" label sits
+  over a very large display-font figure (the net-worth hero), with a faint
+  theme-tinted glow for depth. Everything below is a calm grid of panels with
+  hairline borders that lift gently on hover. All colour comes from CSS theme
+  variables (so it adapts across all 10 themes) and `color-mix` tints, so the
+  same layout reads as Japandi, neon, terminal, or sepia depending on the theme.
+  This page stores nothing — it's a live mirror of the ledger + investment maths.
+*/
 export function Dashboard() {
   const d = useDashboard()
   const settings = useSettings()
@@ -18,16 +30,21 @@ export function Dashboard() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-      <p className="mt-1 text-sm text-muted">
-        Your whole picture at a glance — {formatMonthLabel(currentMonthKey())}.
-      </p>
+      {/* Masthead — small, editorial. The page's real headline is the number. */}
+      <div className="flex items-baseline justify-between">
+        <h1 className="text-xs font-medium uppercase tracking-[0.2em] text-muted">
+          Overview
+        </h1>
+        <span className="text-xs tracking-wide text-muted">
+          {formatMonthLabel(currentMonthKey())}
+        </span>
+      </div>
 
       {/* Upcoming yearly-expense reminders, shown on open. */}
       <RemindersBanner />
 
       {!d.hasAnyData ? (
-        <p className="mt-6 rounded-card border border-border bg-surface p-5 text-sm text-muted">
+        <p className="mt-8 rounded-card border border-border bg-surface p-6 text-sm text-muted">
           Nothing to show yet. Add income, expenses, or an investment and your net
           worth and growth chart will appear here.
         </p>
@@ -36,37 +53,65 @@ export function Dashboard() {
           variants={staggerContainer}
           initial="initial"
           animate="enter"
+          className="mt-4 space-y-4"
         >
           {/* Hero: net worth */}
           <motion.section
             variants={fadeItem}
-            className="mt-6 rounded-card border border-border bg-surface p-5"
+            className="relative overflow-hidden rounded-card border border-border p-6 sm:p-8"
+            style={{
+              backgroundImage:
+                'linear-gradient(150deg, color-mix(in srgb, var(--primary) 7%, var(--surface)) 0%, var(--surface) 60%)',
+            }}
           >
-            <div className="text-sm text-muted">Net worth</div>
-            <CountUp
-              value={d.netWorth}
-              format={(n) => formatMoney(n, sym)}
-              className="mt-1 block text-4xl font-semibold tracking-tight tabular-nums"
+            {/* Soft theme-tinted glow, top-right, for depth. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full opacity-50 blur-3xl"
+              style={{
+                background:
+                  'radial-gradient(circle, color-mix(in srgb, var(--primary) 28%, transparent), transparent 70%)',
+              }}
             />
-            <p className="mt-1 text-xs text-muted">
-              Liquid balance plus the value of every investment.
-            </p>
+            <div className="relative">
+              <Eyebrow>Net worth</Eyebrow>
+              <CountUp
+                value={d.netWorth}
+                format={(n) => formatMoney(n, sym)}
+                className="mt-2 block font-display text-5xl font-semibold tracking-tight tabular-nums sm:text-6xl"
+              />
+              <p className="mt-2 text-sm text-muted">
+                Liquid balance plus the value of every investment.
+              </p>
 
-            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <StatCard label="Liquid balance" value={formatMoney(d.liquid, sym)}>
-                in your rolling budget
-              </StatCard>
-              <StatCard
-                label="Investments"
-                value={formatMoney(d.investmentsValue, sym)}
-              >
-                <span className={growthColor(d.investmentsGain)}>
-                  {formatSigned(d.investmentsGain, sym)}
-                  {d.investmentsGainPct != null &&
-                    ` (${d.investmentsGainPct >= 0 ? '+' : ''}${d.investmentsGainPct.toFixed(1)}%)`}
-                </span>{' '}
-                all-time growth
-              </StatCard>
+              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <MetricPanel label="Liquid balance" caption="in your rolling budget">
+                  <CountUp
+                    value={d.liquid}
+                    format={(n) => formatMoney(n, sym)}
+                    className="font-display text-2xl font-semibold tabular-nums"
+                  />
+                </MetricPanel>
+                <MetricPanel
+                  label="Investments"
+                  caption={
+                    <>
+                      <span className={growthColor(d.investmentsGain)}>
+                        {formatSigned(d.investmentsGain, sym)}
+                        {d.investmentsGainPct != null &&
+                          ` (${d.investmentsGainPct >= 0 ? '+' : ''}${d.investmentsGainPct.toFixed(1)}%)`}
+                      </span>{' '}
+                      all-time
+                    </>
+                  }
+                >
+                  <CountUp
+                    value={d.investmentsValue}
+                    format={(n) => formatMoney(n, sym)}
+                    className="font-display text-2xl font-semibold tabular-nums"
+                  />
+                </MetricPanel>
+              </div>
             </div>
           </motion.section>
 
@@ -80,19 +125,19 @@ export function Dashboard() {
           {/* Growth chart */}
           <motion.section
             variants={fadeItem}
-            className="mt-4 rounded-card border border-border bg-surface p-5"
+            className="rounded-card border border-border bg-surface p-5 sm:p-6"
           >
-            <div className="mb-3 flex items-baseline justify-between">
-              <h2 className="text-sm font-medium">Net worth over time</h2>
+            <div className="mb-4 flex items-baseline justify-between">
+              <Eyebrow>Net worth over time</Eyebrow>
               <span className="text-xs text-muted">last 12 months</span>
             </div>
             <NetWorthChart series={d.series} sym={sym} />
           </motion.section>
 
           {/* This month */}
-          <motion.section variants={fadeItem} className="mt-4">
-            <h2 className="text-sm font-medium text-muted">This month</h2>
-            <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <motion.section variants={fadeItem}>
+            <Eyebrow className="mb-2">This month</Eyebrow>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <StatCard
                 label="Income"
                 value={`+ ${formatMoney(d.monthIncome, sym)}`}
@@ -107,9 +152,8 @@ export function Dashboard() {
                 label="Net this month"
                 value={formatMoney(monthNet, sym)}
                 tone={monthNet < 0 ? 'negative' : 'positive'}
-              >
-                income minus expenses
-              </StatCard>
+                caption="income minus expenses"
+              />
             </div>
           </motion.section>
         </motion.div>
@@ -131,16 +175,40 @@ function formatSigned(amount: number, sym: string): string {
   return `${sign}${formatMoney(Math.abs(amount), sym)}`
 }
 
+// A panel inside the hero (Liquid / Investments). Gentle hover lift; the lift is
+// a transform, so reduce-motion disables it automatically via MotionConfig.
+function MetricPanel({
+  label,
+  caption,
+  children,
+}: {
+  label: string
+  caption: ReactNode
+  children: ReactNode
+}) {
+  return (
+    <motion.div
+      {...hoverLift}
+      className="rounded-lg border border-border bg-bg/70 px-4 py-3 backdrop-blur-sm"
+    >
+      <Eyebrow>{label}</Eyebrow>
+      <div className="mt-1">{children}</div>
+      <div className="mt-1 text-[11px] text-muted">{caption}</div>
+    </motion.div>
+  )
+}
+
+// A flat stat card for the "this month" row.
 function StatCard({
   label,
   value,
   tone = 'fg',
-  children,
+  caption,
 }: {
   label: string
   value: string
   tone?: 'fg' | 'positive' | 'negative'
-  children?: ReactNode
+  caption?: string
 }) {
   const valueClass =
     tone === 'positive'
@@ -149,10 +217,17 @@ function StatCard({
         ? 'text-negative'
         : 'text-fg'
   return (
-    <div className="rounded-lg border border-border bg-bg px-4 py-3">
-      <div className="text-xs text-muted">{label}</div>
-      <div className={`mt-0.5 text-lg font-semibold ${valueClass}`}>{value}</div>
-      {children && <div className="mt-0.5 text-[11px] text-muted">{children}</div>}
-    </div>
+    <motion.div
+      {...hoverLift}
+      className="rounded-card border border-border bg-surface px-4 py-4"
+    >
+      <Eyebrow>{label}</Eyebrow>
+      <div
+        className={`mt-1 font-display text-xl font-semibold tabular-nums ${valueClass}`}
+      >
+        {value}
+      </div>
+      {caption && <div className="mt-1 text-[11px] text-muted">{caption}</div>}
+    </motion.div>
   )
 }
