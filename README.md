@@ -43,18 +43,21 @@ so the in-app Export/Import backup is how you keep it safe.
 
 ## Themes
 
-The **Customize** page has a theme switcher with **10 themes**. Four are light — **Clean**
-(warm Japandi, the default), **Catppuccin Latte**, **Solarized Light**, and **Parchment** (a
-sepia, serif, book-like page) — and six are dark — **Tokyo Night**, **Terminal** (green-on-black
-monospace), **Rosé Pine**, **Gruvbox**, **Nord**, and **Dracula**. Picking one applies instantly
-across the whole app and is saved on your device. Each theme is its own **personality**, not just a
-palette: it picks its own type pairing — a display face for headlines/numbers and a body face — plus
-corner radius. So Terminal is mono and sharp, Parchment is a serif book page, Nord/Dracula/Tokyo Night
-lean clean grotesque, and the warm themes use the Fraunces serif for display. Every theme is just a
-block of CSS variables in `src/index.css` plus an entry in `src/theme/themes.ts`, so adding more is cheap.
+The **Customize** page has a theme switcher. Themes are being re-thought as concept-driven
+**"worlds"** — each its own personality (type pairing, texture, a signature ornament, and living
+micro-animation), not just a recoloured palette. **Japandi** is the new default and first finished
+world: warm-oat *washi*-paper texture with a soft "light through shoji" glow, a hand-brushed *ensō*
+that ripples like ink in water on the Dashboard, a vermilion *hanko* seal as the app mark, and
+gamification glyphs that live (the level plant sways, the streak flame flickers). More worlds are in
+progress — **Anime/Manga, Art Deco, Cyberpunk noir** — alongside the kept themes (Terminal, Tokyo
+Night, Catppuccin Latte, Parchment, etc.).
 
-The overall look is editorial and typography-led (think Kinfolk / Papier / Apple) with subtle,
-unobtrusive motion. Shared design primitives live in `src/components/ui.tsx`.
+Each theme is a block of CSS variables in `src/index.css` plus an entry in `src/theme/themes.ts`;
+per-theme decoration lives in `src/components/ThemeSignature.tsx` and `BrandMark.tsx`. The overall
+look is editorial and typography-led (think Kinfolk / Papier / Apple) with subtle, unobtrusive
+motion that **always respects reduce-motion** (OS setting or the in-app toggle). Shared design
+primitives (eyebrow labels, page headers, the brush-stroke + ink-rule motifs, hover-lift cards) live
+in `src/components/ui.tsx`.
 
 ## Progress (gamification)
 
