@@ -31,7 +31,8 @@ pnpm preview
 ## Tech
 
 Vite · React · TypeScript · Tailwind CSS (CSS-variable theming) · Dexie (IndexedDB) ·
-react-router · Recharts (dashboard charts) · Zod (backup validation) · vite-plugin-pwa.
+react-router · Recharts (dashboard charts) · Framer Motion (animation) · Zod (backup
+validation) · vite-plugin-pwa.
 
 ## Where your data lives
 
@@ -59,6 +60,16 @@ from your real figures (nothing extra is stored):
   on track.
 
 Don't want it? Switch it off under **Customize → Progress & achievements** for a plain dashboard.
+
+## Motion
+
+The app uses small, calm **Framer Motion** touches: pages cross-fade as you navigate,
+Dashboard cards ease in, and key figures (net worth, your rolling balance) count up
+smoothly when they change. Nothing bounces or demands attention.
+
+Prefer it still? Two ways to calm it down: your device's system **"reduce motion"**
+accessibility setting is always respected, and there's a **Customize → Motion → Reduce
+motion** switch to turn movement off in-app regardless of the OS setting.
 
 ## Reminders
 

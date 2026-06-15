@@ -22,6 +22,7 @@ export interface Settings {
     yearlyOneMonth: boolean
   }
   gamification: boolean // Phase 9: show the quiet progress layer (level/streak/budget)
+  reduceMotion: boolean // Phase 10: force-calm — disable animations regardless of OS setting
 }
 
 export interface IncomeStream {

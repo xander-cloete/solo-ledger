@@ -1,5 +1,6 @@
 import { formatMoney } from '../lib/format'
 import { addMonthsKey, formatMonthLabel } from '../lib/month'
+import { CountUp } from './CountUp'
 import type { LedgerSummary } from '../hooks/useLedger'
 import type { MonthKey } from '../db/types'
 
@@ -32,13 +33,13 @@ export function LedgerCard({
         <span className="font-medium">
           Balance carried into {formatMonthLabel(addMonthsKey(month, 1))}
         </span>
-        <span
-          className={`text-lg font-semibold ${
+        <CountUp
+          value={ledger.carryOut}
+          format={(n) => formatMoney(n, sym)}
+          className={`text-lg font-semibold tabular-nums ${
             ledger.carryOut < 0 ? 'text-negative' : 'text-fg'
           }`}
-        >
-          {formatMoney(ledger.carryOut, sym)}
-        </span>
+        />
       </div>
     </div>
   )

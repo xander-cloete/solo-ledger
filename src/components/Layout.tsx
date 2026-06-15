@@ -1,6 +1,9 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, useLocation, useOutlet } from 'react-router-dom'
 import type { ReactNode } from 'react'
+import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
 import { useReminderNotifications } from '../hooks/useReminders'
+import { useReduceMotion } from '../hooks/useReduceMotion'
+import { pageVariants } from '../lib/motion'
 
 // Each tab: route path, label, and a small inline icon (kept minimal/tasteful).
 type NavItem = { to: string; label: string; icon: ReactNode }
@@ -81,12 +84,42 @@ function navLinkClasses(isActive: boolean): string {
     : `${base} text-muted hover:bg-border/40 hover:text-fg`
 }
 
+// The routed page, wrapped so each navigation cross-fades. With the data router
+// (`createBrowserRouter`), `<Outlet />` doesn't expose the current location, so
+// we read it ourselves: `useOutlet()` gives the active page element and
+// `useLocation()` gives a key that changes on every route. AnimatePresence keeps
+// the outgoing page mounted just long enough to animate it out (`mode="wait"`
+// = finish exit before the next page enters).
+function AnimatedOutlet() {
+  const location = useLocation()
+  const outlet = useOutlet()
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={location.pathname}
+        variants={pageVariants}
+        initial="initial"
+        animate="enter"
+        exit="exit"
+      >
+        {outlet}
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
 export function Layout() {
   // Fire any due browser notifications on app open (best-effort; no-op without
   // permission). Lives here so it runs regardless of the landing page.
   useReminderNotifications()
 
+  // When reduce-motion is on (OS or the Customize toggle), `MotionConfig` with
+  // reducedMotion="always" makes every motion component below skip transforms
+  // and only fade — so nothing moves, app-wide, from one switch.
+  const reduce = useReduceMotion()
+
   return (
+    <MotionConfig reducedMotion={reduce ? 'always' : 'user'}>
     <div className="min-h-full bg-bg text-fg">
       {/* Sidebar (desktop) */}
       <aside className="fixed inset-y-0 left-0 hidden w-60 flex-col border-r border-border bg-surface p-4 md:flex">
@@ -112,7 +145,7 @@ export function Layout() {
       {/* Main content. Padding leaves room for the sidebar (desktop) and the
           bottom nav (mobile). */}
       <main className="mx-auto max-w-3xl px-4 pb-24 pt-6 md:ml-60 md:pb-10">
-        <Outlet />
+        <AnimatedOutlet />
       </main>
 
       {/* Bottom nav (mobile) */}
@@ -134,5 +167,6 @@ export function Layout() {
         ))}
       </nav>
     </div>
+    </MotionConfig>
   )
 }

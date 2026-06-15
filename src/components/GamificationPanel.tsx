@@ -1,5 +1,8 @@
+import { motion } from 'framer-motion'
 import { useGamification } from '../hooks/useGamification'
 import { formatMoney } from '../lib/format'
+import { EASE } from '../lib/motion'
+import { useReduceMotion } from '../hooks/useReduceMotion'
 
 // A quiet "Your progress" card for the Dashboard: level, savings streak, and
 // this month's budget. Calm by design — soft tones, no badges flashing.
@@ -28,9 +31,18 @@ function Level({ g }: { g: G }) {
   return (
     <div className="rounded-lg border border-border bg-bg p-4">
       <div className="flex items-center gap-2">
-        <span className="text-2xl leading-none" aria-hidden>
+        {/* Re-keyed by level, so reaching a new tier replays a gentle pop. The
+            scale is a transform, so reduce-motion (via MotionConfig) skips it. */}
+        <motion.span
+          key={level.level}
+          initial={{ scale: 1.3 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.4, ease: EASE }}
+          className="text-2xl leading-none"
+          aria-hidden
+        >
           {level.emoji}
-        </span>
+        </motion.span>
         <div>
           <div className="text-xs text-muted">Level {level.level}</div>
           <div className="text-sm font-semibold">{level.title}</div>
@@ -101,7 +113,11 @@ function Budget({ g }: { g: G }) {
 }
 
 // A thin progress bar. `tone` picks the fill colour; default is the primary.
+// The fill grows to its width on mount and re-animates whenever `pct` changes —
+// a calm "live" cue that your progress moved. Width isn't a transform, so we
+// honour reduce-motion ourselves by collapsing the duration to zero.
 function Bar({ pct, tone }: { pct: number; tone?: 'positive' | 'negative' }) {
+  const reduce = useReduceMotion()
   const fill =
     tone === 'positive'
       ? 'bg-positive'
@@ -110,7 +126,12 @@ function Bar({ pct, tone }: { pct: number; tone?: 'positive' | 'negative' }) {
         : 'bg-primary'
   return (
     <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-border">
-      <div className={`h-full rounded-full ${fill}`} style={{ width: `${pct}%` }} />
+      <motion.div
+        className={`h-full rounded-full ${fill}`}
+        initial={{ width: 0 }}
+        animate={{ width: `${pct}%` }}
+        transition={{ duration: reduce ? 0 : 0.6, ease: EASE }}
+      />
     </div>
   )
 }

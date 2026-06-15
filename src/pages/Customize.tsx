@@ -56,6 +56,28 @@ export function Customize() {
           </span>
         </label>
       </section>
+
+      {/* Phase 10 — motion is on by default, but can be calmed here. */}
+      <section className="mt-8 rounded-card border border-border bg-surface p-6">
+        <h2 className="text-lg font-semibold tracking-tight">Motion</h2>
+        <label className="mt-3 flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            checked={settings.reduceMotion === true}
+            onChange={() =>
+              updateSettings({ reduceMotion: !(settings.reduceMotion === true) })
+            }
+            className="mt-1 h-4 w-4 accent-[var(--primary)]"
+          />
+          <span>
+            <span className="block text-sm font-medium">Reduce motion</span>
+            <span className="block text-xs text-muted">
+              Turn off page transitions, count-ups, and other movement. Your
+              device’s system “reduce motion” setting is always respected too.
+            </span>
+          </span>
+        </label>
+      </section>
     </div>
   )
 }

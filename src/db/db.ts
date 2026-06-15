@@ -60,6 +60,7 @@ export const DEFAULT_SETTINGS: Settings = {
   activeTheme: 'clean',
   notifications: { yearlyThreeMonths: true, yearlyOneMonth: true },
   gamification: true,
+  reduceMotion: false,
 }
 
 // Make sure the single settings row exists, and backfill any fields added in

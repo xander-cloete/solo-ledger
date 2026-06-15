@@ -1,9 +1,12 @@
+import { motion } from 'framer-motion'
 import { NetWorthChart } from '../components/NetWorthChart'
 import { RemindersBanner } from '../components/RemindersBanner'
 import { GamificationPanel } from '../components/GamificationPanel'
+import { CountUp } from '../components/CountUp'
 import { useDashboard } from '../hooks/useDashboard'
 import { useSettings } from '../hooks/useSettings'
 import { formatMoney } from '../lib/format'
+import { staggerContainer, fadeItem } from '../lib/motion'
 import { currentMonthKey, formatMonthLabel } from '../lib/month'
 import type { ReactNode } from 'react'
 
@@ -29,13 +32,22 @@ export function Dashboard() {
           worth and growth chart will appear here.
         </p>
       ) : (
-        <>
+        <motion.div
+          variants={staggerContainer}
+          initial="initial"
+          animate="enter"
+        >
           {/* Hero: net worth */}
-          <section className="mt-6 rounded-card border border-border bg-surface p-5">
+          <motion.section
+            variants={fadeItem}
+            className="mt-6 rounded-card border border-border bg-surface p-5"
+          >
             <div className="text-sm text-muted">Net worth</div>
-            <div className="mt-1 text-4xl font-semibold tracking-tight">
-              {formatMoney(d.netWorth, sym)}
-            </div>
+            <CountUp
+              value={d.netWorth}
+              format={(n) => formatMoney(n, sym)}
+              className="mt-1 block text-4xl font-semibold tracking-tight tabular-nums"
+            />
             <p className="mt-1 text-xs text-muted">
               Liquid balance plus the value of every investment.
             </p>
@@ -56,22 +68,29 @@ export function Dashboard() {
                 all-time growth
               </StatCard>
             </div>
-          </section>
+          </motion.section>
 
           {/* Quiet progress layer (Phase 9) — only when enabled in Customize. */}
-          {settings.gamification !== false && <GamificationPanel />}
+          {settings.gamification !== false && (
+            <motion.div variants={fadeItem}>
+              <GamificationPanel />
+            </motion.div>
+          )}
 
           {/* Growth chart */}
-          <section className="mt-4 rounded-card border border-border bg-surface p-5">
+          <motion.section
+            variants={fadeItem}
+            className="mt-4 rounded-card border border-border bg-surface p-5"
+          >
             <div className="mb-3 flex items-baseline justify-between">
               <h2 className="text-sm font-medium">Net worth over time</h2>
               <span className="text-xs text-muted">last 12 months</span>
             </div>
             <NetWorthChart series={d.series} sym={sym} />
-          </section>
+          </motion.section>
 
           {/* This month */}
-          <section className="mt-4">
+          <motion.section variants={fadeItem} className="mt-4">
             <h2 className="text-sm font-medium text-muted">This month</h2>
             <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
               <StatCard
@@ -92,8 +111,8 @@ export function Dashboard() {
                 income minus expenses
               </StatCard>
             </div>
-          </section>
-        </>
+          </motion.section>
+        </motion.div>
       )}
     </div>
   )

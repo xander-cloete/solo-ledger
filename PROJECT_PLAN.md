@@ -24,8 +24,8 @@
 - [x] **Phase 7 — Reminders / notifications** ✅ (yearly expenses get a heads-up 3 months and 1 month before they're due. Pure rules in `src/lib/reminders.ts` find each yearly expense's next due month and emit a reminder when it's exactly 3 or 1 month(s) out, each gated by its Settings toggle. Shown in an in-app banner at the top of the Dashboard (`RemindersBanner`, session-dismissible) and, best-effort, as browser notifications fired from `Layout` on open — de-duped via localStorage so they don't re-nag, and a no-op without permission. Prefs + an "Enable browser notifications" control live in a Reminders section on Settings (`RemindersSettings`). Reuses the existing `settings.notifications` fields — no new tables.)
 - [x] **Phase 8 — Theming engine (full)** ✅ (a Customization page (`/customize`, new nav item) with a live theme switcher — three launch themes ship as CSS-variable blocks in `index.css`: **Clean** (Japandi, default/light), **Tokyo Night** (Omarchy-inspired dark), and **Terminal** (green-on-black monospace, sharper corners). A data-driven registry in `src/theme/themes.ts` lists each theme + swatch colours so the picker draws previews and adding a theme later is one entry + one CSS block. Picking a theme saves `settings.activeTheme`; `ThemeProvider` writes `data-theme` to `<html>` and the app restyles instantly, falling back to the default if a saved id is unknown. Themes also swap the font and card radius, not just colours. No new tables.)
 - [x] **Phase 9 — Gamification (optional quiet layer)** ✅ (a calm "Your progress" card on the Dashboard with three mechanics, all pure read-derivations that store nothing: a **garden Level** that grows with net worth (🌱 Seedling → 👑 Magnate, with progress to the next tier), a **savings streak** of consecutive completed months you didn't overspend (income − expenses ≥ 0; leading empty months trimmed, the in-progress month excluded), and **budget adherence** for the live month (this month's expenses vs income, on-track/over). Logic in `src/lib/gamification.ts`, wired via `useGamification` which reuses `useDashboard`'s net-worth/this-month figures. It's **opt-out** via a new `settings.gamification` toggle on the Customize page.)
-- [ ] Phase 10 — Animation & live elements polish ← **next**
-- [ ] Phase 11 — Deploy to home server
+- [x] **Phase 10 — Animation & live elements polish** ✅ (minimal, theme-aware **Framer Motion** motion, all presentation-only — no new tables. Shared variants/timings live in `src/lib/motion.ts`. Pages cross-fade: `Layout` swaps `<Outlet />` for `useOutlet()` + `useLocation()` inside `AnimatePresence` (`mode="wait"`). The Dashboard's cards stagger-fade in, and key figures count up smoothly via a `CountUp` component (`animate()` writing to the DOM, not React state, so 60fps doesn't cause 60 renders) — used for the net-worth hero and the rolling-ledger balance. Gamification progress bars grow to their width and the level emoji pops on tier-up. Reduce-motion is honoured from **both** the OS `prefers-reduced-motion` query **and** a new Customize-page "Reduce motion" toggle, combined in the `useReduceMotion` hook and applied app-wide via `MotionConfig reducedMotion`; the new `settings.reduceMotion` field is backfilled by `ensureSettings`.)
+- [ ] Phase 11 — Deploy to home server ← **next**
 
 ---
 
@@ -56,14 +56,14 @@
 | Styling + themes | **Tailwind CSS** + CSS variables | Theme by swapping variables |
 | PWA / offline / updates | **vite-plugin-pwa** | Service worker + install manifest |
 | Charts | **Recharts** (added in Phase 5) | Simple React charts |
-| Animation | **Framer Motion** (Phase 10) | Minimal, tasteful transitions |
+| Animation | **Framer Motion** (added Phase 10) | Minimal, tasteful transitions |
 | Dates | **date-fns** | Month/period maths |
 | Validation | **Zod** | Validate forms + imported backup files |
 
 ## Data model (Dexie tables — `src/db/types.ts` + `src/db/db.ts`)
 
-- **settings** — `currency`, `currencySymbol`, `startingBalance`, `ledgerStartMonth`, `activeTheme`, `notifications`, `gamification`
-  (`ledgerStartMonth` added in Phase 1: the month `startingBalance` is the opening balance for — the ledger's anchor. `gamification` added in Phase 9: opt-out toggle for the progress layer. `ensureSettings` backfills any field missing from an older saved row, so installs from an earlier phase keep working.)
+- **settings** — `currency`, `currencySymbol`, `startingBalance`, `ledgerStartMonth`, `activeTheme`, `notifications`, `gamification`, `reduceMotion`
+  (`ledgerStartMonth` added in Phase 1: the month `startingBalance` is the opening balance for — the ledger's anchor. `gamification` added in Phase 9: opt-out toggle for the progress layer. `reduceMotion` added in Phase 10: opt-in switch to disable animations (OS `prefers-reduced-motion` is also always respected). `ensureSettings` backfills any field missing from an older saved row, so installs from an earlier phase keep working.)
 - **incomeStreams** — `id`, `name`, `defaultAmount`, `active`
 - **incomeEntries** — `id`, `streamId?`, `month`, `amount`, `note?`, `sourceTxnId?`
   (Phase 4: `streamId` is now optional — divest income has no stream and is set with `sourceTxnId`; the ledger sums all entries regardless of stream, and the Income page lists divest income in its own read-only "From investments" section)
