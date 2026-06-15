@@ -42,11 +42,13 @@ so the in-app Export/Import backup is how you keep it safe.
 
 ## Themes
 
-The **Customize** page has a theme switcher with three launch themes — **Clean** (warm Japandi,
-the default), **Tokyo Night** (Omarchy-inspired dark), and **Terminal** (green-on-black
-monospace). Picking one applies instantly across the whole app and is saved on your device.
-Every theme is just a block of CSS variables in `src/index.css` plus an entry in
-`src/theme/themes.ts`, so adding more later is cheap.
+The **Customize** page has a theme switcher with **10 themes**. Four are light — **Clean**
+(warm Japandi, the default), **Catppuccin Latte**, **Solarized Light**, and **Parchment** (a
+sepia, serif, book-like page) — and six are dark — **Tokyo Night**, **Terminal** (green-on-black
+monospace), **Rosé Pine**, **Gruvbox**, **Nord**, and **Dracula**. Picking one applies instantly
+across the whole app and is saved on your device. Themes can swap the font and corner radius too,
+not just colours. Every theme is just a block of CSS variables in `src/index.css` plus an entry in
+`src/theme/themes.ts`, so adding more is cheap.
 
 ## Progress (gamification)
 

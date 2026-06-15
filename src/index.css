@@ -89,6 +89,125 @@
   --radius-card: 0.25rem;
 }
 
+/* "rose-pine" — soft muted rose on deep plum (dark). */
+[data-theme='rose-pine'] {
+  color-scheme: dark;
+  --bg: #191724;
+  --surface: #1f1d2e;
+  --fg: #e0def4;
+  --muted: #6e6a86;
+  --border: #26233a;
+  --primary: #ebbcba; /* rose */
+  --primary-fg: #191724;
+  --positive: #9ccfd8; /* foam */
+  --negative: #eb6f92; /* love */
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius-card: 0.75rem;
+}
+
+/* "gruvbox" — warm retro amber on soft charcoal (dark). */
+[data-theme='gruvbox'] {
+  color-scheme: dark;
+  --bg: #282828;
+  --surface: #32302f;
+  --fg: #ebdbb2;
+  --muted: #928374;
+  --border: #3c3836;
+  --primary: #fabd2f; /* amber */
+  --primary-fg: #282828;
+  --positive: #b8bb26; /* green */
+  --negative: #fb4934; /* red */
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius-card: 0.5rem;
+}
+
+/* "nord" — cool arctic blues (dark). */
+[data-theme='nord'] {
+  color-scheme: dark;
+  --bg: #2e3440;
+  --surface: #3b4252;
+  --fg: #eceff4;
+  --muted: #7b88a1;
+  --border: #434c5e;
+  --primary: #88c0d0; /* frost cyan */
+  --primary-fg: #2e3440;
+  --positive: #a3be8c; /* green */
+  --negative: #bf616a; /* red */
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius-card: 0.75rem;
+}
+
+/* "dracula" — vivid purple on dusk grey (dark). */
+[data-theme='dracula'] {
+  color-scheme: dark;
+  --bg: #282a36;
+  --surface: #343746;
+  --fg: #f8f8f2;
+  --muted: #6272a4;
+  --border: #44475a;
+  --primary: #bd93f9; /* purple */
+  --primary-fg: #282a36;
+  --positive: #50fa7b; /* green */
+  --negative: #ff5555; /* red */
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius-card: 0.75rem;
+}
+
+/* "catppuccin-latte" — soft pastel mauve on warm white (light). */
+[data-theme='catppuccin-latte'] {
+  color-scheme: light;
+  --bg: #eff1f5;
+  --surface: #ffffff;
+  --fg: #4c4f69;
+  --muted: #8c8fa1;
+  --border: #dce0e8;
+  --primary: #8839ef; /* mauve */
+  --primary-fg: #ffffff;
+  --positive: #40a02b; /* green */
+  --negative: #d20f39; /* red */
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius-card: 1rem;
+}
+
+/* "solarized-light" — Ethan Schoonover's warm-paper classic (light). */
+[data-theme='solarized-light'] {
+  color-scheme: light;
+  --bg: #fdf6e3;
+  --surface: #fffbf0;
+  --fg: #586e75;
+  --muted: #93a1a1;
+  --border: #eee8d5;
+  --primary: #268bd2; /* blue */
+  --primary-fg: #fffbf0;
+  --positive: #859900; /* green */
+  --negative: #dc322f; /* red */
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius-card: 0.75rem;
+}
+
+/* "parchment" — sepia book page with a serif face (light). */
+[data-theme='parchment'] {
+  color-scheme: light;
+  --bg: #f4ecd8;
+  --surface: #fbf6e9;
+  --fg: #4a3f35;
+  --muted: #9c8c76;
+  --border: #e3d8c0;
+  --primary: #a0522d; /* sienna */
+  --primary-fg: #fbf6e9;
+  --positive: #6b8e23; /* olive */
+  --negative: #b22222; /* firebrick */
+
+  --font-sans: ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  --radius-card: 0.5rem;
+}
+
 html,
 body,
 #root {

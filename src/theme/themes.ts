@@ -40,6 +40,48 @@ export const THEMES: ThemeDef[] = [
     description: 'Green-on-black monospace, like a classic CRT.',
     swatch: { bg: '#0a0d0a', surface: '#0f140f', primary: '#2ee06a', fg: '#c8f7c8' },
   },
+  {
+    id: 'rose-pine',
+    label: 'Rosé Pine',
+    description: 'Soft muted rose on a deep plum night.',
+    swatch: { bg: '#191724', surface: '#1f1d2e', primary: '#ebbcba', fg: '#e0def4' },
+  },
+  {
+    id: 'gruvbox',
+    label: 'Gruvbox',
+    description: 'Warm retro amber on soft charcoal.',
+    swatch: { bg: '#282828', surface: '#32302f', primary: '#fabd2f', fg: '#ebdbb2' },
+  },
+  {
+    id: 'nord',
+    label: 'Nord',
+    description: 'Cool, calm arctic blues.',
+    swatch: { bg: '#2e3440', surface: '#3b4252', primary: '#88c0d0', fg: '#eceff4' },
+  },
+  {
+    id: 'dracula',
+    label: 'Dracula',
+    description: 'Vivid purple on dusk grey.',
+    swatch: { bg: '#282a36', surface: '#343746', primary: '#bd93f9', fg: '#f8f8f2' },
+  },
+  {
+    id: 'catppuccin-latte',
+    label: 'Catppuccin Latte',
+    description: 'Soft pastel mauve on warm white.',
+    swatch: { bg: '#eff1f5', surface: '#ffffff', primary: '#8839ef', fg: '#4c4f69' },
+  },
+  {
+    id: 'solarized-light',
+    label: 'Solarized Light',
+    description: 'The warm-paper classic, ocean-blue accent.',
+    swatch: { bg: '#fdf6e3', surface: '#fffbf0', primary: '#268bd2', fg: '#586e75' },
+  },
+  {
+    id: 'parchment',
+    label: 'Parchment',
+    description: 'Sepia book page with a serif face.',
+    swatch: { bg: '#f4ecd8', surface: '#fbf6e9', primary: '#a0522d', fg: '#4a3f35' },
+  },
 ]
 
 export const DEFAULT_THEME = 'clean'
