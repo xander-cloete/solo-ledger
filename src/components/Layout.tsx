@@ -4,6 +4,7 @@ import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
 import { useReminderNotifications } from '../hooks/useReminders'
 import { useReduceMotion } from '../hooks/useReduceMotion'
 import { pageVariants } from '../lib/motion'
+import { BrandMark } from './BrandMark'
 
 // Each tab: route path, label, and a small inline icon (kept minimal/tasteful).
 type NavItem = { to: string; label: string; icon: ReactNode }
@@ -124,7 +125,7 @@ export function Layout() {
       {/* Sidebar (desktop) */}
       <aside className="fixed inset-y-0 left-0 hidden w-60 flex-col border-r border-border bg-surface p-4 md:flex">
         <div className="mb-8 flex items-center gap-2 px-2">
-          <img src="/sl-icon.svg" alt="" className="h-8 w-8 rounded-lg" />
+          <BrandMark />
           <span className="font-display text-lg font-semibold tracking-tight">Solo Ledger</span>
         </div>
         <nav className="flex flex-col gap-1">

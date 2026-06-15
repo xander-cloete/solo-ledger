@@ -23,6 +23,12 @@ export interface ThemeDef {
 
 export const THEMES: ThemeDef[] = [
   {
+    id: 'japandi',
+    label: 'Japandi',
+    description: 'Warm oat, washi paper, a hand-brushed ensō. The default.',
+    swatch: { bg: '#e7e1d3', surface: '#f3eee2', primary: '#b06a47', fg: '#2c2922' },
+  },
+  {
     id: 'clean',
     label: 'Clean',
     description: 'Warm, calm Japandi tones — the default.',
@@ -84,7 +90,7 @@ export const THEMES: ThemeDef[] = [
   },
 ]
 
-export const DEFAULT_THEME = 'clean'
+export const DEFAULT_THEME = 'japandi'
 
 // True if `id` is one of our known themes (used to fall back safely if settings
 // ever hold a theme id we no longer ship).

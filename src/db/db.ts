@@ -57,7 +57,7 @@ export const DEFAULT_SETTINGS: Settings = {
   currencySymbol: 'N$',
   startingBalance: 0,
   ledgerStartMonth: currentMonthKey(),
-  activeTheme: 'clean',
+  activeTheme: 'japandi',
   notifications: { yearlyThreeMonths: true, yearlyOneMonth: true },
   gamification: true,
   reduceMotion: false,

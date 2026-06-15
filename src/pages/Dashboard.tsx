@@ -3,6 +3,7 @@ import { NetWorthChart } from '../components/NetWorthChart'
 import { RemindersBanner } from '../components/RemindersBanner'
 import { GamificationPanel } from '../components/GamificationPanel'
 import { CountUp } from '../components/CountUp'
+import { ThemeSignature } from '../components/ThemeSignature'
 import { Eyebrow, hoverLift } from '../components/ui'
 import { useDashboard } from '../hooks/useDashboard'
 import { useSettings } from '../hooks/useSettings'
@@ -64,15 +65,9 @@ export function Dashboard() {
                 'linear-gradient(150deg, color-mix(in srgb, var(--primary) 7%, var(--surface)) 0%, var(--surface) 60%)',
             }}
           >
-            {/* Soft theme-tinted glow, top-right, for depth. */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full opacity-50 blur-3xl"
-              style={{
-                background:
-                  'radial-gradient(circle, color-mix(in srgb, var(--primary) 28%, transparent), transparent 70%)',
-              }}
-            />
+            {/* Per-theme decorative signature (Japandi: a brushed ensō; others:
+                a soft theme-tinted glow). */}
+            <ThemeSignature />
             <div className="relative">
               <Eyebrow>Net worth</Eyebrow>
               <CountUp

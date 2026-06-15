@@ -65,6 +65,29 @@
   --radius-card: 1rem;
 }
 
+/* "japandi" — Japanese × Scandinavian calm (light). The default.
+   Personality: editorial serif over warm oat plaster; a washi-paper grain and a
+   soft "light through shoji" glow live on the body (see the backdrop rules near
+   the bottom), and the Dashboard wears a hand-brushed ensō + a vermilion hanko
+   seal as its signature (see ThemeSignature.tsx / BrandMark.tsx). */
+[data-theme='japandi'] {
+  color-scheme: light;
+  --bg: #e7e1d3; /* warm oat plaster */
+  --surface: #f3eee2; /* warm paper */
+  --fg: #2c2922; /* sumi ink — never pure black */
+  --muted: #8a8273; /* warm stone */
+  --border: #d3cab8;
+  --primary: #b06a47; /* terracotta — the single warm accent */
+  --primary-fg: #f3eee2;
+  --positive: #6f7a56; /* matcha — money in */
+  --negative: #b14e38; /* kaki/persimmon — money out */
+  --seal: #b8402f; /* vermilion — the hanko seal */
+
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --radius-card: 1rem;
+}
+
 /* "tokyo-night" — Omarchy-inspired deep blues and purples (dark).
    Personality: neon-modern — all-grotesque, tight and confident. */
 [data-theme='tokyo-night'] {
@@ -260,6 +283,59 @@ body {
 ::selection {
   background: color-mix(in srgb, var(--primary) 24%, transparent);
 }
+
+/*
+  PER-THEME AMBIENT BACKDROPS
+  ---------------------------
+  Texture/atmosphere lives as background-image *layers* on <body> (not a ::before
+  overlay), so it always sits behind content with no stacking surprises. Each
+  theme paints its own world here.
+*/
+
+/* Japandi: a faint washi-paper fibre grain (SVG noise, multiplied) over the oat,
+   plus a soft "light through a shoji screen" glow from the top-left. */
+[data-theme='japandi'] body {
+  background-color: var(--bg);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E"),
+    radial-gradient(130% 90% at 12% -12%, #f1ebde 0%, rgba(241,235,222,0) 55%);
+  background-blend-mode: multiply, normal;
+  background-repeat: repeat, no-repeat;
+  background-attachment: fixed, fixed;
+}
+
+/*
+  AMBIENT MOTION
+  --------------
+  Slow, looping micro-animations that make a theme feel alive rather than static.
+  Subtle by design; all disabled under prefers-reduced-motion (see below).
+*/
+@keyframes sl-enso-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-7px) rotate(1.3deg); }
+}
+@keyframes sl-seal-glow {
+  0%, 100% { box-shadow: inset 0 0 0 1.5px rgba(243, 238, 226, 0.25), 0 0 0 0 color-mix(in srgb, var(--seal, var(--primary)) 0%, transparent); }
+  50%      { box-shadow: inset 0 0 0 1.5px rgba(243, 238, 226, 0.25), 0 0 16px 1px color-mix(in srgb, var(--seal, var(--primary)) 55%, transparent); }
+}
+@keyframes sl-leaf-sway {
+  0%, 100% { transform: rotate(-6deg); }
+  50%      { transform: rotate(6deg); }
+}
+@keyframes sl-fire-flicker {
+  0%, 100% { transform: scale(1, 1) translateX(0); }
+  25%      { transform: scale(1.07, 0.96) translateX(-0.4px); }
+  50%      { transform: scale(0.96, 1.06) translateX(0.4px); }
+  75%      { transform: scale(1.04, 0.99) translateX(-0.2px); }
+}
+
+/* Living gamification glyphs (the level emoji sways like a plant in a breeze;
+   the streak flame flickers). transform-origin keeps them pivoting from a
+   natural base. */
+.glyph-sway { display: inline-block; transform-origin: 50% 88%; animation: sl-leaf-sway 4.6s ease-in-out infinite; }
+.glyph-flicker { display: inline-block; transform-origin: 50% 90%; animation: sl-fire-flicker 1.4s ease-in-out infinite; }
+.glyph-seal { animation: sl-seal-glow 3.6s ease-in-out infinite; }
+.glyph-enso { animation: sl-enso-float 13s ease-in-out infinite; }
 
 /* Respect reduce-motion at the CSS layer too (belt-and-suspenders alongside the
    JS MotionConfig): no element should animate or smooth-scroll if it's asked

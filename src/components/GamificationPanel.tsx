@@ -40,7 +40,7 @@ function Level({ g }: { g: G }) {
           initial={{ scale: 1.3 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.4, ease: EASE }}
-          className="text-2xl leading-none"
+          className="glyph-sway text-2xl leading-none"
           aria-hidden
         >
           {level.emoji}
@@ -67,7 +67,10 @@ function Streak({ g }: { g: G }) {
   return (
     <div className="rounded-lg border border-border bg-bg p-4">
       <div className="flex items-baseline gap-2">
-        <span className="text-2xl leading-none" aria-hidden>
+        <span
+          className={`text-2xl leading-none ${has ? 'glyph-flicker' : ''}`}
+          aria-hidden
+        >
           {has ? '🔥' : '🌙'}
         </span>
         <span className="text-2xl font-semibold tabular-nums">{g.streak}</span>
