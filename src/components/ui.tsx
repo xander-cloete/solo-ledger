@@ -62,9 +62,57 @@ export function PageHeader({
         <h1 className="font-display text-3xl font-semibold tracking-tight">
           {title}
         </h1>
+        {/* A short hand-brushed stroke under every title — the ensō's cousin,
+            carried across all pages. Uses the theme accent, so it reads as ink,
+            neon, or gold depending on the world. */}
+        <BrushStroke className="mt-2.5" />
       </div>
       {right && <div className="shrink-0">{right}</div>}
     </header>
+  )
+}
+
+// A short, slightly irregular brushed underline in the theme accent colour.
+export function BrushStroke({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      className={`block ${className}`}
+      width="68"
+      height="9"
+      viewBox="0 0 68 9"
+      fill="none"
+    >
+      <path
+        d="M2 5.2C14 2.1 31 6.6 44 3.4 52 1.5 60 4.2 66 3"
+        stroke="var(--primary)"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        opacity="0.85"
+      />
+    </svg>
+  )
+}
+
+// A full-width, hand-drawn tapered ink rule for separating sections — softer and
+// more characterful than a flat border. Sits in the theme's hairline colour.
+export function InkRule({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      className={`block w-full text-border ${className}`}
+      height="10"
+      viewBox="0 0 800 10"
+      preserveAspectRatio="none"
+    >
+      <path
+        d="M2 5C200 1.5 600 1.5 798 5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
   )
 }
 

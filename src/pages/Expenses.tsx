@@ -77,7 +77,7 @@ export function Expenses() {
             {applicable.map(({ expense, amount }) => (
               <div
                 key={expense.id}
-                className="flex items-center gap-3 px-4 py-3"
+                className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-border/30"
               >
                 <div className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-medium">

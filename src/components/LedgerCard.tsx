@@ -1,6 +1,7 @@
 import { formatMoney } from '../lib/format'
 import { addMonthsKey, formatMonthLabel } from '../lib/month'
 import { CountUp } from './CountUp'
+import { Eyebrow, InkRule } from './ui'
 import type { LedgerSummary } from '../hooks/useLedger'
 import type { MonthKey } from '../db/types'
 
@@ -15,7 +16,8 @@ export function LedgerCard({
 }) {
   const sym = ledger.currencySymbol
   return (
-    <div className="mt-4 rounded-card border border-border bg-surface p-5">
+    <div className="mt-4 rounded-card border border-border bg-surface p-5 sm:p-6">
+      <Eyebrow className="mb-3">Rolling balance</Eyebrow>
       <div className="space-y-1.5 text-sm">
         <Line label="Carried in" value={formatMoney(ledger.carryIn, sym)} />
         <Line
@@ -29,14 +31,15 @@ export function LedgerCard({
           tone="negative"
         />
       </div>
-      <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-        <span className="font-medium">
-          Balance carried into {formatMonthLabel(addMonthsKey(month, 1))}
+      <InkRule className="my-4" />
+      <div className="flex items-end justify-between gap-3">
+        <span className="text-sm font-medium text-muted">
+          Carried into {formatMonthLabel(addMonthsKey(month, 1))}
         </span>
         <CountUp
           value={ledger.carryOut}
           format={(n) => formatMoney(n, sym)}
-          className={`text-lg font-semibold tabular-nums ${
+          className={`font-display text-2xl font-semibold tabular-nums ${
             ledger.carryOut < 0 ? 'text-negative' : 'text-fg'
           }`}
         />

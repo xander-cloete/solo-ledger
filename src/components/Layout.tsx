@@ -145,8 +145,10 @@ export function Layout() {
 
       {/* Main content. Padding leaves room for the sidebar (desktop) and the
           bottom nav (mobile). */}
-      <main className="mx-auto max-w-3xl px-4 pb-24 pt-6 md:ml-60 md:pb-10">
-        <AnimatedOutlet />
+      <main className="px-5 pb-24 pt-7 md:ml-60 md:px-10 md:pb-12">
+        <div className="mx-auto w-full max-w-5xl">
+          <AnimatedOutlet />
+        </div>
       </main>
 
       {/* Bottom nav (mobile) */}

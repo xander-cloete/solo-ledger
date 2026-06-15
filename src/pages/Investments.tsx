@@ -77,7 +77,7 @@ export function Investments() {
           <SectionLabel>All portfolios</SectionLabel>
           <div className="mt-2 divide-y divide-border rounded-card border border-border bg-surface">
             {portfolios.map((p) => (
-              <div key={p.id} className="flex items-center gap-3 px-4 py-3">
+              <div key={p.id} className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-border/30">
                 <span className="min-w-0 flex-1 truncate text-sm font-medium">
                   {p.name}
                 </span>
