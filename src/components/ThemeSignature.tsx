@@ -129,8 +129,14 @@ function Construction() {
       viewBox="0 0 200 200"
       className="pointer-events-none absolute -right-12 -top-12 h-60 w-60"
     >
-      {/* dashed construction crosshair */}
-      <g stroke="var(--graphite)" strokeOpacity="0.35" strokeWidth="1" strokeDasharray="4 4">
+      {/* dashed construction crosshair — slowly "surveys" via a draw-crawl */}
+      <g
+        stroke="var(--graphite)"
+        strokeOpacity="0.35"
+        strokeWidth="1"
+        strokeDasharray="4 4"
+        className={reduce ? '' : 'glyph-draw'}
+      >
         <line x1="100" y1="34" x2="100" y2="166" />
         <line x1="34" y1="100" x2="166" y2="100" />
       </g>

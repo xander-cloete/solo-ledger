@@ -21,7 +21,7 @@ export function Eyebrow({
 }) {
   return (
     <span
-      className={`block text-[11px] font-medium uppercase tracking-[0.18em] text-muted ${className}`}
+      className={`eyebrow block text-[11px] font-medium uppercase tracking-[0.18em] text-muted ${className}`}
     >
       {children}
     </span>
@@ -38,7 +38,7 @@ export function SectionLabel({
 }) {
   return (
     <h2
-      className={`text-[11px] font-medium uppercase tracking-[0.18em] text-muted ${className}`}
+      className={`eyebrow text-[11px] font-medium uppercase tracking-[0.18em] text-muted ${className}`}
     >
       {children}
     </h2>

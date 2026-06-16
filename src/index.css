@@ -615,6 +615,10 @@ body {
 @keyframes sl-bauhaus-rotate {
   to { transform: rotate(360deg); }
 }
+/* Sketch: dashed construction lines crawl slowly, like a survey being drawn. */
+@keyframes sl-draw {
+  to { stroke-dashoffset: -16; }
+}
 /* Art Deco: a slow gilt shimmer for the sunburst, rule diamonds and emblem. */
 @keyframes sl-deco-shimmer {
   0%, 100% { opacity: 0.55; }
@@ -718,6 +722,99 @@ body {
   font-weight: 700;
 }
 
+/*
+  DEEPER PER-THEME UI
+  -------------------
+  The world doesn't stop at the masthead. Each theme also marks its repeating
+  section labels (.eyebrow::before), accents its cards (.rounded-card), and gives
+  its primary action buttons (.bg-primary.text-primary-fg) and form controls a
+  little of its own character. Kept refined — a signature, not a costume.
+*/
+
+/* — Section-label markers — a small glyph before every uppercase micro-label. */
+.eyebrow::before { margin-inline-end: 0.4em; opacity: 0.9; }
+[data-theme='clean'] .eyebrow::before { content: '·'; color: var(--primary); }
+[data-theme='catppuccin-latte'] .eyebrow::before { content: '·'; color: var(--primary); }
+[data-theme='japandi'] .eyebrow::before { content: '・'; color: var(--primary); }
+[data-theme='cyberpunk'] .eyebrow::before { content: '▍'; color: var(--neon); }
+[data-theme='tokyo-night'] .eyebrow::before { content: '•'; color: var(--accent); }
+[data-theme='terminal'] .eyebrow::before { content: '#'; color: var(--primary); }
+[data-theme='manga'] .eyebrow::before { content: '»'; color: var(--primary); }
+[data-theme='art-deco'] .eyebrow::before { content: '◆'; color: var(--gold); font-size: 0.8em; }
+[data-theme='neoclassical'] .eyebrow::before { content: '•'; color: var(--gold); }
+[data-theme='pixel'] .eyebrow::before { content: '▸'; color: var(--cyan); }
+[data-theme='sketch'] .eyebrow::before { content: '–'; color: var(--graphite); }
+[data-theme='bauhaus'] .eyebrow::before { content: '■'; color: var(--primary); font-size: 0.7em; }
+[data-theme='mixed-media'] .eyebrow::before { content: '✱'; color: var(--primary); }
+[data-theme='utilitarian'] .eyebrow::before { content: '▪'; color: var(--primary); }
+
+/* — Card accents — a refined per-world signature on every surface card. */
+[data-theme='cyberpunk'] .rounded-card {
+  box-shadow: inset 2px 0 0 color-mix(in srgb, var(--neon) 70%, transparent), 0 0 0 1px color-mix(in srgb, var(--neon) 7%, transparent);
+}
+[data-theme='manga'] .rounded-card {
+  border-color: color-mix(in srgb, var(--ink) 65%, transparent);
+  box-shadow: 3px 3px 0 -1px color-mix(in srgb, var(--ink) 45%, transparent);
+}
+[data-theme='art-deco'] .rounded-card {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 26%, transparent);
+}
+[data-theme='neoclassical'] .rounded-card {
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--gold) 38%, transparent);
+}
+[data-theme='pixel'] .rounded-card {
+  box-shadow: 3px 3px 0 0 color-mix(in srgb, var(--primary) 24%, transparent);
+}
+[data-theme='sketch'] .rounded-card {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--graphite) 38%, transparent);
+}
+[data-theme='bauhaus'] .rounded-card {
+  box-shadow: inset 0 3px 0 var(--primary);
+}
+[data-theme='mixed-media'] .rounded-card {
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.08);
+}
+[data-theme='utilitarian'] .rounded-card {
+  border-color: color-mix(in srgb, var(--fg) 22%, transparent);
+}
+[data-theme='terminal'] .rounded-card {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary) 15%, transparent);
+}
+[data-theme='tokyo-night'] .rounded-card {
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* — Primary action buttons (and the active nav pill share the combo) — */
+[data-theme='cyberpunk'] .bg-primary.text-primary-fg {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--neon) 45%, transparent);
+}
+[data-theme='pixel'] .bg-primary.text-primary-fg {
+  border-radius: 0;
+  box-shadow: 3px 3px 0 0 var(--cyan);
+}
+[data-theme='manga'] .bg-primary.text-primary-fg {
+  box-shadow: 2px 2px 0 0 var(--ink);
+}
+[data-theme='art-deco'] .bg-primary.text-primary-fg {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 55%, transparent);
+}
+[data-theme='utilitarian'] .bg-primary.text-primary-fg {
+  border-radius: 0;
+}
+
+/* — Form controls — a touch of world on inputs/selects (boxy ones go sharp). */
+[data-theme='pixel'] input:not([type='checkbox']):not([type='radio']),
+[data-theme='pixel'] select,
+[data-theme='utilitarian'] input:not([type='checkbox']):not([type='radio']),
+[data-theme='utilitarian'] select {
+  border-radius: 0;
+}
+[data-theme='sketch'] input:not([type='checkbox']):not([type='radio']),
+[data-theme='sketch'] select {
+  border-style: dashed;
+}
+
 /* Terminal: the heading reads like a typed command — a green `>` prompt prefix, a
    blinking block cursor after it, and a soft phosphor CRT bloom on the text. */
 [data-theme='terminal'] .page-title {
@@ -759,6 +856,7 @@ body {
 .glyph-pixel-bob { animation: sl-pixel-bob 1.8s steps(1, end) infinite; }
 .glyph-pixel-blink { animation: sl-pixel-blink 1.4s steps(1, end) infinite; }
 .glyph-bauhaus-spin { transform-box: fill-box; transform-origin: center; animation: sl-bauhaus-rotate 26s linear infinite; }
+.glyph-draw { animation: sl-draw 7s linear infinite; }
 .glyph-manga-pop { display: inline-grid; animation: sl-manga-pop 5s ease-in-out infinite; }
 .glyph-deco-shimmer { animation: sl-deco-shimmer 5s ease-in-out infinite; }
 
