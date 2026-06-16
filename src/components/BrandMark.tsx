@@ -22,5 +22,184 @@ export function BrandMark() {
     )
   }
 
+  // Cyberpunk: a neon ¥ sign — cyan glass on a dark panel with a magenta
+  // chromatic edge, buzzing in its glow halo (the buzz is dropped for
+  // reduce-motion). ¥ keeps the noir-money read; the ring border is the tube.
+  if (activeTheme === 'cyberpunk') {
+    return (
+      <span
+        aria-hidden
+        className={`grid h-8 w-8 place-items-center rounded-md font-display text-lg font-bold ${reduce ? '' : 'glyph-neon-seal'}`}
+        style={{
+          color: 'var(--neon)',
+          background: 'var(--surface)',
+          boxShadow: 'inset 0 0 0 1px color-mix(in srgb, var(--neon) 55%, transparent)',
+        }}
+      >
+        ¥
+      </span>
+    )
+  }
+
+  // Manga: a crimson speech-pop with a white ¥, inked outline, tilted like a
+  // sticker — it gives a tiny "pop" beat on a loop (dropped for reduce-motion).
+  if (activeTheme === 'manga') {
+    return (
+      <span
+        aria-hidden
+        className={`grid h-8 w-8 -rotate-6 place-items-center rounded-lg font-display text-lg font-extrabold italic ${reduce ? '' : 'glyph-manga-pop'}`}
+        style={{
+          background: 'var(--primary)',
+          color: '#fff5ec',
+          boxShadow: 'inset 0 0 0 2px var(--ink)',
+        }}
+      >
+        ¥
+      </span>
+    )
+  }
+
+  // Art Deco: a stepped gilt emblem — octagon-clipped panel, gold ¥, thin gold
+  // inner border. Kept static so the mark always reads; the living gilt lives in
+  // the Dashboard sunburst and the heading rule instead.
+  if (activeTheme === 'art-deco') {
+    return (
+      <span
+        aria-hidden
+        className="grid h-8 w-8 place-items-center font-display text-lg font-semibold"
+        style={{
+          color: 'var(--gold)',
+          background: 'var(--surface)',
+          clipPath:
+            'polygon(28% 0, 72% 0, 100% 28%, 100% 72%, 72% 100%, 28% 100%, 0 72%, 0 28%)',
+          boxShadow: 'inset 0 0 0 1.5px var(--primary)',
+        }}
+      >
+        ¥
+      </span>
+    )
+  }
+
+  // Neoclassical: a gilt medallion — a gold ¥ ringed in a thin gold band on marble.
+  if (activeTheme === 'neoclassical') {
+    return (
+      <span
+        aria-hidden
+        className="grid h-8 w-8 place-items-center rounded-full font-display text-base font-semibold"
+        style={{
+          color: 'var(--gold)',
+          background: 'var(--surface)',
+          boxShadow: 'inset 0 0 0 1.5px var(--primary)',
+        }}
+      >
+        ¥
+      </span>
+    )
+  }
+
+  // Pixel: a pixel ¥ coin — magenta block with a hard cyan pixel drop, no rounding.
+  if (activeTheme === 'pixel') {
+    return (
+      <span
+        aria-hidden
+        className="grid h-8 w-8 place-items-center font-display text-base font-bold"
+        style={{
+          color: 'var(--primary-fg)',
+          background: 'var(--primary)',
+          boxShadow: '3px 3px 0 0 var(--cyan)',
+          borderRadius: 0,
+        }}
+      >
+        ¥
+      </span>
+    )
+  }
+
+  // Sketch: a hand-drawn badge — a graphite ¥ in a wobbly pencilled box (irregular
+  // corner radii read as drawn-by-hand), tilted a touch.
+  if (activeTheme === 'sketch') {
+    return (
+      <span
+        aria-hidden
+        className="grid h-8 w-8 -rotate-2 place-items-center font-display text-base font-semibold"
+        style={{
+          color: 'var(--graphite)',
+          background: 'var(--surface)',
+          boxShadow: 'inset 0 0 0 1.5px var(--graphite)',
+          borderRadius: '0.4rem 0.55rem 0.38rem 0.5rem',
+        }}
+      >
+        ¥
+      </span>
+    )
+  }
+
+  // Bauhaus: a red square holding the ¥, with a yellow triangle corner and a blue dot.
+  if (activeTheme === 'bauhaus') {
+    return (
+      <span
+        aria-hidden
+        className="relative grid h-8 w-8 place-items-center overflow-hidden font-display text-base font-extrabold"
+        style={{ color: 'var(--primary-fg)', background: 'var(--primary)', borderRadius: '0.15rem' }}
+      >
+        <span
+          aria-hidden
+          className="absolute right-0 top-0"
+          style={{ width: 0, height: 0, borderTop: '9px solid var(--yellow)', borderLeft: '9px solid transparent' }}
+        />
+        <span
+          aria-hidden
+          className="absolute bottom-1 left-1 h-2 w-2 rounded-full"
+          style={{ background: 'var(--blue)' }}
+        />
+        ¥
+      </span>
+    )
+  }
+
+  // Mixed media: a taped paper tag — a ¥ stamped on a cream scrap with a washi-tape
+  // strip across the top, tilted like it was stuck on.
+  if (activeTheme === 'mixed-media') {
+    return (
+      <span
+        aria-hidden
+        className="relative grid h-8 w-8 -rotate-6 place-items-center font-display text-base font-bold"
+        style={{
+          color: 'var(--primary)',
+          background: 'var(--surface)',
+          boxShadow: 'inset 0 0 0 1px var(--border), 1px 2px 3px rgba(0, 0, 0, 0.15)',
+          borderRadius: '0.1rem',
+        }}
+      >
+        <span
+          aria-hidden
+          className="absolute -top-1 left-1 h-2 w-6 -rotate-12"
+          style={{ background: 'var(--tape)' }}
+        />
+        ¥
+      </span>
+    )
+  }
+
+  // Utilitarian: a stamped label box — a ¥ in a sharp inked frame with one signal-
+  // orange corner tick. Zero rounding.
+  if (activeTheme === 'utilitarian') {
+    return (
+      <span
+        aria-hidden
+        className="relative grid h-8 w-8 place-items-center font-display text-base font-bold"
+        style={{
+          color: 'var(--fg)',
+          background: 'var(--surface)',
+          boxShadow: 'inset 0 0 0 1.5px var(--fg)',
+          borderRadius: 0,
+        }}
+      >
+        <span aria-hidden className="absolute right-0 top-0 h-1.5 w-1.5" style={{ background: 'var(--primary)' }} />
+        ¥
+      </span>
+    )
+  }
+
   return <img src="/sl-icon.svg" alt="" className="h-8 w-8 rounded-lg" />
 }

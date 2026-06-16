@@ -11,8 +11,8 @@
   palette. Each one also picks its own type pairing —
     --font-sans     the body / UI face
     --font-display  the large, expressive face for headlines and hero numbers
-  — plus its corner radius. So Terminal stays mono and sharp, Parchment is a
-  serif book page, Clean is airy editorial, etc. Two self-hosted variable fonts
+  — plus its corner radius. So Terminal & Pixel stay mono and sharp, Neoclassical
+  is an engraved serif, Clean is airy editorial, etc. Two self-hosted variable fonts
   do most of the work: "Fraunces Variable" (warm editorial serif) and "Hanken
   Grotesk Variable" (clean modern grotesque), with system mono/serif as accents.
 
@@ -88,6 +88,83 @@
   --radius-card: 1rem;
 }
 
+/* "cyberpunk" — rain-slick neon noir (dark). A finished concept world.
+   Personality: a midnight street drenched in sign-light. Cool off-white on near-
+   black blue, electric-cyan as the one true accent, hot-magenta as its shadow.
+   Mono display face for terminal-noir teeth + tight corners. The body wears CRT
+   scanlines, a faint street grid and pooled neon glows (see the backdrop rules);
+   the Dashboard wears a flickering, chromatically-split neon sign and the app
+   mark is a buzzing neon ¥ (see ThemeSignature.tsx / BrandMark.tsx). */
+[data-theme='cyberpunk'] {
+  color-scheme: dark;
+  --bg: #0a0a12; /* wet asphalt at midnight */
+  --surface: #13131f; /* a darker panel, faintly violet */
+  --fg: #e9e7ff; /* cool sign-lit white */
+  --muted: #6f6f93; /* fog grey */
+  --border: #242440;
+  --primary: #2de2ff; /* electric cyan — the dominant sign */
+  --primary-fg: #06060d;
+  --positive: #34f5a3; /* neon mint — money in */
+  --negative: #ff3d7f; /* hot magenta-red — money out */
+  --neon: #2de2ff; /* cyan tube */
+  --neon-2: #ff2bd6; /* magenta tube (the chromatic shadow) */
+
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: ui-monospace, 'JetBrains Mono', 'Fira Code', 'Cascadia Code',
+    'Courier New', monospace;
+  --radius-card: 0.375rem;
+}
+
+/* "manga" — a cozy-retro anime panel (dark). A finished concept world.
+   Personality: a dim warm room lit by a CRT — warm cream type on deep umber, a
+   red-turtleneck accent and teal/pink playful pops, drawn from the gruvu "girl at
+   the computer" wallpaper. The body wears a warm screentone + lamp-glow vignette;
+   the Dashboard hero is framed like a black-keyline manga panel; radiating focus-
+   lines and kira-kira sparkles sit in it; the app mark is a red speech-pop; headings
+   keep the hard offset-red "print" shadow + a colour speed-line rule. Boxy corners. */
+[data-theme='manga'] {
+  color-scheme: dark;
+  --bg: #201912; /* dim warm room */
+  --surface: #2a2118; /* warm wood panel */
+  --fg: #ece0c8; /* warm cream */
+  --muted: #9c8a72; /* warm taupe */
+  --border: #3a2e22; /* warm brown hairline */
+  --primary: #e05a4f; /* the red turtleneck — lead accent */
+  --primary-fg: #201912;
+  --positive: #8bb06a; /* soft leaf green — money in */
+  --negative: #e05a4f; /* red — money out */
+  --ink: #120d09; /* near-black warm — the manga keyline */
+  --accent: #6fae9c; /* teal (the books) — sparkles + glints */
+  --accent-2: #d98aa0; /* dusty sakura pink */
+
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 0.2rem;
+}
+
+/* "art-deco" — gold on midnight ink (dark). A finished concept world.
+   Personality: 1920s geometric luxury — a high-contrast serif in gilt over deep
+   ink, fine gold rules and sunburst fans. The body wears a faint gold diamond
+   lattice + a top sunburst glow; the Dashboard wears a radiating gold fan; the app
+   mark is a stepped gilt emblem; headings are uppercase gold with a deco divider. */
+[data-theme='art-deco'] {
+  color-scheme: dark;
+  --bg: #10141a; /* deep midnight ink */
+  --surface: #171d26; /* panel, a touch lifted */
+  --fg: #efe6d0; /* warm cream */
+  --muted: #9a8f78; /* aged gilt-grey */
+  --border: #2c2a22; /* dark gold-brown hairline */
+  --primary: #c9a44c; /* gold */
+  --primary-fg: #11151b;
+  --positive: #5fa37a; /* emerald — money in */
+  --negative: #b5604f; /* burnt terracotta — money out */
+  --gold: #d8b65e; /* brighter gilt for highlights */
+
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --radius-card: 0.2rem;
+}
+
 /* "tokyo-night" — Omarchy-inspired deep blues and purples (dark).
    Personality: neon-modern — all-grotesque, tight and confident. */
 [data-theme='tokyo-night'] {
@@ -101,6 +178,8 @@
   --primary-fg: #1a1b26;
   --positive: #9ece6a; /* green */
   --negative: #f7768e; /* red */
+  --accent: #bb9af7; /* violet — the skyline gradient's far end */
+  --accent-2: #e0af68; /* warm window-light */
 
   --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
@@ -128,82 +207,6 @@
   --radius-card: 0.25rem;
 }
 
-/* "rose-pine" — soft muted rose on deep plum (dark).
-   Personality: romantic editorial — Fraunces serif display. */
-[data-theme='rose-pine'] {
-  color-scheme: dark;
-  --bg: #191724;
-  --surface: #1f1d2e;
-  --fg: #e0def4;
-  --muted: #6e6a86;
-  --border: #26233a;
-  --primary: #ebbcba; /* rose */
-  --primary-fg: #191724;
-  --positive: #9ccfd8; /* foam */
-  --negative: #eb6f92; /* love */
-
-  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
-  --radius-card: 0.75rem;
-}
-
-/* "gruvbox" — warm retro amber on soft charcoal (dark).
-   Personality: retro-warm — Fraunces serif over a soft grotesque. */
-[data-theme='gruvbox'] {
-  color-scheme: dark;
-  --bg: #282828;
-  --surface: #32302f;
-  --fg: #ebdbb2;
-  --muted: #928374;
-  --border: #3c3836;
-  --primary: #fabd2f; /* amber */
-  --primary-fg: #282828;
-  --positive: #b8bb26; /* green */
-  --negative: #fb4934; /* red */
-
-  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
-  --radius-card: 0.5rem;
-}
-
-/* "nord" — cool arctic blues (dark).
-   Personality: Scandinavian-clean — all-grotesque, generous. */
-[data-theme='nord'] {
-  color-scheme: dark;
-  --bg: #2e3440;
-  --surface: #3b4252;
-  --fg: #eceff4;
-  --muted: #7b88a1;
-  --border: #434c5e;
-  --primary: #88c0d0; /* frost cyan */
-  --primary-fg: #2e3440;
-  --positive: #a3be8c; /* green */
-  --negative: #bf616a; /* red */
-
-  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
-  --radius-card: 0.75rem;
-}
-
-/* "dracula" — vivid purple on dusk grey (dark).
-   Personality: vivid-modern — all-grotesque. */
-[data-theme='dracula'] {
-  color-scheme: dark;
-  --bg: #282a36;
-  --surface: #343746;
-  --fg: #f8f8f2;
-  --muted: #6272a4;
-  --border: #44475a;
-  --primary: #bd93f9; /* purple */
-  --primary-fg: #282a36;
-  --positive: #50fa7b; /* green */
-  --negative: #ff5555; /* red */
-
-  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
-  --radius-card: 0.75rem;
-}
-
 /* "catppuccin-latte" — soft pastel mauve on warm white (light).
    Personality: soft editorial — Fraunces serif display, rounded. */
 [data-theme='catppuccin-latte'] {
@@ -223,42 +226,141 @@
   --radius-card: 1rem;
 }
 
-/* "solarized-light" — Ethan Schoonover's warm-paper classic (light).
-   Personality: warm editorial — Fraunces serif display. */
-[data-theme='solarized-light'] {
+/* "neoclassical" — gold on marble (light). A concept world.
+   Personality: a museum gallery — engraved charcoal serif over ivory marble, gilt
+   laurel + a Greek-key meander. Body wears soft marble veining; Dashboard wears a
+   gold laurel wreath; the mark is a gilt medallion. */
+[data-theme='neoclassical'] {
   color-scheme: light;
-  --bg: #fdf6e3;
-  --surface: #fffbf0;
-  --fg: #586e75;
-  --muted: #93a1a1;
-  --border: #eee8d5;
-  --primary: #268bd2; /* blue */
-  --primary-fg: #fffbf0;
-  --positive: #859900; /* green */
-  --negative: #dc322f; /* red */
+  --bg: #ece7dd; /* warm marble */
+  --surface: #f7f3ea; /* pale marble panel */
+  --fg: #2b2823; /* engraved charcoal-bronze */
+  --muted: #8c8475; /* stone grey */
+  --border: #d8cfbd;
+  --primary: #9a7b3f; /* antique gold */
+  --primary-fg: #f7f3ea;
+  --positive: #4f6f52; /* laurel green */
+  --negative: #9e4a3a; /* oxblood */
+  --gold: #c2a35a; /* bright gilt */
+  --jewel: #2e5a8f; /* sapphire — a rare jewel accent */
 
   --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
-  --radius-card: 0.75rem;
+  --radius-card: 0.5rem;
 }
 
-/* "parchment" — sepia book page (light).
-   Personality: full editorial book — Fraunces serif for body *and* display. */
-[data-theme='parchment'] {
-  color-scheme: light;
-  --bg: #f4ecd8;
-  --surface: #fbf6e9;
-  --fg: #4a3f35;
-  --muted: #9c8c76;
-  --border: #e3d8c0;
-  --primary: #a0522d; /* sienna */
-  --primary-fg: #fbf6e9;
-  --positive: #6b8e23; /* olive */
-  --negative: #b22222; /* firebrick */
+/* "pixel" — PC-98 Japanese pixel art (dark). A concept world.
+   Personality: a 16-colour dusk — magenta + cyan over deep indigo, dithering and
+   blocky everything. Body wears a checkerboard dither; Dashboard wears a pixel
+   torii; the mark is a pixel ¥ coin. Mono face, zero radius. */
+[data-theme='pixel'] {
+  color-scheme: dark;
+  --bg: #1a1730; /* deep indigo dusk */
+  --surface: #241f3e; /* violet panel */
+  --fg: #e8e6f5; /* pale */
+  --muted: #8a85b0;
+  --border: #38325c;
+  --primary: #ff5ca8; /* PC-98 magenta-pink */
+  --primary-fg: #1a1730;
+  --positive: #5ad6c0; /* cyan-teal — money in */
+  --negative: #ff6b6b;
+  --cyan: #57e0ff; /* electric cyan accent */
 
-  --font-sans: 'Fraunces Variable', ui-serif, Georgia, Cambria, serif;
-  --font-display: 'Fraunces Variable', ui-serif, Georgia, Cambria, serif;
-  --radius-card: 0.5rem;
+  --font-sans: ui-monospace, 'JetBrains Mono', 'Fira Code', 'Cascadia Code',
+    'Courier New', monospace;
+  --font-display: ui-monospace, 'JetBrains Mono', 'Fira Code', 'Cascadia Code',
+    'Courier New', monospace;
+  --radius-card: 0;
+}
+
+/* "sketch" — a conceptual pencil sketch (light). A concept world.
+   Personality: graphite on graph paper — construction lines, a single red pen for
+   annotation. Body wears an engineering grid; Dashboard wears a roughed-in circle
+   with dimension marks; the mark is a hand-drawn badge. */
+[data-theme='sketch'] {
+  color-scheme: light;
+  --bg: #f6f4ee; /* sketch paper */
+  --surface: #fcfaf4; /* clean leaf */
+  --fg: #3a3a3a; /* graphite */
+  --muted: #9a988f;
+  --border: #d8d4c8;
+  --primary: #d8483b; /* red pen — annotation/correction */
+  --primary-fg: #fcfaf4;
+  --positive: #3f7d5a;
+  --negative: #d8483b;
+  --graphite: #4a4a4a; /* the pencil line */
+  --grid: #c7d6e0; /* faint blue engineering grid */
+
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 0.4rem;
+}
+
+/* "bauhaus" — primaries, geometry, function (light). A concept world.
+   Personality: red/yellow/blue + black on off-white, the circle/triangle/square
+   trio, lowercase geometric sans. Body wears big faint primary shapes; Dashboard
+   wears the composed trio; the mark is a geometric badge. */
+[data-theme='bauhaus'] {
+  color-scheme: light;
+  --bg: #f0ece3; /* off-white */
+  --surface: #faf7f0;
+  --fg: #1a1a1a; /* near-black */
+  --muted: #7a766e;
+  --border: #ddd8cc;
+  --primary: #d62828; /* bauhaus red (the square) */
+  --primary-fg: #faf7f0;
+  --positive: #2a7d4f;
+  --negative: #d62828;
+  --blue: #2b50c8; /* bauhaus blue (the circle) */
+  --yellow: #f4c20d; /* bauhaus yellow (the triangle) */
+
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 0.25rem;
+}
+
+/* "mixed-media" — collage / scrapbook (light, warm). A concept world.
+   Personality: torn kraft paper, washi tape, rubber stamps and layered scraps; a
+   serif headline with a bright accent. Body wears kraft grain + newsprint columns;
+   Dashboard wears a taped collage cluster; the mark is a stamped paper tag. */
+[data-theme='mixed-media'] {
+  color-scheme: light;
+  --bg: #e9e3d6; /* kraft paper */
+  --surface: #f4efe3; /* a lighter scrap */
+  --fg: #2a2622; /* ink */
+  --muted: #8c8473;
+  --border: #cfc6b2;
+  --primary: #e2562f; /* bright collage vermilion */
+  --primary-fg: #f4efe3;
+  --positive: #4f7d4a;
+  --negative: #c0432a;
+  --accent: #2f6f8f; /* teal scrap */
+  --tape: rgba(226, 199, 120, 0.55); /* translucent washi tape */
+
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --radius-card: 0.3rem;
+}
+
+/* "utilitarian" — Swiss / industrial function (light). A concept world.
+   Personality: concrete grey + ink + one signal-orange accent, grids, crop marks,
+   spec labels, no ornament. Body wears a technical grid + crop marks; Dashboard
+   wears a registration target; the mark is a stamped label box. Zero radius. */
+[data-theme='utilitarian'] {
+  color-scheme: light;
+  --bg: #e4e4e1; /* concrete */
+  --surface: #f2f2ef;
+  --fg: #1c1c1a; /* ink */
+  --muted: #82827c;
+  --border: #c4c1ba;
+  --primary: #ff6a00; /* signal orange — the only accent */
+  --primary-fg: #f2f2ef;
+  --positive: #2f7d4f;
+  --negative: #d23b2a;
+
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 0;
 }
 
 html,
@@ -304,6 +406,134 @@ body {
   background-attachment: fixed, fixed;
 }
 
+/* Cyberpunk: a rain-slick midnight street. Two pooled neon glows (cyan top-left,
+   magenta bottom-right) bleed up from the gutter; a faint perspective-free street
+   grid sits over them; fine CRT scanlines lie on top of everything. Layer order is
+   top→bottom, so scanlines are listed first. */
+[data-theme='cyberpunk'] body {
+  background-color: var(--bg);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.22) 0px,
+      rgba(0, 0, 0, 0.22) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(rgba(45, 226, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45, 226, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(80% 60% at 8% 0%, rgba(45, 226, 255, 0.16) 0%, rgba(45, 226, 255, 0) 60%),
+    radial-gradient(80% 60% at 100% 100%, rgba(255, 43, 214, 0.14) 0%, rgba(255, 43, 214, 0) 60%);
+  background-size:
+    100% 3px,
+    44px 44px,
+    44px 44px,
+    100% 100%,
+    100% 100%;
+  background-repeat: repeat, repeat, repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed, fixed, fixed;
+}
+
+/* Manga (cozy-retro): a warm screentone (faint cream dots) over deep umber, lit by
+   a warm CRT/lamp glow from the top-right and a cool teal pool low-left, with a soft
+   vignette darkening the edges so it feels like a dim room at a desk. */
+[data-theme='manga'] body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle, rgba(236, 224, 200, 0.05) 0.7px, transparent 1px),
+    radial-gradient(90% 60% at 82% -5%, rgba(224, 90, 79, 0.1), transparent 55%),
+    radial-gradient(80% 60% at 0% 100%, rgba(111, 174, 156, 0.07), transparent 60%),
+    radial-gradient(120% 100% at 50% 38%, transparent 52%, rgba(0, 0, 0, 0.28));
+  background-size: 7px 7px, 100% 100%, 100% 100%, 100% 100%;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed, fixed;
+}
+
+/* Art Deco: a faint gold diamond lattice (two crossed diagonal hatchings) over the
+   ink, lit by a sunburst glow rising from the top centre. */
+[data-theme='art-deco'] body {
+  background-color: var(--bg);
+  background-image:
+    repeating-linear-gradient(45deg, rgba(201, 164, 76, 0.05) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201, 164, 76, 0.05) 0 1px, transparent 1px 16px),
+    radial-gradient(100% 55% at 50% -8%, rgba(216, 182, 94, 0.1), transparent 60%);
+  background-size: 22px 22px, 22px 22px, 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed;
+}
+
+/* Neoclassical: soft marble — faint grey veining drifting across warm ivory, lit
+   from above, with a whisper of gold low-right. */
+[data-theme='neoclassical'] body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(118deg, transparent 28%, rgba(110, 110, 122, 0.045) 30%, transparent 33%, transparent 52%, rgba(110, 110, 122, 0.035) 55%, transparent 58%),
+    radial-gradient(120% 80% at 50% -12%, rgba(247, 243, 234, 0.75), transparent 55%),
+    radial-gradient(90% 70% at 92% 108%, rgba(194, 163, 90, 0.06), transparent 55%);
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed;
+}
+
+/* Pixel (PC-98): a fine checkerboard dither over indigo, washed by a magenta→cyan
+   dusk gradient. */
+[data-theme='pixel'] body {
+  background-color: var(--bg);
+  background-image:
+    repeating-conic-gradient(rgba(255, 255, 255, 0.025) 0% 25%, transparent 0% 50%),
+    linear-gradient(180deg, rgba(255, 92, 168, 0.1) 0%, transparent 38%, rgba(87, 224, 255, 0.07) 100%);
+  background-size: 6px 6px, 100% 100%;
+  background-repeat: repeat, no-repeat;
+  background-attachment: fixed, fixed;
+}
+
+/* Sketch: pale engineering graph paper — a faint blue grid on cream with a soft
+   paper grain. */
+[data-theme='sketch'] body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(120, 150, 170, 0.11) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 150, 170, 0.11) 1px, transparent 1px),
+    radial-gradient(circle, rgba(58, 58, 58, 0.04) 0.5px, transparent 1px);
+  background-size: 24px 24px, 24px 24px, 5px 5px;
+  background-repeat: repeat, repeat, repeat;
+  background-attachment: fixed, fixed, fixed;
+}
+
+/* Bauhaus: big faint primary shapes anchored in the corners — a blue circle and a
+   yellow disc — over off-white. */
+[data-theme='bauhaus'] body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 90% 8%, color-mix(in srgb, var(--blue) 9%, transparent) 0 96px, transparent 98px),
+    radial-gradient(circle at 4% 96%, color-mix(in srgb, var(--yellow) 12%, transparent) 0 64px, transparent 66px);
+  background-repeat: no-repeat, no-repeat;
+  background-attachment: fixed, fixed;
+}
+
+/* Mixed media: kraft paper — printed halftone + sparse newsprint column rules + a
+   warm top light. */
+[data-theme='mixed-media'] body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle, rgba(42, 38, 34, 0.05) 0.6px, transparent 1px),
+    repeating-linear-gradient(90deg, rgba(42, 38, 34, 0.028) 0 1px, transparent 1px 130px),
+    radial-gradient(120% 90% at 50% -6%, rgba(255, 250, 240, 0.45), transparent 52%);
+  background-size: 5px 5px, auto, 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed;
+}
+
+/* Utilitarian: a precise technical grid on concrete — fine 32px lines, nothing else. */
+[data-theme='utilitarian'] body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(28, 28, 26, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(28, 28, 26, 0.045) 1px, transparent 1px);
+  background-size: 32px 32px, 32px 32px;
+  background-repeat: repeat, repeat;
+  background-attachment: fixed, fixed;
+}
+
 /*
   AMBIENT MOTION
   --------------
@@ -328,6 +558,190 @@ body {
   50%      { transform: scale(0.96, 1.06) translateX(0.4px); }
   75%      { transform: scale(1.04, 0.99) translateX(-0.2px); }
 }
+/* Cyberpunk: a failing neon tube — mostly lit, with quick stutters and the odd
+   half-second brown-out, like a sign that's seen better nights. */
+@keyframes sl-neon-flicker {
+  0%, 100%        { opacity: 1; }
+  8%, 10%         { opacity: 0.35; }
+  9%              { opacity: 0.9; }
+  41%, 43%, 45%   { opacity: 1; }
+  42%, 44%        { opacity: 0.5; }
+  70%             { opacity: 0.78; }
+  72%             { opacity: 1; }
+}
+/* The neon ¥ seal: a slow buzz in the glow halo, sympathetic to the flicker. */
+@keyframes sl-neon-buzz {
+  0%, 100% { text-shadow: 0 0 6px var(--neon), 0 0 14px color-mix(in srgb, var(--neon) 60%, transparent), 1px 0 0 color-mix(in srgb, var(--neon-2) 70%, transparent); }
+  50%      { text-shadow: 0 0 9px var(--neon), 0 0 22px color-mix(in srgb, var(--neon) 75%, transparent), 1px 0 0 color-mix(in srgb, var(--neon-2) 80%, transparent); }
+}
+/* The neon HUD title-rail: a slow brightness breath. */
+@keyframes sl-neon-rule-pulse {
+  0%, 100% { opacity: 0.82; }
+  50%      { opacity: 1; }
+}
+/* Terminal: a hard square-wave cursor blink. */
+@keyframes sl-term-blink {
+  0%, 50%      { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+/* Tokyo Night: city lights twinkling at the horizon. */
+@keyframes sl-twinkle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.28; }
+}
+/* Manga: focus-lines drift in a slow rotation; the speech-pop gives a tiny beat. */
+@keyframes sl-manga-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes sl-manga-pop {
+  0%, 88%, 100% { transform: rotate(-4deg) scale(1); }
+  94%           { transform: rotate(-4deg) scale(1.12); }
+}
+/* Anime kira-kira: sparkles that wink in and out, scaling from a glint. */
+@keyframes sl-sparkle {
+  0%, 100% { transform: scale(0.5) rotate(0deg); opacity: 0.25; }
+  50%      { transform: scale(1) rotate(45deg); opacity: 1; }
+}
+/* Pixel: hard 2-frame motion (no tweening) — a sprite bob and a sprite blink. */
+@keyframes sl-pixel-bob {
+  0%, 49%   { transform: translateY(0); }
+  50%, 100% { transform: translateY(-3px); }
+}
+@keyframes sl-pixel-blink {
+  0%, 60%   { opacity: 1; }
+  61%, 100% { opacity: 0.2; }
+}
+/* Bauhaus: the triangle turns, slow and mechanical. */
+@keyframes sl-bauhaus-rotate {
+  to { transform: rotate(360deg); }
+}
+/* Art Deco: a slow gilt shimmer for the sunburst, rule diamonds and emblem. */
+@keyframes sl-deco-shimmer {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+/*
+  PER-THEME PAGE-HEADING TREATMENTS
+  ---------------------------------
+  Every page <h1> carries `.page-title`. By default it inherits the theme's fg,
+  but a world can claim it here to give its headings a signature voice. This is
+  the hook for "each theme speaks for itself" — add a block per world over time.
+*/
+/* Cyberpunk: the heading lights up as a neon sign — cyan glass with a glow halo
+   and a faint magenta chromatic edge, so each tab title reads like street signage. */
+[data-theme='cyberpunk'] .page-title {
+  color: var(--neon);
+  text-shadow:
+    0 0 1px var(--neon),
+    0 0 12px color-mix(in srgb, var(--neon) 42%, transparent),
+    1px 0 0 color-mix(in srgb, var(--neon-2) 55%, transparent);
+}
+
+/* Tokyo Night: the heading is a blue→violet skyline gradient with a soft neon
+   glow — the city seen from a rooftop, not a sign in your face. */
+[data-theme='tokyo-night'] .page-title {
+  background-image: linear-gradient(92deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--primary) 30%, transparent));
+}
+
+/* Manga: the heading "prints" — italic, heavy, with a hard offset crimson shadow
+   like a misregistered second ink plate. Pure comic pop. */
+[data-theme='manga'] .page-title {
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  text-shadow: 2.5px 2.5px 0 color-mix(in srgb, var(--primary) 92%, transparent);
+}
+/* Manga: frame the Dashboard hero like a comic panel — a heavy black keyline with
+   a thin cream inner mat and a hard offset "printed" shadow. Boxy, no rounding. */
+[data-theme='manga'] .dash-hero {
+  border-radius: 0;
+  border: 2.5px solid var(--ink);
+  box-shadow:
+    inset 0 0 0 2px color-mix(in srgb, var(--fg) 22%, transparent),
+    8px 8px 0 0 var(--ink);
+}
+
+/* Art Deco: uppercase gilt small-caps, wide-tracked, with a thin dark engrave
+   shadow beneath — a name plate over a hotel door. */
+[data-theme='art-deco'] .page-title {
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+}
+
+/* Neoclassical: an engraved stone inscription — serif, tracked, with a chiselled
+   highlight/shadow so it reads as cut into marble. */
+[data-theme='neoclassical'] .page-title {
+  letter-spacing: 0.06em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6), 0 2px 1px rgba(0, 0, 0, 0.07);
+}
+
+/* Pixel: chunky uppercase mono with a hard two-colour pixel drop (cyan then magenta),
+   no blur — like a sprite label. */
+[data-theme='pixel'] .page-title {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-shadow: 2px 2px 0 var(--cyan), 4px 4px 0 color-mix(in srgb, var(--primary) 85%, transparent);
+}
+
+/* Sketch: graphite, softened like a pencil line; the rule carries the sketchiness. */
+[data-theme='sketch'] .page-title {
+  font-weight: 600;
+  text-shadow: 0.5px 0.5px 0 rgba(74, 74, 74, 0.18);
+}
+
+/* Bauhaus: lowercase geometric sans, heavy and tight — Herbert Bayer's universal
+   alphabet, function over flourish. */
+[data-theme='bauhaus'] .page-title {
+  text-transform: lowercase;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* Mixed media: a serif headline that looks slightly mis-printed — italic with a
+   faint colour offset, like a second pass of the press. */
+[data-theme='mixed-media'] .page-title {
+  font-style: italic;
+  text-shadow: 1px 1px 0 color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+/* Utilitarian: an all-caps spec label — tight, functional, no decoration. */
+[data-theme='utilitarian'] .page-title {
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+}
+
+/* Terminal: the heading reads like a typed command — a green `>` prompt prefix, a
+   blinking block cursor after it, and a soft phosphor CRT bloom on the text. */
+[data-theme='terminal'] .page-title {
+  text-shadow: 0 0 8px color-mix(in srgb, var(--primary) 32%, transparent);
+}
+[data-theme='terminal'] .page-title::before {
+  content: '> ';
+  color: var(--primary);
+}
+[data-theme='terminal'] .page-title::after {
+  content: '▋';
+  margin-left: 0.12em;
+  color: var(--primary);
+  animation: sl-term-blink 1.1s steps(1, end) infinite;
+}
+/* The terminal title-rule: a row of box-drawing chars fused into a phosphor line. */
+.term-rule {
+  font-family: var(--font-display);
+  line-height: 1;
+  letter-spacing: -1px;
+  color: var(--primary);
+  opacity: 0.78;
+  text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 55%, transparent);
+}
 
 /* Living gamification glyphs (the level emoji sways like a plant in a breeze;
    the streak flame flickers). transform-origin keeps them pivoting from a
@@ -336,6 +750,17 @@ body {
 .glyph-flicker { display: inline-block; transform-origin: 50% 90%; animation: sl-fire-flicker 1.4s ease-in-out infinite; }
 .glyph-seal { animation: sl-seal-glow 3.6s ease-in-out infinite; }
 .glyph-enso { animation: sl-enso-float 13s ease-in-out infinite; }
+.glyph-neon { animation: sl-neon-flicker 7s steps(1, end) infinite; }
+.glyph-neon-seal { animation: sl-neon-buzz 2.8s ease-in-out infinite; }
+.glyph-neon-rule { animation: sl-neon-rule-pulse 3.4s ease-in-out infinite; }
+.glyph-twinkle { animation: sl-twinkle 3s ease-in-out infinite; }
+.glyph-manga-spin { transform-origin: 50% 50%; animation: sl-manga-spin 90s linear infinite; }
+.glyph-sparkle { transform-box: fill-box; transform-origin: center; animation: sl-sparkle 2.6s ease-in-out infinite; }
+.glyph-pixel-bob { animation: sl-pixel-bob 1.8s steps(1, end) infinite; }
+.glyph-pixel-blink { animation: sl-pixel-blink 1.4s steps(1, end) infinite; }
+.glyph-bauhaus-spin { transform-box: fill-box; transform-origin: center; animation: sl-bauhaus-rotate 26s linear infinite; }
+.glyph-manga-pop { display: inline-grid; animation: sl-manga-pop 5s ease-in-out infinite; }
+.glyph-deco-shimmer { animation: sl-deco-shimmer 5s ease-in-out infinite; }
 
 /* Respect reduce-motion at the CSS layer too (belt-and-suspenders alongside the
    JS MotionConfig): no element should animate or smooth-scroll if it's asked

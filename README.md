@@ -48,16 +48,37 @@ The **Customize** page has a theme switcher. Themes are being re-thought as conc
 micro-animation), not just a recoloured palette. **Japandi** is the new default and first finished
 world: warm-oat *washi*-paper texture with a soft "light through shoji" glow, a hand-brushed *ensō*
 that ripples like ink in water on the Dashboard, a vermilion *hanko* seal as the app mark, and
-gamification glyphs that live (the level plant sways, the streak flame flickers). More worlds are in
-progress — **Anime/Manga, Art Deco, Cyberpunk noir** — alongside the kept themes (Terminal, Tokyo
-Night, Catppuccin Latte, Parchment, etc.).
+gamification glyphs that live (the level plant sways, the streak flame flickers).
+
+Finished worlds so far, each with its own backdrop, Dashboard signature, app mark, and **page-header
+voice** (a bespoke heading style + title rule): **Japandi** (brushed ink), **Cyberpunk Noir** (a
+rain-slick neon street — scanlines, a chromatically-split neon ring, a glowing-sign heading + HUD
+rule), **Anime / Manga** (a cozy-retro panel inspired by the *gruvu* "girl at the computer" wallpaper —
+warm dim room, CRT/lamp glow, the Dashboard hero framed like a black-keyline manga panel, radiating
+focus-lines, kira-kira sparkles, a red speech-pop mark, an italic "mis-registered ink" heading +
+colour speed-line rule), **Art Deco** (gold on midnight ink — a sunburst fan, a stepped gilt emblem,
+uppercase gilt headings + an engraved diamond rule), **Neoclassical** (gold on marble — a gilt laurel
+wreath, a medallion mark, engraved serif headings + a Greek-key meander rule), **Pixel Art** (a PC-98
+dusk — checkerboard dither, a blocky pixel torii + blinking stars, a pixel-¥ coin, chunky uppercase
+headings + a dithered pixel-block rule), **Conceptual Sketch** (graphite on graph paper — a roughed-in
+construction circle with dimension marks, a hand-drawn badge, a doubled pencil underline + a red
+correction tick), **Bauhaus** (red/yellow/blue + black — the circle/triangle/square trio with a
+turning yellow triangle, a geometric mark, lowercase headings + a shapes rule), **Mixed Media** (kraft
+collage — a torn-paper + washi-tape + rubber-stamp cluster, a taped tag mark, a mis-printed serif
+heading + a tape-strip rule), and **Utilitarian** (Swiss-industrial — a print registration target, a
+stamped label mark, all-caps spec headings + a dimension-line rule). **Terminal** and **Tokyo Night**
+also have their own header voices (a `>` command prompt with a blinking cursor; a blue→violet skyline
+gradient with twinkling lights). **Clean** and **Catppuccin Latte** remain as simple palette themes,
+using the shared brush.
 
 Each theme is a block of CSS variables in `src/index.css` plus an entry in `src/theme/themes.ts`;
-per-theme decoration lives in `src/components/ThemeSignature.tsx` and `BrandMark.tsx`. The overall
-look is editorial and typography-led (think Kinfolk / Papier / Apple) with subtle, unobtrusive
-motion that **always respects reduce-motion** (OS setting or the in-app toggle). Shared design
-primitives (eyebrow labels, page headers, the brush-stroke + ink-rule motifs, hover-lift cards) live
-in `src/components/ui.tsx`.
+per-theme decoration lives in `src/components/ThemeSignature.tsx` (Dashboard signature) and
+`BrandMark.tsx` (app mark), while each world's **page-header treatment** is a branch in the
+`BrushStroke` rule (`src/components/ui.tsx`) plus a `[data-theme='…'] .page-title` block in
+`index.css`. The overall look is editorial and typography-led (think Kinfolk / Papier / Apple) with
+subtle, unobtrusive motion that **always respects reduce-motion** (OS setting or the in-app toggle).
+Shared design primitives (eyebrow labels, page headers, the brush-stroke + ink-rule motifs,
+hover-lift cards) live in `src/components/ui.tsx`.
 
 ## Progress (gamification)
 

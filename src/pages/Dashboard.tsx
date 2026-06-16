@@ -59,7 +59,7 @@ export function Dashboard() {
           {/* Hero: net worth */}
           <motion.section
             variants={fadeItem}
-            className="relative overflow-hidden rounded-card border border-border p-6 sm:p-8"
+            className="dash-hero relative overflow-hidden rounded-card border border-border p-6 sm:p-8"
             style={{
               backgroundImage:
                 'linear-gradient(150deg, color-mix(in srgb, var(--primary) 7%, var(--surface)) 0%, var(--surface) 60%)',
