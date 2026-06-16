@@ -66,10 +66,15 @@ correction tick), **Bauhaus** (red/yellow/blue + black — the circle/triangle/s
 turning yellow triangle, a geometric mark, lowercase headings + a shapes rule), **Mixed Media** (kraft
 collage — a torn-paper + washi-tape + rubber-stamp cluster, a taped tag mark, a mis-printed serif
 heading + a tape-strip rule), and **Utilitarian** (Swiss-industrial — a print registration target, a
-stamped label mark, all-caps spec headings + a dimension-line rule). **Terminal** and **Tokyo Night**
-also have their own header voices (a `>` command prompt with a blinking cursor; a blue→violet skyline
-gradient with twinkling lights). **Clean** and **Catppuccin Latte** remain as simple palette themes,
-using the shared brush.
+stamped label mark, all-caps spec headings + a dimension-line rule), **Terminal** (a CRT — green
+scanlines + phosphor bloom + tube vignette, an oscilloscope trace with a sweeping beam, a phosphor
+prompt mark with a blinking cursor, a `>` command-prompt heading + ASCII rule), and **Tokyo Night** (a
+deep night sky — stars + a horizon city-glow, a glowing crescent moon with twinkling stars, a
+gradient-¥ mark, a blue→violet skyline-gradient heading + a city-lights rule), **Clean** (airy
+editorial — a sunlit paper wash, a swaying botanical sprig, a sage ring mark, a refined serif heading
++ a hairline-and-dot rule), and **Catppuccin Latte** (soft pastel bokeh — a breathing sleeping cat, a
+mauve badge with cat ears, a mauve-tinted serif heading + a pastel-dots rule). Every shipped theme is
+now a full world.
 
 Each theme is a block of CSS variables in `src/index.css` plus an entry in `src/theme/themes.ts`;
 per-theme decoration lives in `src/components/ThemeSignature.tsx` (Dashboard signature) and

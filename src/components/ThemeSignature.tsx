@@ -31,9 +31,177 @@ export function ThemeSignature() {
       return <Collage />
     case 'utilitarian':
       return <Registration />
+    case 'terminal':
+      return <Scope />
+    case 'tokyo-night':
+      return <Moon />
+    case 'clean':
+      return <Sprig />
+    case 'catppuccin-latte':
+      return <CatCurl />
     default:
       return <SoftGlow />
   }
+}
+
+// Clean: a delicate botanical sprig — a thin sage stem with small paired leaves,
+// swaying gently like something on a sunlit windowsill. Editorial calm.
+function Sprig() {
+  const reduce = useReduceMotion()
+  const leaf = (x: number, y: number, rot: number) => (
+    <ellipse cx={x} cy={y} rx="11" ry="4.5" transform={`rotate(${rot} ${x} ${y})`} />
+  )
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 200 200"
+      className={`pointer-events-none absolute -right-8 -top-10 h-60 w-60 ${reduce ? '' : 'glyph-sway'}`}
+      style={{ transformOrigin: '60% 95%' }}
+    >
+      <g stroke="var(--primary)" strokeOpacity="0.5" strokeWidth="1.6" fill="none">
+        <path d="M150 176 C150 130 138 96 112 64 C100 49 92 40 90 24" strokeLinecap="round" />
+      </g>
+      <g fill="var(--primary)" fillOpacity="0.32" stroke="var(--primary)" strokeOpacity="0.45" strokeWidth="0.8">
+        {leaf(132, 150, -28)}
+        {leaf(118, 120, 32)}
+        {leaf(124, 122, -34)}
+        {leaf(104, 94, 38)}
+        {leaf(110, 92, -40)}
+        {leaf(92, 64, 44)}
+        {leaf(90, 30, 8)}
+      </g>
+    </svg>
+  )
+}
+
+// Catppuccin Latte: a curled sleeping cat in soft mauve — round body, two ears, a
+// looping tail — breathing slowly. Cozy and a little playful (Catppuccin's cat).
+function CatCurl() {
+  const reduce = useReduceMotion()
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 200 200"
+      className="pointer-events-none absolute -right-8 -top-8 h-56 w-56"
+    >
+      <g
+        className={reduce ? '' : 'glyph-breathe'}
+        fill="var(--primary)"
+        fillOpacity="0.42"
+      >
+        {/* body */}
+        <circle cx="112" cy="100" r="44" />
+        {/* ears */}
+        <polygon points="80,68 90,30 106,60" />
+        <polygon points="144,68 134,30 118,60" />
+        {/* tail curling around */}
+        <path
+          d="M150 112 C182 112 184 152 150 156"
+          fill="none"
+          stroke="var(--primary)"
+          strokeOpacity="0.42"
+          strokeWidth="11"
+          strokeLinecap="round"
+        />
+      </g>
+      {/* closed eye + nose hints (still, not part of the breath) */}
+      <g stroke="var(--surface)" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.8">
+        <path d="M96 96 q6 5 12 0" />
+        <path d="M122 96 q6 5 12 0" />
+      </g>
+    </svg>
+  )
+}
+
+// Terminal: a CRT oscilloscope — a jagged phosphor trace with a lit beam sweeping
+// along it (the sweep is a dash travelling the path). Reduce-motion stills the beam.
+function Scope() {
+  const reduce = useReduceMotion()
+  const trace = 'M-10 120 L18 120 32 92 48 132 68 58 92 142 116 98 138 110 158 70 184 122 230 122'
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 200 200"
+      className="pointer-events-none absolute -right-10 -top-8 h-56 w-56"
+    >
+      <defs>
+        <filter id="sl-scope-glow" x="-20%" y="-50%" width="140%" height="200%">
+          <feGaussianBlur stdDeviation="2" result="b" />
+          <feMerge>
+            <feMergeNode in="b" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      {/* dim base trace */}
+      <path d={trace} fill="none" stroke="var(--primary)" strokeOpacity="0.28" strokeWidth="1.6" />
+      {/* lit beam: a short dash travelling the trace */}
+      <path
+        d={trace}
+        fill="none"
+        stroke="var(--primary)"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        filter="url(#sl-scope-glow)"
+        strokeDasharray="22 618"
+        className={reduce ? '' : 'glyph-scope'}
+      />
+    </svg>
+  )
+}
+
+// Tokyo Night: a glowing crescent moon (carved with a mask) and a few twinkling
+// stars — calm and nocturnal. The moon breathes; the stars wink.
+function Moon() {
+  const reduce = useReduceMotion()
+  const stars = [
+    { cx: 60, cy: 56, r: 1.8, fill: 'var(--primary)', delay: '0s' },
+    { cx: 150, cy: 120, r: 1.5, fill: 'var(--accent)', delay: '0.9s' },
+    { cx: 78, cy: 132, r: 1.4, fill: 'var(--accent-2)', delay: '1.6s' },
+    { cx: 40, cy: 100, r: 1.3, fill: 'var(--primary)', delay: '1.2s' },
+  ]
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 200 200"
+      className="pointer-events-none absolute -right-10 -top-10 h-60 w-60"
+    >
+      <defs>
+        <mask id="sl-moon-mask">
+          <circle cx="118" cy="84" r="46" fill="white" />
+          <circle cx="138" cy="76" r="40" fill="black" />
+        </mask>
+        <filter id="sl-moon-glow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="3.5" result="b" />
+          <feMerge>
+            <feMergeNode in="b" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <circle
+        cx="118"
+        cy="84"
+        r="46"
+        fill="var(--fg)"
+        fillOpacity="0.55"
+        mask="url(#sl-moon-mask)"
+        filter="url(#sl-moon-glow)"
+        className={reduce ? '' : 'glyph-moon'}
+      />
+      {stars.map((s, i) => (
+        <circle
+          key={i}
+          cx={s.cx}
+          cy={s.cy}
+          r={s.r}
+          fill={s.fill}
+          className={reduce ? '' : 'glyph-twinkle'}
+          style={reduce ? undefined : { animationDelay: s.delay }}
+        />
+      ))}
+    </svg>
+  )
 }
 
 // Neoclassical: a gilt laurel wreath — two mirrored leafy branches, open at the top.

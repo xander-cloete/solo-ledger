@@ -88,6 +88,8 @@ export function BrushStroke({ className = '' }: { className?: string }) {
   if (activeTheme === 'bauhaus') return <ShapesRule className={className} />
   if (activeTheme === 'mixed-media') return <TapeRule className={className} />
   if (activeTheme === 'utilitarian') return <DimensionRule className={className} />
+  if (activeTheme === 'clean') return <HairlineRule className={className} />
+  if (activeTheme === 'catppuccin-latte') return <DotsRule className={className} />
   if (activeTheme === 'terminal')
     return (
       // Terminal: a phosphor ASCII divider instead of a brush. Box-drawing
@@ -113,6 +115,48 @@ export function BrushStroke({ className = '' }: { className?: string }) {
         strokeLinecap="round"
         opacity="0.85"
       />
+    </svg>
+  )
+}
+
+// Clean: a single fine hairline with a small centred dot — precise, editorial.
+function HairlineRule({ className = '' }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden
+      className={`block ${className}`}
+      width="82"
+      height="8"
+      viewBox="0 0 82 8"
+      fill="none"
+    >
+      <line x1="2" y1="4" x2="80" y2="4" stroke="var(--primary)" strokeOpacity="0.45" strokeWidth="1" />
+      <circle cx="41" cy="4" r="1.7" fill="var(--primary)" />
+    </svg>
+  )
+}
+
+// Catppuccin Latte: a soft row of pastel dots — mauve, pink, blue, peach.
+function DotsRule({ className = '' }: { className?: string }) {
+  const dots = [
+    { x: 4, fill: 'var(--primary)' },
+    { x: 18, fill: 'var(--accent)' },
+    { x: 32, fill: 'var(--accent-2)' },
+    { x: 46, fill: 'var(--accent-3)' },
+    { x: 60, fill: 'var(--primary)' },
+  ]
+  return (
+    <svg
+      aria-hidden
+      className={`block ${className}`}
+      width="68"
+      height="8"
+      viewBox="0 0 68 8"
+      fill="none"
+    >
+      {dots.map((d, i) => (
+        <circle key={i} cx={d.x} cy={4} r={2.4} fill={d.fill} />
+      ))}
     </svg>
   )
 }

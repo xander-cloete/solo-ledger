@@ -201,5 +201,99 @@ export function BrandMark() {
     )
   }
 
+  // Terminal: a phosphor prompt box — a green ¥ behind a CRT glow with a blinking
+  // block cursor in the corner. Sharp, mono.
+  if (activeTheme === 'terminal') {
+    return (
+      <span
+        aria-hidden
+        className="relative grid h-8 w-8 place-items-center font-display text-base font-bold"
+        style={{
+          color: 'var(--primary)',
+          background: 'var(--surface)',
+          boxShadow:
+            'inset 0 0 0 1.5px color-mix(in srgb, var(--primary) 55%, transparent), 0 0 8px color-mix(in srgb, var(--primary) 22%, transparent)',
+          borderRadius: 0,
+        }}
+      >
+        ¥
+        <span
+          aria-hidden
+          className={`absolute bottom-1 right-1 h-2 w-1 ${reduce ? '' : 'glyph-term-blink'}`}
+          style={{ background: 'var(--primary)' }}
+        />
+      </span>
+    )
+  }
+
+  // Tokyo Night: a soft-glow box holding a blue→violet gradient ¥, echoing the
+  // skyline heading.
+  if (activeTheme === 'tokyo-night') {
+    return (
+      <span
+        aria-hidden
+        className="grid h-8 w-8 place-items-center font-display text-lg font-bold"
+        style={{
+          background: 'var(--surface)',
+          borderRadius: '0.5rem',
+          boxShadow:
+            'inset 0 0 0 1px color-mix(in srgb, var(--primary) 30%, transparent), 0 0 9px color-mix(in srgb, var(--primary) 22%, transparent)',
+        }}
+      >
+        <span
+          style={{
+            backgroundImage: 'linear-gradient(92deg, var(--primary), var(--accent))',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            color: 'transparent',
+          }}
+        >
+          ¥
+        </span>
+      </span>
+    )
+  }
+
+  // Clean: an airy sage ¥ in a thin ring — minimal and editorial.
+  if (activeTheme === 'clean') {
+    return (
+      <span
+        aria-hidden
+        className="grid h-8 w-8 place-items-center rounded-full font-display text-base font-semibold"
+        style={{
+          color: 'var(--primary)',
+          background: 'var(--surface)',
+          boxShadow: 'inset 0 0 0 1.5px color-mix(in srgb, var(--primary) 45%, transparent)',
+        }}
+      >
+        ¥
+      </span>
+    )
+  }
+
+  // Catppuccin Latte: a soft mauve badge with two little cat ears poking up and a
+  // white ¥ — cozy and playful.
+  if (activeTheme === 'catppuccin-latte') {
+    return (
+      <span
+        aria-hidden
+        className="relative grid h-8 w-8 place-items-center rounded-xl font-display text-base font-bold"
+        style={{ color: '#ffffff', background: 'var(--primary)' }}
+      >
+        <span
+          aria-hidden
+          className="absolute -top-1 left-1"
+          style={{ width: 0, height: 0, borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderBottom: '7px solid var(--primary)' }}
+        />
+        <span
+          aria-hidden
+          className="absolute -top-1 right-1"
+          style={{ width: 0, height: 0, borderLeft: '4px solid transparent', borderRight: '4px solid transparent', borderBottom: '7px solid var(--primary)' }}
+        />
+        ¥
+      </span>
+    )
+  }
+
   return <img src="/sl-icon.svg" alt="" className="h-8 w-8 rounded-lg" />
 }
