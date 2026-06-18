@@ -287,8 +287,10 @@ function PixelStar({ x, y, reduce, delay }: { x: number; y: number; reduce: bool
   )
 }
 
-// Sketch: a roughed-in circle with construction marks — a doubled, wobbly graphite
-// circle, a dashed crosshair, and a red dimension arrow with annotation ticks.
+// Sketch: a roughed-in circle worked up like a drafting plate — a dashed bounding
+// box with corner crop ticks, a doubled wobbly graphite circle, a surveying
+// crosshair, a red radius leader, a scale bar and a dimension arrow. Lots of
+// construction marks so it reads as a working sketch, not a lone shape.
 function Construction() {
   const reduce = useReduceMotion()
   return (
@@ -297,7 +299,12 @@ function Construction() {
       viewBox="0 0 200 200"
       className="pointer-events-none absolute -right-12 -top-12 h-60 w-60"
     >
-      {/* dashed construction crosshair — slowly "surveys" via a draw-crawl */}
+      {/* dashed bounding box + corner crop ticks (the construction frame) */}
+      <g stroke="var(--graphite)" strokeOpacity="0.3" strokeWidth="1" fill="none">
+        <rect x="38" y="38" width="124" height="124" strokeDasharray="3 5" />
+        <path d="M30 38 H46 M38 30 V46 M154 38 H170 M162 30 V46 M30 162 H46 M38 154 V170 M154 162 H170 M162 154 V170" strokeOpacity="0.5" />
+      </g>
+      {/* dashed surveying crosshair — slowly "surveys" via a draw-crawl */}
       <g
         stroke="var(--graphite)"
         strokeOpacity="0.35"
@@ -313,8 +320,21 @@ function Construction() {
         <path d="M100 38 C135 38 162 66 162 100 C162 135 134 161 100 161 C65 161 38 134 38 100 C38 66 66 39 100 38 Z" />
         <path d="M101 40 C133 41 160 67 159 101 C159 133 133 159 99 159 C66 159 40 133 41 99 C41 67 67 41 101 40" strokeOpacity="0.4" strokeWidth="1.1" />
       </g>
-      {/* red dimension arrow + ticks (the annotation) */}
+      {/* centre dot + small registration crosses pinned around the plate */}
+      <g stroke="var(--graphite)" strokeOpacity="0.5" strokeWidth="1" strokeLinecap="round">
+        <circle cx="100" cy="100" r="1.6" fill="var(--graphite)" stroke="none" fillOpacity="0.7" />
+        <path d="M54 56 h6 M57 53 v6 M146 56 h6 M149 53 v6" strokeOpacity="0.35" />
+      </g>
+      {/* red annotations: a radius leader (centre→edge), a scale bar, a dimension arrow */}
       <g stroke="var(--primary)" strokeWidth="1.4" strokeLinecap="round" className={reduce ? '' : 'glyph-deco-shimmer'}>
+        {/* radius leader to the circle edge with an arrowhead + an "R" tick */}
+        <line x1="100" y1="100" x2="143" y2="71" />
+        <path d="M143 71 137 71 M143 71 141 77" />
+        <line x1="100" y1="95" x2="100" y2="105" strokeOpacity="0.6" />
+        {/* segmented scale bar, top-left */}
+        <line x1="40" y1="24" x2="88" y2="24" />
+        <path d="M40 21 v6 M56 22 v4 M72 22 v4 M88 21 v6" strokeOpacity="0.8" />
+        {/* bottom dimension arrow with extension ticks */}
         <line x1="38" y1="178" x2="162" y2="178" />
         <path d="M38 178 44 174 M38 178 44 182 M162 178 156 174 M162 178 156 182" />
         <line x1="38" y1="172" x2="38" y2="184" strokeOpacity="0.7" />
@@ -345,8 +365,9 @@ function Trio() {
   )
 }
 
-// Mixed media: a layered collage cluster — a torn paper scrap, a rubber-stamp ring,
-// and a strip of washi tape, each slightly rotated.
+// Mixed media: a layered collage cluster — a tinted scrap behind a torn paper note,
+// a perforated postage stamp, crossing washi-tape strips, a paperclip, a dashed
+// "cut here" line and a rubber-stamp ring. Lots of pasted-up pieces.
 function Collage() {
   const reduce = useReduceMotion()
   return (
@@ -355,41 +376,87 @@ function Collage() {
       viewBox="0 0 200 200"
       className="pointer-events-none absolute -right-10 -top-10 h-56 w-56"
     >
-      {/* torn paper scrap */}
+      {/* teal scrap peeking out behind, rotated the other way */}
+      <polygon
+        points="52,72 120,58 132,128 58,142"
+        fill="var(--accent)"
+        fillOpacity="0.16"
+        stroke="var(--accent)"
+        strokeOpacity="0.4"
+        strokeWidth="1"
+        transform="rotate(-9 92 100)"
+      />
+      {/* main torn paper scrap */}
       <polygon
         points="60,60 150,52 156,140 66,150"
         fill="var(--surface)"
         stroke="var(--border)"
         strokeWidth="1"
         transform="rotate(6 110 100)"
-        opacity="0.9"
+        opacity="0.95"
       />
-      {/* washi tape strip across the top corner */}
+      {/* dashed "cut here" line across the scrap */}
+      <line x1="70" y1="116" x2="150" y2="110" stroke="var(--muted)" strokeWidth="1" strokeDasharray="4 4" strokeOpacity="0.7" transform="rotate(6 110 100)" />
+      {/* perforated postage stamp, bottom-left */}
+      <g transform="rotate(-7 78 132)">
+        <rect x="58" y="116" width="40" height="34" fill="var(--surface)" stroke="var(--accent)" strokeOpacity="0.6" strokeWidth="1" strokeDasharray="0.5 3.5" strokeLinecap="round" />
+        <circle cx="78" cy="133" r="9" fill="var(--accent)" fillOpacity="0.45" />
+      </g>
+      {/* two crossing washi-tape strips on the top corner */}
       <rect x="120" y="38" width="64" height="20" fill="var(--tape)" transform="rotate(-24 150 48)" />
+      <rect x="40" y="44" width="48" height="16" fill="var(--tape)" transform="rotate(18 64 52)" />
+      {/* a bent-wire paperclip clipping the top edge of the scrap */}
+      <path
+        d="M150 44 v22 a6 6 0 0 1 -12 0 v-16 a4 4 0 0 1 8 0 v14"
+        fill="none"
+        stroke="var(--muted)"
+        strokeOpacity="0.85"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
       {/* rubber-stamp ring + star */}
       <g stroke="var(--primary)" fill="none" strokeWidth="2.4" className={reduce ? '' : 'glyph-deco-shimmer'}>
-        <circle cx="112" cy="104" r="30" strokeOpacity="0.8" />
-        <path d="M112 90 l4 11 12 0 -9 8 3 12 -10 -7 -10 7 3 -12 -9 -8 12 0z" fill="var(--primary)" fillOpacity="0.85" stroke="none" />
+        <circle cx="118" cy="98" r="26" strokeOpacity="0.8" />
+        <path d="M118 86 l3.4 9.4 10 0 -7.6 6.8 2.6 10 -8.4 -5.8 -8.4 5.8 2.6 -10 -7.6 -6.8 10 0z" fill="var(--primary)" fillOpacity="0.85" stroke="none" />
       </g>
     </svg>
   )
 }
 
-// Utilitarian: a print registration target — concentric rings + a crosshair, with a
-// signal-orange inner ring that slowly pulses. Precise, mechanical.
+// Utilitarian: a technical drawing plate — a print registration target (rings +
+// crosshair) framed by corner crop marks, with dimension lines, a segmented scale
+// bar and a tick ruler. A pulsing signal-orange inner ring. Precise, mechanical.
 function Registration() {
   const reduce = useReduceMotion()
+  const ticks = Array.from({ length: 13 }, (_, i) => 44 + i * 10) // ruler ticks
   return (
     <svg
       aria-hidden
       viewBox="0 0 200 200"
       className="pointer-events-none absolute -right-10 -top-10 h-56 w-56"
     >
+      {/* corner crop marks framing the plate */}
+      <g stroke="var(--fg)" strokeOpacity="0.5" strokeWidth="1.2">
+        <path d="M34 22 H50 M34 22 V38 M186 22 H170 M186 22 V38 M34 158 H50 M34 158 V142 M186 158 H170 M186 158 V142" />
+      </g>
+      {/* registration target: concentric rings + crosshair */}
       <g fill="none" stroke="var(--fg)" strokeOpacity="0.55" strokeWidth="1.4">
         <circle cx="110" cy="90" r="54" />
         <circle cx="110" cy="90" r="30" />
         <line x1="110" y1="20" x2="110" y2="160" />
         <line x1="40" y1="90" x2="180" y2="90" />
+      </g>
+      {/* tick ruler along the bottom + a segmented scale bar */}
+      <g stroke="var(--fg)" strokeOpacity="0.45" strokeWidth="1">
+        {ticks.map((x, i) => (
+          <line key={i} x1={x} y1="172" x2={x} y2={i % 5 === 0 ? 164 : 168} />
+        ))}
+        <line x1="44" y1="172" x2="164" y2="172" />
+      </g>
+      {/* signal-orange annotations: a dimension line + the pulsing inner ring */}
+      <g stroke="var(--primary)" strokeWidth="1.6">
+        <line x1="40" y1="36" x2="76" y2="36" />
+        <path d="M40 36 45 33 M40 36 45 39 M76 36 71 33 M76 36 71 39" strokeWidth="1.2" />
       </g>
       <circle
         cx="110"
@@ -448,8 +515,8 @@ function FocusLines() {
             y1={r.y1}
             x2={r.x2}
             y2={r.y2}
-            stroke="var(--fg)"
-            strokeOpacity="0.12"
+            stroke="var(--ink)"
+            strokeOpacity="0.16"
             strokeWidth={r.w}
           />
         ))}
@@ -516,6 +583,7 @@ function Enso() {
       aria-hidden
       viewBox="0 0 200 200"
       className={`pointer-events-none absolute -right-12 -top-14 h-60 w-60 ${reduce ? '' : 'glyph-enso'}`}
+      style={{ filter: 'drop-shadow(0 0 13px color-mix(in srgb, var(--primary) 34%, transparent))' }}
     >
       <defs>
         <filter id="sl-enso-brush">
@@ -554,7 +622,7 @@ function Enso() {
         r="74"
         fill="none"
         stroke="var(--primary)"
-        strokeOpacity="0.34"
+        strokeOpacity="0.42"
         strokeWidth="15"
         strokeLinecap="round"
         strokeDasharray="402 60"

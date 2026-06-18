@@ -26,7 +26,7 @@ export const THEMES: ThemeDef[] = [
     id: 'japandi',
     label: 'Japandi',
     description: 'Warm oat, washi paper, a hand-brushed ensō. The default.',
-    swatch: { bg: '#e7e1d3', surface: '#f3eee2', primary: '#b06a47', fg: '#2c2922' },
+    swatch: { bg: '#efe9dc', surface: '#f8f4ec', primary: '#b06a47', fg: '#2c2922' },
   },
   {
     id: 'cyberpunk',
@@ -37,8 +37,8 @@ export const THEMES: ThemeDef[] = [
   {
     id: 'manga',
     label: 'Anime / Manga',
-    description: 'Cozy-retro anime — warm dark room, manga-panel frame, kira sparkles.',
-    swatch: { bg: '#201912', surface: '#2a2118', primary: '#e05a4f', fg: '#ece0c8' },
+    description: 'A printed manga page — ink on paper, screentone, red + kira sparkles.',
+    swatch: { bg: '#f2efe6', surface: '#fbf9f3', primary: '#e23744', fg: '#1c1916' },
   },
   {
     id: 'art-deco',

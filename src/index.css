@@ -72,11 +72,11 @@
    seal as its signature (see ThemeSignature.tsx / BrandMark.tsx). */
 [data-theme='japandi'] {
   color-scheme: light;
-  --bg: #e7e1d3; /* warm oat plaster */
-  --surface: #f3eee2; /* warm paper */
+  --bg: #efe9dc; /* warm oat plaster — lifted so the accents pop */
+  --surface: #f8f4ec; /* warm paper */
   --fg: #2c2922; /* sumi ink — never pure black */
   --muted: #8a8273; /* warm stone */
-  --border: #d3cab8;
+  --border: #ddd4c2;
   --primary: #b06a47; /* terracotta — the single warm accent */
   --primary-fg: #f3eee2;
   --positive: #6f7a56; /* matcha — money in */
@@ -115,27 +115,27 @@
   --radius-card: 0.375rem;
 }
 
-/* "manga" — a cozy-retro anime panel (dark). A finished concept world.
-   Personality: a dim warm room lit by a CRT — warm cream type on deep umber, a
-   red-turtleneck accent and teal/pink playful pops, drawn from the gruvu "girl at
-   the computer" wallpaper. The body wears a warm screentone + lamp-glow vignette;
-   the Dashboard hero is framed like a black-keyline manga panel; radiating focus-
-   lines and kira-kira sparkles sit in it; the app mark is a red speech-pop; headings
-   keep the hard offset-red "print" shadow + a colour speed-line rule. Boxy corners. */
+/* "manga" — a crisp printed manga page (light). A finished concept world.
+   Personality: black ink on warm manga paper — the unmistakable shoujo/shōnen look.
+   Vivid manga-red leads, sky-blue and sakura-pink are the kira-kira pops. The body
+   wears a halftone screentone + faint speed-lines + page light (no more dim umber
+   room); the Dashboard hero is framed like a heavy black-keyline panel with
+   converging focus-lines and sparkles; the app mark is a red speech-pop; headings
+   keep the hard offset-red "misregistered print" shadow. Boxy corners. */
 [data-theme='manga'] {
-  color-scheme: dark;
-  --bg: #201912; /* dim warm room */
-  --surface: #2a2118; /* warm wood panel */
-  --fg: #ece0c8; /* warm cream */
-  --muted: #9c8a72; /* warm taupe */
-  --border: #3a2e22; /* warm brown hairline */
-  --primary: #e05a4f; /* the red turtleneck — lead accent */
-  --primary-fg: #201912;
-  --positive: #8bb06a; /* soft leaf green — money in */
-  --negative: #e05a4f; /* red — money out */
-  --ink: #120d09; /* near-black warm — the manga keyline */
-  --accent: #6fae9c; /* teal (the books) — sparkles + glints */
-  --accent-2: #d98aa0; /* dusty sakura pink */
+  color-scheme: light;
+  --bg: #f2efe6; /* warm manga paper */
+  --surface: #fbf9f3; /* clean page panel */
+  --fg: #1c1916; /* manga ink — near-black */
+  --muted: #8d877d; /* soft grey type */
+  --border: #ddd6c9; /* faint paper hairline */
+  --primary: #e23744; /* manga red — the lead accent */
+  --primary-fg: #fbf9f3;
+  --positive: #3f8a5a; /* leaf green — money in */
+  --negative: #e23744; /* red — money out */
+  --ink: #161310; /* the heavy black manga keyline */
+  --accent: #4a93d6; /* sky blue — anime pop */
+  --accent-2: #ef82a8; /* sakura pink */
 
   --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
@@ -403,7 +403,7 @@ body {
   background-color: var(--bg);
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E"),
-    radial-gradient(130% 90% at 12% -12%, #f1ebde 0%, rgba(241,235,222,0) 55%);
+    radial-gradient(130% 90% at 12% -12%, #f8f2e6 0%, rgba(248,242,230,0) 55%);
   background-blend-mode: multiply, normal;
   background-repeat: repeat, no-repeat;
   background-attachment: fixed, fixed;
@@ -437,19 +437,18 @@ body {
   background-attachment: fixed, fixed, fixed, fixed, fixed;
 }
 
-/* Manga (cozy-retro): a warm screentone (faint cream dots) over deep umber, lit by
-   a warm CRT/lamp glow from the top-right and a cool teal pool low-left, with a soft
-   vignette darkening the edges so it feels like a dim room at a desk. */
+/* Manga (printed page): an ink halftone screentone over warm paper, with a faint
+   diagonal speed-line hatch and a soft page light from the top — the look of a freshly
+   printed manga page rather than a dim room. */
 [data-theme='manga'] body {
   background-color: var(--bg);
   background-image:
-    radial-gradient(circle, rgba(236, 224, 200, 0.05) 0.7px, transparent 1px),
-    radial-gradient(90% 60% at 82% -5%, rgba(224, 90, 79, 0.1), transparent 55%),
-    radial-gradient(80% 60% at 0% 100%, rgba(111, 174, 156, 0.07), transparent 60%),
-    radial-gradient(120% 100% at 50% 38%, transparent 52%, rgba(0, 0, 0, 0.28));
-  background-size: 7px 7px, 100% 100%, 100% 100%, 100% 100%;
-  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
-  background-attachment: fixed, fixed, fixed, fixed;
+    radial-gradient(circle, rgba(28, 25, 22, 0.06) 1px, transparent 1.5px),
+    repeating-linear-gradient(-32deg, rgba(28, 25, 22, 0.018) 0 1px, transparent 1px 10px),
+    radial-gradient(120% 90% at 50% -8%, rgba(255, 255, 255, 0.6), transparent 55%);
+  background-size: 8px 8px, auto, 100% 100%;
+  background-repeat: repeat, repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed;
 }
 
 /* Art Deco: a faint gold diamond lattice (two crossed diagonal hatchings) over the
@@ -489,17 +488,19 @@ body {
   background-attachment: fixed, fixed;
 }
 
-/* Sketch: pale engineering graph paper — a faint blue grid on cream with a soft
-   paper grain. */
+/* Sketch: pale engineering graph paper — a fine blue grid with a stronger major
+   grid every 5 squares (proper drafting paper), plus a soft paper grain. */
 [data-theme='sketch'] body {
   background-color: var(--bg);
   background-image:
+    linear-gradient(rgba(120, 150, 170, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 150, 170, 0.18) 1px, transparent 1px),
     linear-gradient(rgba(120, 150, 170, 0.11) 1px, transparent 1px),
     linear-gradient(90deg, rgba(120, 150, 170, 0.11) 1px, transparent 1px),
     radial-gradient(circle, rgba(58, 58, 58, 0.04) 0.5px, transparent 1px);
-  background-size: 24px 24px, 24px 24px, 5px 5px;
-  background-repeat: repeat, repeat, repeat;
-  background-attachment: fixed, fixed, fixed;
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px, 5px 5px;
+  background-repeat: repeat, repeat, repeat, repeat, repeat;
+  background-attachment: fixed, fixed, fixed, fixed, fixed;
 }
 
 /* Bauhaus: big faint primary shapes anchored in the corners — a blue circle and a
@@ -513,28 +514,32 @@ body {
   background-attachment: fixed, fixed;
 }
 
-/* Mixed media: kraft paper — printed halftone + sparse newsprint column rules + a
-   warm top light. */
+/* Mixed media: kraft paper — printed halftone + sparse newsprint column rules +
+   faint horizontal text-rows + a warm top light, like pasted-up scraps of print. */
 [data-theme='mixed-media'] body {
   background-color: var(--bg);
   background-image:
     radial-gradient(circle, rgba(42, 38, 34, 0.05) 0.6px, transparent 1px),
     repeating-linear-gradient(90deg, rgba(42, 38, 34, 0.028) 0 1px, transparent 1px 130px),
+    repeating-linear-gradient(0deg, rgba(42, 38, 34, 0.02) 0 1px, transparent 1px 26px),
     radial-gradient(120% 90% at 50% -6%, rgba(255, 250, 240, 0.45), transparent 52%);
-  background-size: 5px 5px, auto, 100% 100%;
-  background-repeat: repeat, repeat, no-repeat;
-  background-attachment: fixed, fixed, fixed;
+  background-size: 5px 5px, auto, auto, 100% 100%;
+  background-repeat: repeat, repeat, repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed, fixed;
 }
 
-/* Utilitarian: a precise technical grid on concrete — fine 32px lines, nothing else. */
+/* Utilitarian: a precise technical grid on concrete — fine 32px lines with a
+   stronger 256px major grid for module hierarchy. Functional, no ornament. */
 [data-theme='utilitarian'] body {
   background-color: var(--bg);
   background-image:
+    linear-gradient(rgba(28, 28, 26, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(28, 28, 26, 0.08) 1px, transparent 1px),
     linear-gradient(rgba(28, 28, 26, 0.045) 1px, transparent 1px),
     linear-gradient(90deg, rgba(28, 28, 26, 0.045) 1px, transparent 1px);
-  background-size: 32px 32px, 32px 32px;
-  background-repeat: repeat, repeat;
-  background-attachment: fixed, fixed;
+  background-size: 256px 256px, 256px 256px, 32px 32px, 32px 32px;
+  background-repeat: repeat, repeat, repeat, repeat;
+  background-attachment: fixed, fixed, fixed, fixed;
 }
 
 /* Terminal: a CRT screen — fine green scanlines, a phosphor bloom from the centre,
