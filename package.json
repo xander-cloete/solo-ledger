@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "A private, offline-first personal finance app. All data stays on your device.",
+  "license": "MIT",
+  "author": "Xander Deacon Cloete",
+  "homepage": "https://solo-ledger-finance.netlify.app",
+  "repository": { "type": "git", "url": "https://github.com/xander-cloete/solo-ledger.git" },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

@@ -16,7 +16,7 @@ Core set to remix:
 #personalfinance #fintech #studentdeveloper #appdesign #madewithcode #pwa #designinspo`
 
 **Format tips:**
-- IG strips clickable links from captions → say **"link in bio"** and put `[LIVE LINK]`
+- IG strips clickable links from captions → say **"link in bio"** and put `https://solo-ledger-finance.netlify.app`
   in your bio (or a Linktree).
 - Reels: first 1 second must show the app moving (theme switch). No slow intros.
 - Carousels: slide 1 is a scroll-stopper; the last slide is your CTA.
@@ -45,7 +45,9 @@ snappy cuts on the beat of a trending audio. End on your favourite.
 >
 > #buildinpublic #uidesign #reactjs #webdev #codinglife #studentdeveloper #appdesign #designinspo #indiedev #personalfinance
 
-*(Ask me to generate the theme-switching recording / multi-theme set.)*
+**Visual assets ready:** 14 dashboards in `tutorial/shots/themes/` + a full grid at
+`tutorial/shots/theme-gallery-grid.png`. (For the Reel itself, screen-record yourself
+clicking through Customize — that live motion beats stills.)
 
 ---
 

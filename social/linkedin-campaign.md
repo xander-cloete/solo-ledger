@@ -53,8 +53,7 @@ weighs early engagement heavily).
 >
 > #BuildInPublic #ComputerScience #ReactJS #WebDevelopment #SoftwareEngineering
 
-*First comment:* `Live demo 👉 [LIVE LINK]  ·  Happy to answer anything about how it works.`
-*(only if public)* add: `Code: [GITHUB LINK]`
+*First comment:* `Live demo 👉 https://solo-ledger-finance.netlify.app  ·  Code (open source, MIT) 👉 https://github.com/xander-cloete/solo-ledger  ·  Happy to answer anything about how it works.`
 
 **Visual:** upload the **PDF guide** as a document post, OR `tutorial/shots/dashboard.png`.
 
@@ -114,8 +113,8 @@ weighs early engagement heavily).
 >
 > #BuildInPublic #WebDevelopment #UIDesign #ReactJS #FrontEnd
 
-**Visual:** a carousel of 4–6 dashboards in different themes. *(Ask me to generate the
-multi-theme screenshot set.)*
+**Visual:** a carousel of 4–6 dashboards in different themes — ready in
+`tutorial/shots/themes/` (14 PNGs), plus a full grid at `tutorial/shots/theme-gallery-grid.png`.
 
 ---
 
@@ -165,7 +164,7 @@ multi-theme screenshot set.)*
 >
 > #BuildInPublic #ComputerScience #SoftwareEngineering #WebDevelopment
 
-*First comment:* `Try it 👉 [LIVE LINK]`
+*First comment:* `Try it 👉 https://solo-ledger-finance.netlify.app`
 
 ---
 

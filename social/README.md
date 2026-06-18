@@ -5,16 +5,11 @@ Two ready-to-run campaigns, tailored per platform:
 - [`linkedin-campaign.md`](linkedin-campaign.md) — professional, build-in-public, career-building. Longer copy, fewer hashtags, networking-first.
 - [`instagram-campaign.md`](instagram-campaign.md) — visual-first, aesthetic-led. Carousels, Reels, Stories, punchy captions.
 
-## Before you post — two things to fix
+## Status: live & open source ✅
 
-1. **Deploy it first.** The campaigns link to a live demo. Connect the repo on Netlify
-   (see the project root chat / `netlify.toml`) so you have a real URL like
-   `https://solo-ledger.netlify.app`. Until then, every `[LIVE LINK]` is a placeholder.
-2. **The GitHub repo is PRIVATE.** Don't claim it's "open source" or "code on GitHub"
-   unless you flip it to public (GitHub → repo → Settings → General → Danger Zone →
-   Change visibility). If you keep it private, lead with the *live app* and screenshots,
-   not the code. Both campaigns are written to work either way — public-repo lines are
-   marked `(only if public)`.
+- **Live app:** https://solo-ledger-finance.netlify.app (auto-deploys from `main`).
+- **Code:** public on GitHub under the MIT license — free to use, share and build on.
+- The campaigns already use the real link; "link in bio" → set that URL in your IG bio.
 
 ## Visual assets you already have
 
