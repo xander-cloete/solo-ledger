@@ -1,10 +1,80 @@
+<div align="center">
+
 # Solo Ledger
 
-A private, **local-first** personal finance PWA. All your data lives on your own device
-(in the browser's IndexedDB) — it never touches any server. See `PROJECT_PLAN.md` for the
-full phase-by-phase build guide.
+### A private, offline-first personal finance app. Your data never leaves your device.
 
-## Run it
+[**▶ Live app**](https://solo-ledger-finance.netlify.app) · [Report a bug](https://github.com/xander-cloete/solo-ledger/issues) · [User guide (PDF)](tutorial/Solo-Ledger-User-Guide.pdf)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-b06a47.svg)](LICENSE)
+![PWA](https://img.shields.io/badge/PWA-installable-4f6f52.svg)
+![No backend](https://img.shields.io/badge/data-100%25%20on--device-2c2922.svg)
+
+![Solo Ledger dashboard](docs/dashboard.png)
+
+</div>
+
+## What it is
+
+Solo Ledger keeps a running picture of your personal finances — what comes in, what goes
+out, and what you're worth over time. The unusual part: it has **no account, no server,
+and no cloud**. Everything you type is saved on your own device, in the browser's
+database (IndexedDB). Close the tab and it's still there; nobody else ever sees it.
+
+It's a **PWA**, so you can install it like a native app and it works fully offline.
+
+> Built by a first-year Computer Science student, learning by shipping something real,
+> paired with [Claude Code](https://claude.com/claude-code).
+
+## Features
+
+- **Rolling monthly ledger** — last month's leftover carries into the next, so every
+  month opens with the right starting balance.
+- **Net-worth tracking** — your liquid balance plus the value of every investment, charted
+  across the last 12 months.
+- **Income streams** — recurring sources that pre-fill each month; you only adjust what changed.
+- **Three kinds of expense** — monthly, yearly (placed on its due month), and one-off,
+  with optional itemising (qty × price, by store).
+- **Investments that tell the truth** — growth is separated from contributions, so deposits
+  don't flatter your returns. 1-month / 3-month / 1-year and all-time figures.
+- **Yearly-bill reminders** — a heads-up 3 months and/or 1 month before a big bill is due.
+- **A quiet gamification layer** — a level that grows with your net worth, a saving streak,
+  and a budget-used meter. Fully optional.
+- **Backup & restore** — export everything to one JSON file, import it on a new device.
+- **14 theme "worlds"** — see below.
+
+## Fourteen themes
+
+Each theme is a complete **world**, not a recoloured palette: its own type pairing, an
+animated backdrop, a signature ornament on the dashboard, an app mark, and a bespoke
+page-heading voice. Switching is instant and remembered on your device.
+
+![Switching through the themes](docs/themes.gif)
+
+**Japandi** (brushed-ink ensō on washi paper · the default) · **Tokyo Night** (a starry
+sky + crescent moon) · **Cyberpunk Noir** (a rain-slick, chromatically-split neon ring) ·
+**Anime / Manga** (a crisp printed manga page — ink on paper, halftone screentone,
+converging focus-lines and kira-kira sparkles) · **Art Deco** (a gilt sunburst on midnight
+ink) · **Neoclassical** (a gold laurel on marble) · **Pixel Art** (a PC-98 dusk with a
+blocky torii) · **Terminal** (a green CRT with an oscilloscope trace) · **Catppuccin
+Latte** (pastel bokeh + a breathing cat) · **Clean** (sunlit editorial + a swaying sprig) ·
+**Conceptual Sketch** (graphite drafting on graph paper) · **Bauhaus** (the red/yellow/blue
+circle-triangle-square trio) · **Mixed Media** (a torn-paper + washi-tape collage) ·
+**Utilitarian** (a Swiss-industrial registration target).
+
+## Privacy
+
+There's nothing to opt out of, because nothing is collected. All data lives in IndexedDB
+under the database name `solo-ledger` (inspect it in **DevTools → Application → IndexedDB**).
+Clearing your browser data wipes it — which is exactly why the in-app **Export backup** exists.
+
+## Tech
+
+Vite · React · TypeScript · Tailwind CSS (CSS-variable theming) · Dexie (IndexedDB) ·
+react-router · Recharts · Framer Motion · self-hosted variable fonts (Fraunces +
+Hanken Grotesk) · Zod (backup validation) · vite-plugin-pwa.
+
+## Run it locally
 
 This project uses **pnpm** (via corepack). If `pnpm` isn't found, enable it once:
 
@@ -12,119 +82,28 @@ This project uses **pnpm** (via corepack). If `pnpm` isn't found, enable it once
 corepack enable pnpm
 ```
 
-Then, from the project folder (`~/Projects/solo-ledger`):
+Then, from the project folder:
 
 ```bash
-# Install dependencies (first time only)
-pnpm install
-
-# Start the dev server with hot-reload — open the printed http://localhost URL
-pnpm dev
-
-# Type-check + build the production bundle into dist/
-pnpm build
-
-# Preview the production build locally
-pnpm preview
+pnpm install   # install dependencies (first time only)
+pnpm dev       # start the dev server — open the printed http://localhost URL
+pnpm build     # type-check + build the production bundle into dist/
+pnpm preview   # preview the production build locally
 ```
 
-## Tech
+Deploys are static: any host that serves the `dist/` folder works. This repo deploys to
+Netlify automatically from `main` (see `netlify.toml`).
 
-Vite · React · TypeScript · Tailwind CSS (CSS-variable theming) · Dexie (IndexedDB) ·
-react-router · Recharts (dashboard charts) · Framer Motion (animation) · self-hosted
-variable fonts (@fontsource Fraunces + Hanken Grotesk) · Zod (backup validation) ·
-vite-plugin-pwa.
+## Project layout
 
-## Where your data lives
+- `src/pages/` — the six screens (Dashboard, Income, Expenses, Investments, Customize, Settings)
+- `src/db/` — the Dexie database and shared types
+- `src/lib/` — the pure money logic (ledger, expenses, investments) kept free of UI
+- `src/index.css` + `src/theme/themes.ts` — the theming system; per-theme decoration lives in
+  `src/components/ThemeSignature.tsx` and `BrandMark.tsx`
+- `tutorial/` — the screenshot → PDF user-guide pipeline
+- `PROJECT_PLAN.md` — the full phase-by-phase build log
 
-Everything is stored in IndexedDB under the database name `solo-ledger`. Inspect it in your
-browser: **DevTools → Application → IndexedDB → solo-ledger**. Clearing site data wipes it,
-so the in-app Export/Import backup is how you keep it safe.
+## License
 
-## Themes
-
-The **Customize** page has a theme switcher. Themes are being re-thought as concept-driven
-**"worlds"** — each its own personality (type pairing, texture, a signature ornament, and living
-micro-animation), not just a recoloured palette. **Japandi** is the new default and first finished
-world: warm-oat *washi*-paper texture with a soft "light through shoji" glow, a hand-brushed *ensō*
-that ripples like ink in water on the Dashboard, a vermilion *hanko* seal as the app mark, and
-gamification glyphs that live (the level plant sways, the streak flame flickers).
-
-Finished worlds so far, each with its own backdrop, Dashboard signature, app mark, and **page-header
-voice** (a bespoke heading style + title rule): **Japandi** (brushed ink), **Cyberpunk Noir** (a
-rain-slick neon street — scanlines, a chromatically-split neon ring, a glowing-sign heading + HUD
-rule), **Anime / Manga** (a cozy-retro panel inspired by the *gruvu* "girl at the computer" wallpaper —
-warm dim room, CRT/lamp glow, the Dashboard hero framed like a black-keyline manga panel, radiating
-focus-lines, kira-kira sparkles, a red speech-pop mark, an italic "mis-registered ink" heading +
-colour speed-line rule), **Art Deco** (gold on midnight ink — a sunburst fan, a stepped gilt emblem,
-uppercase gilt headings + an engraved diamond rule), **Neoclassical** (gold on marble — a gilt laurel
-wreath, a medallion mark, engraved serif headings + a Greek-key meander rule), **Pixel Art** (a PC-98
-dusk — checkerboard dither, a blocky pixel torii + blinking stars, a pixel-¥ coin, chunky uppercase
-headings + a dithered pixel-block rule), **Conceptual Sketch** (graphite on graph paper — a roughed-in
-construction circle with dimension marks, a hand-drawn badge, a doubled pencil underline + a red
-correction tick), **Bauhaus** (red/yellow/blue + black — the circle/triangle/square trio with a
-turning yellow triangle, a geometric mark, lowercase headings + a shapes rule), **Mixed Media** (kraft
-collage — a torn-paper + washi-tape + rubber-stamp cluster, a taped tag mark, a mis-printed serif
-heading + a tape-strip rule), and **Utilitarian** (Swiss-industrial — a print registration target, a
-stamped label mark, all-caps spec headings + a dimension-line rule), **Terminal** (a CRT — green
-scanlines + phosphor bloom + tube vignette, an oscilloscope trace with a sweeping beam, a phosphor
-prompt mark with a blinking cursor, a `>` command-prompt heading + ASCII rule), and **Tokyo Night** (a
-deep night sky — stars + a horizon city-glow, a glowing crescent moon with twinkling stars, a
-gradient-¥ mark, a blue→violet skyline-gradient heading + a city-lights rule), **Clean** (airy
-editorial — a sunlit paper wash, a swaying botanical sprig, a sage ring mark, a refined serif heading
-+ a hairline-and-dot rule), and **Catppuccin Latte** (soft pastel bokeh — a breathing sleeping cat, a
-mauve badge with cat ears, a mauve-tinted serif heading + a pastel-dots rule). Every shipped theme is
-now a full world.
-
-Each theme is a block of CSS variables in `src/index.css` plus an entry in `src/theme/themes.ts`;
-per-theme decoration lives in `src/components/ThemeSignature.tsx` (Dashboard signature) and
-`BrandMark.tsx` (app mark), while each world's **page-header treatment** is a branch in the
-`BrushStroke` rule (`src/components/ui.tsx`) plus a `[data-theme='…'] .page-title` block in
-`index.css`. The overall look is editorial and typography-led (think Kinfolk / Papier / Apple) with
-subtle, unobtrusive motion that **always respects reduce-motion** (OS setting or the in-app toggle).
-Shared design primitives (eyebrow labels, page headers, the brush-stroke + ink-rule motifs,
-hover-lift cards) live in `src/components/ui.tsx`.
-
-## Progress (gamification)
-
-The Dashboard shows a quiet **Your progress** card with three gentle motivators, all derived
-from your real figures (nothing extra is stored):
-
-- **Level** — a garden that grows with your net worth (🌱 Seedling up to 👑 Magnate), with a bar
-  showing progress to the next tier.
-- **Savings streak** — how many completed months in a row you've finished without overspending.
-- **This month** — how much of this month's income your expenses have used, and whether you're
-  on track.
-
-Don't want it? Switch it off under **Customize → Progress & achievements** for a plain dashboard.
-
-## Motion
-
-The app uses small, calm **Framer Motion** touches: pages cross-fade as you navigate,
-Dashboard cards ease in, and key figures (net worth, your rolling balance) count up
-smoothly when they change. Nothing bounces or demands attention.
-
-Prefer it still? Two ways to calm it down: your device's system **"reduce motion"**
-accessibility setting is always respected, and there's a **Customize → Motion → Reduce
-motion** switch to turn movement off in-app regardless of the OS setting.
-
-## Reminders
-
-Yearly expenses (insurance, renewals…) are easy to forget, so Solo Ledger warns you ahead of
-each one. On the **Settings → Reminders** section you can switch on a heads-up **3 months** and/or
-**1 month** before a yearly expense is due. Active reminders appear in a banner at the top of the
-**Dashboard** when you open the app, and — if you click **Enable browser notifications** — your
-device can alert you too (best-effort; the in-app banner always works regardless).
-
-## Backing up your data
-
-On the **Settings** page, the **Backup** section lets you:
-
-- **Export backup** — download every table as one timestamped JSON file
-  (`solo-ledger-backup-YYYY-MM-DD_HHMM.json`). Keep it somewhere safe.
-- **Import backup…** — pick a backup file. It's validated with Zod first, then shows a
-  per-table count and an overwrite warning; confirming **replaces all current data** with the
-  file's contents in one all-or-nothing database transaction.
-
-To test a full round-trip: export → DevTools → Application → Clear site data → reload →
-import the file → confirm everything is back.
+[MIT](LICENSE) — free to use, modify and share. Built to be useful, not to make money.
