@@ -1,0 +1,21 @@
+# Netlify deploy config for Solo Ledger (a static Vite + React PWA).
+#
+# Netlify runs `command` to build the site, then serves everything in `publish`.
+# Because the app uses client-side routing (react-router), every URL must fall
+# back to index.html so a deep link like /investments is handled by the app, not
+# met with a 404 — that's what the redirect rule does.
+
+[build]
+  command = "pnpm build"
+  publish = "dist"
+
+[build.environment]
+  # Match the Node version the project develops on.
+  NODE_VERSION = "22"
+
+# SPA fallback: serve index.html for any path that isn't a real file, with a
+# 200 (not a redirect) so the URL the visitor typed stays intact.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Solo Ledger — User Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root {
+    --paper: #f4efe4;
+    --card: #fbf8f1;
+    --ink: #2c2922;
+    --muted: #8a8273;
+    --accent: #b06a47;       /* terracotta */
+    --seal: #b8402f;         /* vermilion */
+    --line: #ddd4c2;
+    --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --sans: 'Hanken Grotesk', -apple-system, system-ui, sans-serif;
+  }
+
+  /* A4 pages with a comfortable margin; each .page is one printed sheet. */
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: var(--sans); color: var(--ink); background: var(--paper); font-size: 11.5px; line-height: 1.55; }
+
+  .page {
+    position: relative;
+    width: 210mm; min-height: 297mm;
+    padding: 20mm 18mm;
+    background: var(--paper);
+    page-break-after: always;
+    overflow: hidden;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  .eyebrow {
+    font-size: 9.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 6px;
+  }
+  .eyebrow::before { content: '・'; margin-right: 0.4em; }
+
+  h1 { font-family: var(--serif); font-weight: 600; font-size: 46px; line-height: 1.04; margin: 0 0 14px; letter-spacing: -0.01em; }
+  h2 { font-family: var(--serif); font-weight: 600; font-size: 30px; line-height: 1.08; margin: 0 0 6px; letter-spacing: -0.01em; }
+  h3 { font-family: var(--serif); font-weight: 600; font-size: 16px; margin: 0 0 3px; }
+  p { margin: 0 0 10px; }
+  .lead { font-size: 13.5px; color: var(--muted); max-width: 62ch; }
+  .rule { height: 2px; width: 56px; background: var(--accent); border: 0; margin: 0 0 18px; border-radius: 2px; }
+
+  /* Screenshot framing */
+  figure { margin: 14px 0 0; }
+  .shot {
+    width: 100%; display: block; border-radius: 10px;
+    border: 1px solid var(--line);
+    box-shadow: 0 18px 40px -24px rgba(44,41,34,0.4);
+    background: var(--card);
+  }
+  .shot.tall { max-height: 150mm; width: auto; max-width: 100%; margin: 0 auto; }
+  figcaption { font-size: 10px; color: var(--muted); margin-top: 7px; text-align: center; font-style: italic; }
+
+  /* Numbered steps */
+  ol.steps { list-style: none; counter-reset: s; margin: 16px 0 0; padding: 0; }
+  ol.steps > li { counter-increment: s; position: relative; padding: 0 0 12px 34px; }
+  ol.steps > li::before {
+    content: counter(s); position: absolute; left: 0; top: -1px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent); color: var(--card);
+    font-family: var(--serif); font-weight: 600; font-size: 12px;
+    display: grid; place-items: center;
+  }
+  ol.steps b { font-weight: 600; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .callout {
+    margin-top: 16px; padding: 12px 16px; border-radius: 10px;
+    background: #efe7d6; border: 1px solid var(--line);
+    border-left: 3px solid var(--seal); font-size: 11px;
+  }
+  .callout b { color: var(--seal); }
+
+  .pagenum { position: absolute; bottom: 12mm; right: 18mm; font-size: 9px; color: var(--muted); letter-spacing: 0.1em; }
+  .foot { position: absolute; bottom: 12mm; left: 18mm; font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* Cover */
+  .cover { display: flex; flex-direction: column; justify-content: space-between; }
+  .cover .mark {
+    width: 46px; height: 46px; border-radius: 12px; background: var(--seal);
+    color: var(--card); font-family: var(--serif); font-weight: 600; font-size: 24px;
+    display: grid; place-items: center; transform: rotate(-3deg); margin-bottom: 28px;
+  }
+  .cover h1 { font-size: 62px; }
+  .cover .sub { font-size: 16px; color: var(--muted); max-width: 50ch; }
+  .cover .hero { width: 100%; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 24px 60px -30px rgba(44,41,34,0.5); margin-top: 22px; }
+  .badges { display: flex; gap: 10px; margin-top: 22px; }
+  .badge { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; background: var(--card); }
+
+  .toc { margin-top: 22px; }
+  .toc-row { display: flex; align-items: baseline; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+  .toc-row .n { font-family: var(--serif); color: var(--accent); font-weight: 600; width: 24px; }
+  .toc-row .t { font-weight: 600; font-size: 13px; }
+  .toc-row .d { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ───────────────────────── COVER ───────────────────────── -->
+<section class="page cover">
+  <div>
+    <div class="mark">¥</div>
+    <p class="eyebrow">User Guide</p>
+    <h1>Solo&nbsp;Ledger</h1>
+    <p class="sub">A calm, private place to see your whole financial picture — what comes in, what goes out, and what you're worth — all on your own device.</p>
+    <div class="badges">
+      <span class="badge">On your device</span>
+      <span class="badge">Private &amp; offline</span>
+      <span class="badge">No account needed</span>
+    </div>
+    <img class="hero" src="shots/dashboard.png" alt="The Solo Ledger dashboard" />
+  </div>
+  <div class="foot">Solo Ledger · How to use the app</div>
+</section>
+
+<!-- ───────────────────── WHAT IT IS + QUICK START ───────────────────── -->
+<section class="page">
+  <p class="eyebrow">Start here</p>
+  <h2>What Solo Ledger is</h2>
+  <hr class="rule" />
+  <p class="lead">Solo Ledger keeps a running picture of your personal finances. Everything you type is saved <b>only on this device, inside your browser</b> — nothing is uploaded to a server, and you never sign in. Close the tab and your data is still here when you come back.</p>
+
+  <p style="margin-top:14px">It answers three everyday questions:</p>
+  <div class="two" style="margin-top:6px">
+    <div>
+      <h3>Where's my money going?</h3>
+      <p class="lead">Record income and expenses each month and watch your <b>rolling balance</b> carry forward — last month's leftover becomes this month's starting point.</p>
+    </div>
+    <div>
+      <h3>What am I worth?</h3>
+      <p class="lead">Your <b>net worth</b> is your everyday balance plus the value of every investment, tracked over time on one chart.</p>
+    </div>
+  </div>
+
+  <p class="eyebrow" style="margin-top:26px">Quick start</p>
+  <h2>Five minutes to set up</h2>
+  <hr class="rule" />
+  <ol class="steps">
+    <li><b>Open Settings</b> and set your <b>currency symbol</b> and <b>starting balance</b> — your bank balance today, so the ledger lines up with reality.</li>
+    <li><b>Add your income streams</b> on the Income page (e.g. Salary, Freelance). The amount pre-fills each month.</li>
+    <li><b>Add your expenses</b> — rent, groceries, a yearly insurance bill. Solo Ledger places each one in the right month automatically.</li>
+    <li><b>Add any investments</b> and record their balance now and then to see real growth.</li>
+    <li><b>Export a backup</b> from Settings now and then, so your data is safe if you switch devices.</li>
+  </ol>
+
+  <div class="foot">Solo Ledger · How to use the app</div>
+  <div class="pagenum">2</div>
+</section>
+
+<!-- ───────────────────────── DASHBOARD ───────────────────────── -->
+<section class="page">
+  <p class="eyebrow">The home screen</p>
+  <h2>Your dashboard</h2>
+  <hr class="rule" />
+  <p class="lead">The Dashboard is a read-only summary — it invents nothing, it just mirrors everything you've entered elsewhere. It's the first thing you see when you open the app.</p>
+  <ol class="steps">
+    <li><b>Net worth</b> is the big number at the top: your liquid balance plus the value of every investment.</li>
+    <li><b>Liquid balance vs. Investments</b> break that total in two — spendable money now, and money that's invested.</li>
+    <li><b>Your progress</b> shows a gentle level, a saving streak, and how much of this month's income you've used. (You can hide this in Customize.)</li>
+    <li><b>Net worth over time</b> charts your last 12 months so you can see the trend at a glance.</li>
+    <li><b>This month</b> spells out income, expenses, and the difference between them.</li>
+  </ol>
+  <figure>
+    <img class="shot" src="shots/dashboard.png" alt="Dashboard" />
+  </figure>
+  <div class="foot">Solo Ledger · How to use the app</div>
+  <div class="pagenum">3</div>
+</section>
+
+<!-- ───────────────────────── INCOME ───────────────────────── -->
+<section class="page">
+  <p class="eyebrow">Money in</p>
+  <h2>Recording income</h2>
+  <hr class="rule" />
+  <p class="lead">Income is organised into <b>streams</b> — your recurring sources of money. Each new month pre-fills with the stream's default amount, so you only adjust what actually changed.</p>
+  <ol class="steps">
+    <li>Use the <b>month switcher</b> (top right) to pick which month you're recording.</li>
+    <li>In <b>Income for this month</b>, type the real amount received for each stream — it overrides the default just for that month.</li>
+    <li>To add a new source, type a name and a default in <b>Income streams</b> and press <b>Add</b>.</li>
+    <li>Untick <b>Active</b> to retire a stream without deleting its history.</li>
+    <li>The <b>rolling balance</b> at the top shows what carried in, plus this month's income, minus expenses, and what carries into next month.</li>
+  </ol>
+  <figure>
+    <img class="shot" src="shots/income.png" alt="Income page" />
+  </figure>
+  <div class="foot">Solo Ledger · How to use the app</div>
+  <div class="pagenum">4</div>
+</section>
+
+<!-- ───────────────────────── EXPENSES ───────────────────────── -->
+<section class="page">
+  <p class="eyebrow">Money out</p>
+  <h2>Tracking expenses</h2>
+  <hr class="rule" />
+  <p class="lead">Add an expense once and Solo Ledger works out which months it belongs to. There are three kinds, so a yearly bill doesn't have to be retyped every month.</p>
+  <ol class="steps">
+    <li>In <b>Add an expense</b>, give it a <b>name</b> and <b>amount</b>.</li>
+    <li>Pick a <b>type</b>: <b>Monthly</b> (recurs every month — optionally for a set number of months), <b>Yearly</b> (lands on its due date's month each year), or <b>One-off</b> (a single month).</li>
+    <li>Set when it <b>starts</b>, then press <b>Add expense</b>.</li>
+    <li>Tick <b>Itemise</b> to build the total from individual items (qty × price, by store) — handy for groceries.</li>
+    <li>Use <b>Edit</b> or <b>✕</b> in <b>All expenses</b> to change or remove one later.</li>
+  </ol>
+  <figure>
+    <img class="shot tall" src="shots/expenses.png" alt="Expenses page" />
+  </figure>
+  <div class="foot">Solo Ledger · How to use the app</div>
+  <div class="pagenum">5</div>
+</section>
+
+<!-- ───────────────────────── INVESTMENTS ───────────────────────── -->
+<section class="page">
+  <p class="eyebrow">Holdings</p>
+  <h2>Tracking investments</h2>
+  <hr class="rule" />
+  <p class="lead">Each investment is a <b>portfolio</b> you update by hand — no bank linking. The clever part: Solo Ledger separates <b>real growth</b> from money you simply added, so your returns aren't flattered by deposits.</p>
+  <ol class="steps">
+    <li>In <b>Add a portfolio</b>, enter a <b>name</b>, the date you <b>started</b>, and your <b>initial amount</b> (your starting capital).</li>
+    <li>Now and then, press <b>Record balance</b> to log what it's worth today.</li>
+    <li>Use <b>Contribute</b> or <b>Withdraw</b> when you add or take out money — these don't count as growth.</li>
+    <li>Read the growth figures for <b>1 month</b>, <b>3 months</b> and <b>1 year</b>, plus all-time growth beside the name.</li>
+  </ol>
+  <figure>
+    <img class="shot tall" src="shots/investments.png" alt="Investments page" />
+  </figure>
+  <div class="foot">Solo Ledger · How to use the app</div>
+  <div class="pagenum">6</div>
+</section>
+
+<!-- ───────────────────── CUSTOMIZE + SETTINGS ───────────────────── -->
+<section class="page">
+  <p class="eyebrow">Make it yours</p>
+  <h2>Themes &amp; settings</h2>
+  <hr class="rule" />
+  <p class="lead">Solo Ledger ships with fourteen full visual "worlds". Pick whichever fits your mood — it applies instantly and is remembered on this device.</p>
+  <ol class="steps">
+    <li>On <b>Customize</b>, click any theme to switch the whole app. The active one is ticked.</li>
+    <li>Toggle <b>Show the progress panel</b> off for a plain, all-business dashboard.</li>
+    <li>Turn on <b>Reduce motion</b> to calm animations (your device's own setting is always respected too).</li>
+  </ol>
+  <figure>
+    <img class="shot tall" src="shots/customize.png" alt="Customize page" />
+  </figure>
+
+  <div class="callout">
+    <b>Back up your data.</b> Because everything lives only in this browser, clearing your browser data or switching devices will lose it. On <b>Settings → Backup</b>, press <b>Export backup</b> to save a file, and <b>Import backup…</b> to restore it elsewhere. Do this regularly.
+  </div>
+  <div class="foot">Solo Ledger · How to use the app</div>
+  <div class="pagenum">7</div>
+</section>
+
+</body>
+</html>

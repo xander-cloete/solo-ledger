@@ -1,0 +1,9 @@
+{
+  "name": "solo-ledger-tutorial",
+  "private": true,
+  "type": "module",
+  "description": "One-off tooling that screenshots the running app and builds the user-guide PDF. Separate from the app so it never touches the app's dependencies.",
+  "dependencies": {
+    "puppeteer-core": "^23.0.0"
+  }
+}
