@@ -27,3 +27,4 @@ dev-dist
 # Tutorial tooling (local build pipeline)
 tutorial/node_modules
 tutorial/shots
+tutorial/*.mp4
