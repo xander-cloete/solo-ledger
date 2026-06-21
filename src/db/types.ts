@@ -100,6 +100,11 @@ export interface Portfolio {
   name: string
   initialDate: string
   initialAmount: number
+  // Projection assumptions (Phase 11). Both optional, so older saved portfolios
+  // keep working untouched — Dexie stores extra fields without a migration since
+  // neither is indexed.
+  assumedAnnualRate?: number // override % growth; unset = derive from history
+  monthlyContribution?: number // a recurring top-up to feed into projections
 }
 
 export interface PortfolioBalance {

@@ -5,6 +5,7 @@ import {
   deleteBalanceEntry,
   deletePortfolio,
   savePortfolio,
+  updatePortfolio,
   usePortfolioBalances,
   usePortfolios,
 } from '../hooks/usePortfolios'
@@ -25,6 +26,11 @@ import {
   netCapital,
   type Growth,
 } from '../lib/investments'
+import {
+  DEFAULT_ANNUAL_RATE,
+  deriveAnnualRate,
+  project,
+} from '../lib/projections'
 import { formatMoney } from '../lib/format'
 import { currentMonthKey, formatMonthLabel } from '../lib/month'
 import type { Portfolio } from '../db/types'
@@ -156,7 +162,7 @@ export function Investments() {
 
 // --- One portfolio: headline figures, actions, and expandable history -------
 
-type Panel = 'balance' | 'contribute' | 'withdraw' | 'history' | null
+type Panel = 'balance' | 'contribute' | 'withdraw' | 'history' | 'project' | null
 
 function PortfolioCard({
   portfolio,
@@ -213,6 +219,9 @@ function PortfolioCard({
           <ActionButton active={panel === 'withdraw'} onClick={() => toggle('withdraw')}>
             Withdraw
           </ActionButton>
+          <ActionButton active={panel === 'project'} onClick={() => toggle('project')}>
+            Project
+          </ActionButton>
           <ActionButton active={panel === 'history'} onClick={() => toggle('history')}>
             History
           </ActionButton>
@@ -240,6 +249,15 @@ function PortfolioCard({
           kind="withdraw"
           currencySymbol={currencySymbol}
           onSubmit={(amount, m) => divest(portfolio.id, amount, m)}
+          onDone={() => setPanel(null)}
+        />
+      )}
+      {panel === 'project' && (
+        <ProjectionPanel
+          portfolio={portfolio}
+          balances={balances}
+          txns={txns}
+          currencySymbol={currencySymbol}
           onDone={() => setPanel(null)}
         />
       )}
@@ -494,6 +512,137 @@ function FormButtons({
   )
 }
 
+// --- Projection panel (per-portfolio, editable) ----------------------------
+
+const PROJECTION_HORIZONS = [
+  { label: '1 yr', months: 12 },
+  { label: '3 yr', months: 36 },
+  { label: '5 yr', months: 60 },
+  { label: '10 yr', months: 120 },
+]
+
+function ProjectionPanel({
+  portfolio,
+  balances,
+  txns,
+  currencySymbol,
+  onDone,
+}: {
+  portfolio: Portfolio
+  balances: ReturnType<typeof usePortfolioBalances>
+  txns: ReturnType<typeof usePortfolioTransactions>
+  currencySymbol: string
+  onDone: () => void
+}) {
+  // The rate this portfolio has actually earned so far (null if too new).
+  const derived = deriveAnnualRate(portfolio, balances, txns)
+  const start = currentBalance(portfolio, balances)
+
+  // Editable inputs. Blank rate means "use my history / the default".
+  const [rate, setRate] = useState(
+    portfolio.assumedAnnualRate != null ? String(portfolio.assumedAnnualRate) : '',
+  )
+  const [contribution, setContribution] = useState(
+    portfolio.monthlyContribution != null ? String(portfolio.monthlyContribution) : '',
+  )
+
+  // What the live preview uses: an entered override, else derived, else default.
+  const override = rate.trim() === '' ? null : Number(rate)
+  const usedRate =
+    override != null && Number.isFinite(override) ? override : derived ?? DEFAULT_ANNUAL_RATE
+  const contrib = Number(contribution) || 0
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault()
+    await updatePortfolio(portfolio.id, {
+      assumedAnnualRate:
+        override != null && Number.isFinite(override) ? override : undefined,
+      monthlyContribution: contribution.trim() === '' ? undefined : contrib,
+    })
+    onDone()
+  }
+
+  return (
+    <form
+      onSubmit={handleSave}
+      className="space-y-4 border-t border-border bg-bg/40 px-5 py-4"
+    >
+      <p className="text-xs text-muted">
+        {derived != null
+          ? `Based on your history, this portfolio has grown about ${derived}% a year.`
+          : `Not enough history yet to measure growth — assuming ${DEFAULT_ANNUAL_RATE}% a year.`}{' '}
+        Override the rate or add a monthly contribution to explore "what if".
+      </p>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div>
+          <label className="block text-xs font-medium" htmlFor="proj-rate">
+            Annual growth (%)
+          </label>
+          <input
+            id="proj-rate"
+            type="number"
+            inputMode="decimal"
+            step="0.1"
+            value={rate}
+            onChange={(e) => setRate(e.target.value)}
+            placeholder={derived != null ? `${derived} (from history)` : String(DEFAULT_ANNUAL_RATE)}
+            className={inputClass}
+          />
+          {rate.trim() !== '' && (
+            <button
+              type="button"
+              onClick={() => setRate('')}
+              className="mt-1 text-[11px] text-muted underline hover:text-fg"
+            >
+              Use my history instead
+            </button>
+          )}
+        </div>
+        <div>
+          <label className="block text-xs font-medium" htmlFor="proj-contrib">
+            Monthly contribution ({currencySymbol})
+          </label>
+          <input
+            id="proj-contrib"
+            type="number"
+            inputMode="decimal"
+            step="0.01"
+            value={contribution}
+            onChange={(e) => setContribution(e.target.value)}
+            placeholder="0"
+            className={inputClass}
+          />
+        </div>
+      </div>
+
+      {/* Live preview — updates as you type, saved values shown on reopen. */}
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {PROJECTION_HORIZONS.map((h) => {
+          const value = project(start, contrib, usedRate, h.months).at(-1)!.value
+          return (
+            <div
+              key={h.months}
+              className="rounded-lg border border-border bg-surface px-3 py-2"
+            >
+              <div className="text-[11px] text-muted">In {h.label}</div>
+              <div className="font-display text-base font-semibold tabular-nums">
+                {formatMoney(value, currencySymbol)}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      <p className="text-[11px] text-muted">
+        Compounded at {usedRate}% a year{contrib > 0 && ` plus ${formatMoney(contrib, currencySymbol)}/mo`}.
+        An estimate from your own numbers — markets don't move in straight lines.
+      </p>
+
+      <FormButtons submitLabel="Save assumptions" onCancel={onDone} />
+    </form>
+  )
+}
+
 // --- History (balance snapshots + transactions) ----------------------------
 
 function History({
@@ -607,6 +756,9 @@ function PortfolioForm({
     if (!name.trim() || !initialDate || !(amt >= 0)) return
 
     await savePortfolio({
+      // Spread the existing record first so projection settings
+      // (assumedAnnualRate, monthlyContribution) survive an edit here.
+      ...(editing ?? {}),
       id: editing?.id ?? crypto.randomUUID(),
       name: name.trim(),
       initialDate,

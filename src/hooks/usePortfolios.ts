@@ -38,6 +38,18 @@ export async function savePortfolio(portfolio: Portfolio): Promise<void> {
   await db.portfolios.put(portfolio)
 }
 
+// Patch a few fields on an existing portfolio without touching the rest. Reads
+// the current record first so we never clobber fields the caller didn't mention
+// (e.g. the projection panel sets the rate but must leave name/amount alone).
+export async function updatePortfolio(
+  id: string,
+  patch: Partial<Portfolio>,
+): Promise<void> {
+  const current = await db.portfolios.get(id)
+  if (!current) return
+  await db.portfolios.put({ ...current, ...patch })
+}
+
 // Delete a portfolio and everything attached to it, in one transaction:
 //   - its balance snapshots
 //   - its transactions (invest/divest), AND the linked expense or income each

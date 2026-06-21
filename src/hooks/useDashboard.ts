@@ -2,8 +2,10 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db/db'
 import type { MonthKey, Transaction } from '../db/types'
 import { expenseTotalForMonth } from '../lib/expenses'
-import { netCapital, portfolioValueOn } from '../lib/investments'
+import { currentBalance, netCapital, portfolioValueOn } from '../lib/investments'
+import { deriveAnnualRate, effectiveRate, projectCombined } from '../lib/projections'
 import { addMonthsKey, currentMonthKey, formatMonthShort, monthRange } from '../lib/month'
+import type { ProjectionSeriesPoint } from '../components/NetWorthChart'
 import { useSettings } from './useSettings'
 
 /*
@@ -47,7 +49,14 @@ export interface DashboardData {
   monthIncome: number // income recorded this month
   monthExpenses: number // expenses applying to this month
   series: NetWorthPoint[] // net worth at each month-end, oldest → newest
+  projection: ProjectionData | null // forward net-worth estimate (null = no portfolios)
   hasAnyData: boolean // false on a brand-new install (nothing to show yet)
+}
+
+// The forward-looking net-worth estimate shown on the dashboard.
+export interface ProjectionData {
+  series: ProjectionSeriesPoint[] // month-by-month projected net worth, out to 5yr
+  horizons: { label: string; months: number; value: number }[] // 1 / 3 / 5yr marks
 }
 
 // The last calendar day we treat as "within" a month, as a string upper bound.
@@ -133,6 +142,45 @@ export function useDashboard(): DashboardData {
   )
   const investmentsGain = Math.round((last.investments - investmentsCapital) * 100) / 100
 
+  // FORWARD PROJECTION (Phase 11). Investments-only for now: each portfolio
+  // compounds at its effective rate (override → derived-from-history → 6%
+  // default) plus any fixed monthly contribution, while the liquid balance is
+  // held flat at today's value. We project 60 months (5 years) for the chart.
+  const PROJECTION_MONTHS = 60
+  const round2 = (n: number) => Math.round(n * 100) / 100
+  const projectionInputs = portfolios.map((p) => {
+    const bals = balancesByPortfolio.get(p.id) ?? []
+    const ptxns = txnsByPortfolio.get(p.id) ?? []
+    return {
+      start: currentBalance(p, bals),
+      monthlyContribution: p.monthlyContribution ?? 0,
+      annualRatePct: effectiveRate(p, deriveAnnualRate(p, bals, ptxns)),
+    }
+  })
+  const combinedInvest = projectCombined(projectionInputs, PROJECTION_MONTHS)
+  const flatLiquid = last.liquid // held constant — we don't model future cash flow yet
+  const projSeries: ProjectionSeriesPoint[] = []
+  for (let i = 1; i <= PROJECTION_MONTHS; i++) {
+    const m = addMonthsKey(current, i)
+    projSeries.push({
+      month: m,
+      label: formatMonthShort(m),
+      projected: round2(flatLiquid + combinedInvest[i]),
+    })
+  }
+  const horizonValue = (months: number) => round2(flatLiquid + combinedInvest[months])
+  const projection: ProjectionData | null =
+    portfolios.length > 0
+      ? {
+          series: projSeries,
+          horizons: [
+            { label: '1 yr', months: 12, value: horizonValue(12) },
+            { label: '3 yr', months: 36, value: horizonValue(36) },
+            { label: '5 yr', months: 60, value: horizonValue(60) },
+          ],
+        }
+      : null
+
   return {
     sym: settings.currencySymbol,
     netWorth: last.netWorth,
@@ -147,6 +195,7 @@ export function useDashboard(): DashboardData {
     monthIncome,
     monthExpenses,
     series,
+    projection,
     hasAnyData:
       entries.length > 0 ||
       expenseDefs.length > 0 ||

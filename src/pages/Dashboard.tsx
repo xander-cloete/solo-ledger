@@ -117,16 +117,43 @@ export function Dashboard() {
             </motion.div>
           )}
 
-          {/* Growth chart */}
+          {/* Growth chart + forward projection */}
           <motion.section
             variants={fadeItem}
             className="rounded-card border border-border bg-surface p-5 sm:p-6"
           >
             <div className="mb-4 flex items-baseline justify-between">
               <Eyebrow>Net worth over time</Eyebrow>
-              <span className="text-xs text-muted">last 12 months</span>
+              <span className="text-xs text-muted">
+                {d.projection ? 'history + projection' : 'last 12 months'}
+              </span>
             </div>
-            <NetWorthChart series={d.series} sym={sym} />
+            <NetWorthChart
+              series={d.series}
+              sym={sym}
+              projection={d.projection?.series}
+            />
+            {d.projection && (
+              <>
+                <div className="mt-5 grid grid-cols-3 gap-3">
+                  {d.projection.horizons.map((h) => (
+                    <div
+                      key={h.months}
+                      className="rounded-lg border border-border bg-bg/70 px-3 py-3"
+                    >
+                      <Eyebrow>In {h.label}</Eyebrow>
+                      <div className="mt-1 font-display text-lg font-semibold tabular-nums sm:text-xl">
+                        {formatMoney(h.value, sym)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-[11px] text-muted">
+                  Projected from each portfolio's growth so far (or your set rate),
+                  with liquid balance held flat. An estimate, not a guarantee.
+                </p>
+              </>
+            )}
           </motion.section>
 
           {/* This month */}

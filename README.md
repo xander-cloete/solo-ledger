@@ -31,7 +31,7 @@ It's a **PWA**, so you can install it like a native app and it works fully offli
 - **Rolling monthly ledger** — last month's leftover carries into the next, so every
   month opens with the right starting balance.
 - **Net-worth tracking** — your liquid balance plus the value of every investment, charted
-  across the last 12 months.
+  across the last 12 months — with a dashed **projection** of where it's heading at 1, 3 and 5 years.
 - **Income streams** — recurring sources that pre-fill each month; you only adjust what changed.
 - **Three kinds of expense** — monthly, yearly (placed on its due month), and one-off,
   with optional itemising (qty × price, by store). The list stays focused on the month
@@ -40,6 +40,9 @@ It's a **PWA**, so you can install it like a native app and it works fully offli
   and sort every list by name, amount or date. Your choices are remembered on your device.
 - **Investments that tell the truth** — growth is separated from contributions, so deposits
   don't flatter your returns. 1-month / 3-month / 1-year and all-time figures.
+- **Projections** — each portfolio estimates its real growth rate from your own history
+  (money-weighted, so contributions don't inflate it), then projects 1 / 3 / 5 / 10 years
+  ahead. Override the rate or add a monthly contribution to explore "what if".
 - **Yearly-bill reminders** — a heads-up 3 months and/or 1 month before a big bill is due.
 - **A quiet gamification layer** — a level that grows with your net worth, a saving streak,
   and a budget-used meter. Fully optional.
