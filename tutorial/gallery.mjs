@@ -43,8 +43,8 @@ function seedData() {
       put('expenses', { id: 'x3', name: 'Phone & internet', type: 'monthlyFixed', amount: 650, term: null, startMonth: '2026-01', hasItems: false })
       put('expenses', { id: 'x4', name: 'Car insurance', type: 'yearly', amount: 6000, dueDate: '2026-09-01', startMonth: '2026-01', hasItems: false })
       put('expenses', { id: 'x5', name: 'New laptop', type: 'oneOff', amount: 14500, startMonth: '2026-04', hasItems: false })
-      put('portfolios', { id: 'p1', name: 'Index fund (S&P 500)', initialDate: '2026-01-15', initialAmount: 15000 })
-      put('portfolios', { id: 'p2', name: 'Emergency savings', initialDate: '2026-01-10', initialAmount: 6000 })
+      put('portfolios', { id: 'p1', name: 'Index fund (S&P 500)', initialDate: '2026-01-15', initialAmount: 15000, assumedAnnualRate: 9, monthlyContribution: 1500 })
+      put('portfolios', { id: 'p2', name: 'Emergency savings', initialDate: '2026-01-10', initialAmount: 6000, assumedAnnualRate: 5, monthlyContribution: 500 })
       const bal = [['p1', '2026-01-31', 15200], ['p1', '2026-02-28', 15800], ['p1', '2026-03-31', 15400], ['p1', '2026-04-30', 16600], ['p1', '2026-05-31', 17300], ['p1', '2026-06-15', 18250], ['p2', '2026-01-31', 6000], ['p2', '2026-03-31', 6500], ['p2', '2026-06-15', 7200]]
       bal.forEach(([pid, date, balance], i) => put('portfolioBalances', { id: `b${i}`, portfolioId: pid, date, balance }))
       tx.oncomplete = () => { db.close(); resolve(true) }
