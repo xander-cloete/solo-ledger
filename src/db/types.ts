@@ -6,6 +6,37 @@ export type ExpenseType = 'yearly' | 'monthlyFixed' | 'oneOff'
 export type ItemFrequency = 'weekly' | 'twiceMonthly' | 'monthly'
 export type TxnType = 'income' | 'expense' | 'divest' | 'invest'
 
+// How a list is ordered. Stored in settings so the user's choice sticks.
+export type SortKey =
+  | 'name-asc'
+  | 'name-desc'
+  | 'amount-desc'
+  | 'amount-asc'
+  | 'date-desc'
+  | 'date-asc'
+
+// Per-page "view" preferences: which display sections are visible, and how the
+// lists on that page are sorted. The add/edit forms are never hidden, so they're
+// not represented here.
+export interface ViewPrefs {
+  expenses: {
+    monthSummary: boolean // "Expenses for <month>" read-only roll-up
+    list: boolean // "Your expenses" editable list
+    staples: boolean // "Monthly staples" grouped items
+    sort: SortKey
+  }
+  income: {
+    monthSummary: boolean // "Income for <month>" editable amounts
+    streams: boolean // "Income streams" manager
+    sort: SortKey
+  }
+  investments: {
+    cards: boolean // the detailed portfolio cards
+    list: boolean // "All portfolios" quick-edit list
+    sort: SortKey
+  }
+}
+
 // Months are stored as 'YYYY-MM' strings (e.g. '2026-06') so they sort and
 // compare naturally.
 export type MonthKey = string
@@ -23,6 +54,7 @@ export interface Settings {
   }
   gamification: boolean // Phase 9: show the quiet progress layer (level/streak/budget)
   reduceMotion: boolean // Phase 10: force-calm — disable animations regardless of OS setting
+  view: ViewPrefs // which sections show + how lists sort, per page
 }
 
 export interface IncomeStream {

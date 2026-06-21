@@ -14,8 +14,10 @@ import {
   divest,
   usePortfolioTransactions,
 } from '../hooks/useInvestments'
-import { useSettings } from '../hooks/useSettings'
+import { useSettings, updateView } from '../hooks/useSettings'
 import { PageHeader, SectionLabel } from '../components/ui'
+import { ViewToolbar } from '../components/ViewControls'
+import { sortBy } from '../lib/sort'
 import {
   allTimeGrowth,
   currentBalance,
@@ -32,10 +34,22 @@ const inputClass =
 const todayKey = () => format(new Date(), 'yyyy-MM-dd')
 
 export function Investments() {
-  const portfolios = usePortfolios()
   const settings = useSettings()
   const sym = settings.currencySymbol
   const [editingId, setEditingId] = useState<string | null>(null)
+
+  // View preferences (which sections show + sort order), persisted in settings.
+  const vp = settings.view.investments
+  const setVp = (patch: Partial<typeof vp>) =>
+    updateView({ investments: { ...vp, ...patch } })
+
+  // Portfolios in the chosen order. "Amount" sorts on starting capital and
+  // "date" on when the portfolio began (current balance lives inside each card).
+  const portfolios = sortBy(usePortfolios(), vp.sort, {
+    name: (p) => p.name,
+    amount: (p) => p.initialAmount,
+    date: (p) => p.initialDate,
+  })
 
   const editing = editingId
     ? (portfolios.find((p) => p.id === editingId) ?? null)
@@ -49,15 +63,37 @@ export function Investments() {
         Growth separates real gains from the money you add or withdraw.
       </p>
 
+      {portfolios.length > 0 && (
+        <ViewToolbar
+          sort={vp.sort}
+          onSortChange={(sort) => setVp({ sort })}
+          sections={[
+            {
+              key: 'cards',
+              label: 'Portfolio cards',
+              on: vp.cards,
+              toggle: () => setVp({ cards: !vp.cards }),
+            },
+            {
+              key: 'list',
+              label: 'Quick-edit list',
+              on: vp.list,
+              toggle: () => setVp({ list: !vp.list }),
+            },
+          ]}
+        />
+      )}
+
       <section className="mt-6 space-y-4">
         {portfolios.length === 0 && (
           <p className="rounded-card border border-border bg-surface p-4 text-sm text-muted">
             No portfolios yet. Add one below to start tracking.
           </p>
         )}
-        {portfolios.map((p) => (
-          <PortfolioCard key={p.id} portfolio={p} currencySymbol={sym} />
-        ))}
+        {vp.cards &&
+          portfolios.map((p) => (
+            <PortfolioCard key={p.id} portfolio={p} currencySymbol={sym} />
+          ))}
       </section>
 
       {/* Add / edit portfolio */}
@@ -72,7 +108,7 @@ export function Investments() {
       </section>
 
       {/* Quick-edit list (rename / change starting figures) */}
-      {portfolios.length > 0 && (
+      {vp.list && portfolios.length > 0 && (
         <section className="mt-8">
           <SectionLabel>All portfolios</SectionLabel>
           <div className="mt-2 divide-y divide-border rounded-card border border-border bg-surface">

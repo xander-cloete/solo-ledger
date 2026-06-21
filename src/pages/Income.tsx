@@ -8,9 +8,12 @@ import {
   useMonthIncomeEntries,
 } from '../hooks/useIncome'
 import { useLedger } from '../hooks/useLedger'
+import { useSettings, updateView } from '../hooks/useSettings'
 import { LedgerCard } from '../components/LedgerCard'
 import { MonthSwitcher } from '../components/MonthSwitcher'
 import { PageHeader, SectionLabel } from '../components/ui'
+import { ViewToolbar } from '../components/ViewControls'
+import { sortBy } from '../lib/sort'
 import { formatMoney } from '../lib/format'
 import { currentMonthKey, formatMonthLabel } from '../lib/month'
 import type { IncomeStream, MonthKey } from '../db/types'
@@ -23,9 +26,25 @@ export function Income() {
   const entries = useMonthIncomeEntries(month)
   const ledger = useLedger(month)
 
+  // View preferences (which sections show + sort order), persisted in settings.
+  const vp = useSettings().view.income
+  const setVp = (patch: Partial<typeof vp>) =>
+    updateView({ income: { ...vp, ...patch } })
+
   // Fast lookup of "what did this stream pay in this month?".
   const amountByStream = new Map(entries.map((e) => [e.streamId, e.amount]))
-  const activeStreams = streams.filter((s) => s.active)
+  // Income streams have no date, so a date sort falls back to name order. The
+  // "amount" axis sorts on this month's recorded income for the monthly view,
+  // and on the default amount for the manager list.
+  const activeStreams = sortBy(
+    streams.filter((s) => s.active),
+    vp.sort,
+    { name: (s) => s.name, amount: (s) => amountByStream.get(s.id) ?? 0 },
+  )
+  const sortedStreams = sortBy(streams, vp.sort, {
+    name: (s) => s.name,
+    amount: (s) => s.defaultAmount,
+  })
   // Income that came from divesting an investment (created on the Investments
   // page). It has no stream, so we list it on its own — read-only here.
   const divestEntries = entries.filter((e) => e.sourceTxnId)
@@ -41,7 +60,27 @@ export function Income() {
       {/* Rolling-ledger summary for the selected month */}
       <LedgerCard ledger={ledger} month={month} />
 
+      <ViewToolbar
+        sort={vp.sort}
+        onSortChange={(sort) => setVp({ sort })}
+        sections={[
+          {
+            key: 'monthSummary',
+            label: 'Income this month',
+            on: vp.monthSummary,
+            toggle: () => setVp({ monthSummary: !vp.monthSummary }),
+          },
+          {
+            key: 'streams',
+            label: 'Income streams',
+            on: vp.streams,
+            toggle: () => setVp({ streams: !vp.streams }),
+          },
+        ]}
+      />
+
       {/* This month's income, one row per active stream */}
+      {vp.monthSummary && (
       <section className="mt-6">
         <SectionLabel>Income for {formatMonthLabel(month)}</SectionLabel>
 
@@ -71,6 +110,7 @@ export function Income() {
           </div>
         )}
       </section>
+      )}
 
       {/* Income from investment withdrawals (managed on the Investments page) */}
       {divestEntries.length > 0 && (
@@ -96,7 +136,12 @@ export function Income() {
       )}
 
       {/* Manage the streams themselves */}
-      <StreamManager streams={streams} currencySymbol={ledger.currencySymbol} />
+      {vp.streams && (
+        <StreamManager
+          streams={sortedStreams}
+          currencySymbol={ledger.currencySymbol}
+        />
+      )}
     </div>
   )
 }

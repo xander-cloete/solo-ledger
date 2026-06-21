@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { LedgerCard } from '../components/LedgerCard'
 import { MonthSwitcher } from '../components/MonthSwitcher'
 import { PageHeader, SectionLabel } from '../components/ui'
+import { ViewToolbar } from '../components/ViewControls'
+import { sortBy } from '../lib/sort'
+import { useSettings, updateView } from '../hooks/useSettings'
 import { deleteExpense, saveExpense, useExpenses } from '../hooks/useExpenses'
 import {
   deleteItem,
@@ -28,6 +31,7 @@ import type {
   ExpenseType,
   ItemFrequency,
   MonthKey,
+  SortKey,
 } from '../db/types'
 
 const inputClass =
@@ -40,19 +44,45 @@ export function Expenses() {
   // Which itemised expense's items panel is expanded in the list (only one open
   // at a time, to keep the page calm).
   const [openItemsId, setOpenItemsId] = useState<string | null>(null)
+  // Whether the "Your expenses" list shows only what lands on the selected month
+  // ('month', the default — keeps the view focused) or every definition ever
+  // logged ('all', for the full all-time history).
+  const [listScope, setListScope] = useState<'month' | 'all'>('month')
 
   const expenses = useExpenses()
   const ledger = useLedger(month)
   const sym = ledger.currencySymbol
 
-  const editing = editingId
-    ? (expenses.find((e) => e.id === editingId) ?? null)
-    : null
+  // View preferences (which sections show + sort order), persisted in settings.
+  const vp = useSettings().view.expenses
+  const setVp = (patch: Partial<typeof vp>) =>
+    updateView({ expenses: { ...vp, ...patch } })
 
-  // The expenses that actually land on the selected month, with their amounts.
-  const applicable = expenses
-    .map((e) => ({ expense: e, amount: expenseAmountForMonth(e, month) }))
-    .filter((x) => x.amount > 0)
+  // The expenses that actually land on the selected month, with their amounts,
+  // in the chosen order. Amount sorts on what it costs this month; date on when
+  // it starts.
+  const applicable = sortBy(
+    expenses
+      .map((e) => ({ expense: e, amount: expenseAmountForMonth(e, month) }))
+      .filter((x) => x.amount > 0),
+    vp.sort,
+    {
+      name: (x) => x.expense.name,
+      amount: (x) => x.amount,
+      date: (x) => x.expense.startMonth,
+    },
+  )
+
+  // The "Your expenses" list respects the scope toggle: by default only the
+  // definitions that hit the selected month (so a one-off logged in May doesn't
+  // clutter June), or every definition when viewing all-time.
+  const listedExpenses = sortBy(
+    listScope === 'month'
+      ? expenses.filter((e) => expenseAmountForMonth(e, month) > 0)
+      : expenses,
+    vp.sort,
+    { name: (e) => e.name, amount: (e) => e.amount, date: (e) => e.startMonth },
+  )
 
   return (
     <div>
@@ -64,7 +94,33 @@ export function Expenses() {
 
       <LedgerCard ledger={ledger} month={month} />
 
+      <ViewToolbar
+        sort={vp.sort}
+        onSortChange={(sort) => setVp({ sort })}
+        sections={[
+          {
+            key: 'monthSummary',
+            label: 'Month summary',
+            on: vp.monthSummary,
+            toggle: () => setVp({ monthSummary: !vp.monthSummary }),
+          },
+          {
+            key: 'list',
+            label: 'Your expenses',
+            on: vp.list,
+            toggle: () => setVp({ list: !vp.list }),
+          },
+          {
+            key: 'staples',
+            label: 'Monthly staples',
+            on: vp.staples,
+            toggle: () => setVp({ staples: !vp.staples }),
+          },
+        ]}
+      />
+
       {/* What hits this specific month */}
+      {vp.monthSummary && (
       <section className="mt-6">
         <SectionLabel>Expenses for {formatMonthLabel(month)}</SectionLabel>
 
@@ -103,13 +159,15 @@ export function Expenses() {
           </div>
         )}
       </section>
+      )}
 
-      {/* Add / edit form */}
+      {/* Add form. Editing happens inline in the list below, so this block is
+          always in "add" mode. */}
       <section className="mt-8">
-        <SectionLabel>{editing ? 'Edit expense' : 'Add an expense'}</SectionLabel>
+        <SectionLabel>Add an expense</SectionLabel>
         <ExpenseForm
-          key={editing?.id ?? 'new'}
-          editing={editing}
+          key="new"
+          editing={null}
           defaultMonth={month}
           currencySymbol={sym}
           onCancel={() => setEditingId(null)}
@@ -122,64 +180,112 @@ export function Expenses() {
       </section>
 
       {/* The full list of expense definitions */}
+      {vp.list && (
       <section className="mt-8">
-        <SectionLabel>All expenses</SectionLabel>
+        <div className="flex items-center justify-between gap-3">
+          <SectionLabel>Your expenses</SectionLabel>
+          <div className="inline-flex rounded-lg border border-border p-0.5 text-xs">
+            <button
+              type="button"
+              onClick={() => setListScope('month')}
+              className={`rounded-md px-2.5 py-1 transition-colors ${
+                listScope === 'month'
+                  ? 'bg-primary text-primary-fg'
+                  : 'text-muted hover:text-fg'
+              }`}
+            >
+              This month
+            </button>
+            <button
+              type="button"
+              onClick={() => setListScope('all')}
+              className={`rounded-md px-2.5 py-1 transition-colors ${
+                listScope === 'all'
+                  ? 'bg-primary text-primary-fg'
+                  : 'text-muted hover:text-fg'
+              }`}
+            >
+              All-time
+            </button>
+          </div>
+        </div>
         <div className="mt-2 divide-y divide-border rounded-card border border-border bg-surface">
-          {expenses.length === 0 && (
-            <p className="px-4 py-3 text-sm text-muted">No expenses yet.</p>
+          {listedExpenses.length === 0 && (
+            <p className="px-4 py-3 text-sm text-muted">
+              {expenses.length === 0
+                ? 'No expenses yet.'
+                : `Nothing lands on ${formatMonthLabel(month)}. Switch to “All-time” to see every expense.`}
+            </p>
           )}
-          {expenses.map((expense) => (
+          {listedExpenses.map((expense) => (
             <div key={expense.id}>
-              <div className="flex items-center gap-3 px-4 py-3">
-                <div className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-medium">
-                    {expense.name}
-                  </span>
-                  <span className="text-xs text-muted">
-                    {describeSchedule(expense)}
-                  </span>
+              {editingId === expense.id ? (
+                // Edit happens right here, in place of the row, so the user
+                // never has to scroll back up to the add form.
+                <div className="bg-bg/40 px-3 py-3">
+                  <SectionLabel className="mb-1 px-1">
+                    Editing {expense.name}
+                  </SectionLabel>
+                  <ExpenseForm
+                    editing={expense}
+                    defaultMonth={month}
+                    currencySymbol={sym}
+                    onCancel={() => setEditingId(null)}
+                    onCreated={() => {}}
+                  />
                 </div>
-                <span className="text-sm">
-                  {formatMoney(expense.amount, sym)}
+              ) : (
+                <div className="flex items-center gap-3 px-4 py-3">
+                  <div className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium">
+                      {expense.name}
+                    </span>
+                    <span className="text-xs text-muted">
+                      {describeSchedule(expense)}
+                    </span>
+                  </div>
+                  <span className="text-sm">
+                    {formatMoney(expense.amount, sym)}
+                    {expense.hasItems && (
+                      <span className="text-xs text-muted">/mo</span>
+                    )}
+                  </span>
                   {expense.hasItems && (
-                    <span className="text-xs text-muted">/mo</span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setOpenItemsId((id) =>
+                          id === expense.id ? null : expense.id,
+                        )
+                      }
+                      className="rounded-lg border border-border px-2 py-1 text-xs text-muted hover:text-fg"
+                    >
+                      {openItemsId === expense.id ? 'Hide items' : 'Items'}
+                    </button>
                   )}
-                </span>
-                {expense.hasItems && (
                   <button
                     type="button"
-                    onClick={() =>
-                      setOpenItemsId((id) =>
-                        id === expense.id ? null : expense.id,
-                      )
-                    }
+                    onClick={() => setEditingId(expense.id)}
                     className="rounded-lg border border-border px-2 py-1 text-xs text-muted hover:text-fg"
                   >
-                    {openItemsId === expense.id ? 'Hide items' : 'Items'}
+                    Edit
                   </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setEditingId(expense.id)}
-                  className="rounded-lg border border-border px-2 py-1 text-xs text-muted hover:text-fg"
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  aria-label={`Delete ${expense.name}`}
-                  onClick={() => {
-                    if (window.confirm(`Delete "${expense.name}"?`)) {
-                      deleteExpense(expense.id)
-                      if (editingId === expense.id) setEditingId(null)
-                      if (openItemsId === expense.id) setOpenItemsId(null)
-                    }
-                  }}
-                  className="rounded-lg px-2 py-1 text-muted hover:text-negative"
-                >
-                  ✕
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    aria-label={`Delete ${expense.name}`}
+                    onClick={() => {
+                      if (window.confirm(`Delete "${expense.name}"?`)) {
+                        deleteExpense(expense.id)
+                        if (editingId === expense.id) setEditingId(null)
+                        if (openItemsId === expense.id) setOpenItemsId(null)
+                      }
+                    }}
+                    className="rounded-lg px-2 py-1 text-muted hover:text-negative"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
               {expense.hasItems && openItemsId === expense.id && (
                 <ItemManager expenseId={expense.id} currencySymbol={sym} />
               )}
@@ -187,9 +293,10 @@ export function Expenses() {
           ))}
         </div>
       </section>
+      )}
 
       {/* Monthly Staples — every item across all expenses, grouped by store */}
-      <StaplesSection currencySymbol={sym} />
+      {vp.staples && <StaplesSection currencySymbol={sym} sort={vp.sort} />}
     </div>
   )
 }
@@ -427,7 +534,7 @@ function ExpenseForm({
       {isItemised && (
         <p className="rounded-lg border border-border bg-bg px-3 py-2 text-xs text-muted">
           {editing
-            ? 'Manage this expense’s items with the “Items” button in the list below.'
+            ? 'Save your changes, then manage this expense’s items with its “Items” button.'
             : 'Save the expense, then add its items from the “Items” button in the list below.'}
         </p>
       )}
@@ -679,9 +786,20 @@ function ItemForm({
 
 // --- Monthly Staples (all items grouped by store) --------------------------
 
-function StaplesSection({ currencySymbol }: { currencySymbol: string }) {
+function StaplesSection({
+  currencySymbol,
+  sort,
+}: {
+  currencySymbol: string
+  sort: SortKey
+}) {
   const items = useAllItems()
-  const groups = groupItemsByStore(items)
+  // Groups are sorted by store name / store total; staples have no date, so a
+  // date sort falls back to store name.
+  const groups = sortBy(groupItemsByStore(items), sort, {
+    name: (g) => g.store,
+    amount: (g) => g.total,
+  })
   const grandTotal = groups.reduce((sum, g) => sum + g.total, 0)
 
   return (

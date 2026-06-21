@@ -61,6 +61,12 @@ export const DEFAULT_SETTINGS: Settings = {
   notifications: { yearlyThreeMonths: true, yearlyOneMonth: true },
   gamification: true,
   reduceMotion: false,
+  // Everything visible, sorted A–Z by default — the layout users have today.
+  view: {
+    expenses: { monthSummary: true, list: true, staples: true, sort: 'name-asc' },
+    income: { monthSummary: true, streams: true, sort: 'name-asc' },
+    investments: { cards: true, list: true, sort: 'name-asc' },
+  },
 }
 
 // Make sure the single settings row exists, and backfill any fields added in
