@@ -34,7 +34,10 @@ It's a **PWA**, so you can install it like a native app and it works fully offli
   across the last 12 months.
 - **Income streams** — recurring sources that pre-fill each month; you only adjust what changed.
 - **Three kinds of expense** — monthly, yearly (placed on its due month), and one-off,
-  with optional itemising (qty × price, by store).
+  with optional itemising (qty × price, by store). The list stays focused on the month
+  you're budgeting (with an all-time view a click away), and you edit each one inline.
+- **Your view, your way** — on Income, Expenses and Investments, toggle which sections show
+  and sort every list by name, amount or date. Your choices are remembered on your device.
 - **Investments that tell the truth** — growth is separated from contributions, so deposits
   don't flatter your returns. 1-month / 3-month / 1-year and all-time figures.
 - **Yearly-bill reminders** — a heads-up 3 months and/or 1 month before a big bill is due.

@@ -9,7 +9,11 @@ import type { Settings, ViewPrefs } from '../db/types'
 */
 export function useSettings(): Settings {
   const settings = useLiveQuery(() => db.settings.get('app'), [])
-  return settings ?? DEFAULT_SETTINGS
+  // Merge defaults under whatever's saved: a row written before a newer field
+  // existed (or seeded externally) still resolves every field, so pages can read
+  // e.g. `settings.view.expenses` without a guard. ensureSettings() persists the
+  // backfill at startup; this keeps reads safe in between.
+  return settings ? { ...DEFAULT_SETTINGS, ...settings } : DEFAULT_SETTINGS
 }
 
 // A small helper to update part of the settings row.

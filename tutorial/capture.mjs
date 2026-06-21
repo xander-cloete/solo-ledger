@@ -41,6 +41,11 @@ function seedData() {
         startingBalance: 8500, ledgerStartMonth: '2026-01', activeTheme: 'japandi',
         notifications: { yearlyThreeMonths: true, yearlyOneMonth: true },
         gamification: true, reduceMotion: false,
+        view: {
+          expenses: { monthSummary: true, list: true, staples: true, sort: 'name-asc' },
+          income: { monthSummary: true, streams: true, sort: 'name-asc' },
+          investments: { cards: true, list: true, sort: 'name-asc' },
+        },
       })
 
       put('incomeStreams', { id: 's1', name: 'Freelance design', defaultAmount: 9000, active: true })
