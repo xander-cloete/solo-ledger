@@ -27,7 +27,7 @@ function seedData() {
     open.onerror = () => reject(open.error)
     open.onsuccess = () => {
       const db = open.result
-      const stores = ['settings', 'incomeStreams', 'incomeEntries', 'expenses', 'expenseItems', 'portfolios', 'portfolioBalances', 'transactions', 'monthState']
+      const stores = ['settings', 'incomeStreams', 'incomeEntries', 'expenses', 'expenseItems', 'portfolios', 'portfolioBalances', 'liabilities', 'liabilityBalances', 'liabilityRates', 'transactions', 'monthState']
       const tx = db.transaction(stores, 'readwrite')
       const put = (s, rec) => tx.objectStore(s).put(rec)
       stores.forEach((s) => tx.objectStore(s).clear())
@@ -47,6 +47,14 @@ function seedData() {
       put('portfolios', { id: 'p2', name: 'Emergency savings', initialDate: '2026-01-10', initialAmount: 6000, assumedAnnualRate: 5, monthlyContribution: 500 })
       const bal = [['p1', '2026-01-31', 15200], ['p1', '2026-02-28', 15800], ['p1', '2026-03-31', 15400], ['p1', '2026-04-30', 16600], ['p1', '2026-05-31', 17300], ['p1', '2026-06-15', 18250], ['p2', '2026-01-31', 6000], ['p2', '2026-03-31', 6500], ['p2', '2026-06-15', 7200]]
       bal.forEach(([pid, date, balance], i) => put('portfolioBalances', { id: `b${i}`, portfolioId: pid, date, balance }))
+      // A modest, realistic debt so the dashboard hero shows its "Debt" panel —
+      // kept small enough that net worth stays comfortably positive in the shots.
+      put('liabilities', { id: 'l1', name: 'Credit card', kind: 'creditCard', openingBalance: 24000, openingDate: '2025-08-01', monthlyRepayment: 1500 })
+      put('liabilities', { id: 'l2', name: 'Overdraft', kind: 'overdraft', openingBalance: 15000, openingDate: '2025-03-01', monthlyRepayment: 800 })
+      put('liabilityBalances', { id: 'lb0', liabilityId: 'l1', date: '2026-06-01', balance: 18500 })
+      put('liabilityBalances', { id: 'lb1', liabilityId: 'l2', date: '2026-06-01', balance: 11000 })
+      put('liabilityRates', { id: 'lr0', liabilityId: 'l1', effectiveDate: '2025-08-01', annualRate: 20.5 })
+      put('liabilityRates', { id: 'lr1', liabilityId: 'l2', effectiveDate: '2025-03-01', annualRate: 11.5 })
       tx.oncomplete = () => { db.close(); resolve(true) }
       tx.onerror = () => reject(tx.error)
     }

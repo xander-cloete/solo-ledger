@@ -35,6 +35,11 @@ export interface ViewPrefs {
     list: boolean // "All portfolios" quick-edit list
     sort: SortKey
   }
+  liabilities: {
+    cards: boolean // the detailed liability cards
+    list: boolean // "All liabilities" quick-edit list
+    sort: SortKey
+  }
 }
 
 // Months are stored as 'YYYY-MM' strings (e.g. '2026-06') so they sort and
@@ -112,6 +117,46 @@ export interface PortfolioBalance {
   portfolioId: string
   date: string
   balance: number
+}
+
+// A debt you owe — the negative side of net worth. Modelled as the mirror image
+// of a Portfolio: a current outstanding balance plus an interest rate, both
+// tracked as dated snapshots (below) so history is preserved.
+export type LiabilityKind =
+  | 'homeLoan'
+  | 'vehicle'
+  | 'loan'
+  | 'creditCard'
+  | 'overdraft'
+  | 'other'
+
+export interface Liability {
+  id: string
+  name: string // e.g. 'Toyota Hilux', 'FNB credit card'
+  kind: LiabilityKind // for grouping + an icon
+  openingBalance: number // what you owed when you started tracking it
+  openingDate: string // anchors it on the net-worth timeline
+  monthlyRepayment?: number // optional — used for payoff projections
+}
+
+// A dated snapshot of what you still owe. Newest on-or-before a date wins, so the
+// net-worth timeline can read the outstanding balance at any past month-end —
+// exactly how PortfolioBalance works for assets.
+export interface LiabilityBalance {
+  id: string
+  liabilityId: string
+  date: string
+  balance: number
+}
+
+// A dated snapshot of the annual interest rate (%). Each repo-rate change is one
+// record; newest on-or-before a date wins, so projections use the right rate for
+// each period rather than only today's.
+export interface LiabilityRate {
+  id: string
+  liabilityId: string
+  effectiveDate: string
+  annualRate: number // percent, e.g. 11.75
 }
 
 // Every movement of money is one linked record. This is what lets a divest show

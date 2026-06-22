@@ -13,6 +13,7 @@ import { Dashboard } from './pages/Dashboard'
 import { Income } from './pages/Income'
 import { Expenses } from './pages/Expenses'
 import { Investments } from './pages/Investments'
+import { Liabilities } from './pages/Liabilities'
 import { Customize } from './pages/Customize'
 import { Settings } from './pages/Settings'
 import { ensureSettings } from './db/db'
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
       { path: 'income', element: <Income /> },
       { path: 'expenses', element: <Expenses /> },
       { path: 'investments', element: <Investments /> },
+      { path: 'liabilities', element: <Liabilities /> },
       { path: 'customize', element: <Customize /> },
       { path: 'settings', element: <Settings /> },
     ],

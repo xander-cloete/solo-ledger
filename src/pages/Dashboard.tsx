@@ -76,10 +76,15 @@ export function Dashboard() {
                 className="mt-2 block font-display text-5xl font-semibold tracking-tight tabular-nums sm:text-6xl"
               />
               <p className="mt-2 text-sm text-muted">
-                Liquid balance plus the value of every investment.
+                Liquid balance plus the value of every investment
+                {d.liabilitiesValue > 0 && ', minus what you owe'}.
               </p>
 
-              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div
+                className={`mt-6 grid grid-cols-1 gap-3 ${
+                  d.liabilitiesValue > 0 ? 'sm:grid-cols-3' : 'sm:grid-cols-2'
+                }`}
+              >
                 <MetricPanel label="Liquid balance" caption="in your rolling budget">
                   <CountUp
                     value={d.liquid}
@@ -106,6 +111,15 @@ export function Dashboard() {
                     className="font-display text-2xl font-semibold tabular-nums"
                   />
                 </MetricPanel>
+                {d.liabilitiesValue > 0 && (
+                  <MetricPanel label="Debt" caption="total outstanding">
+                    <CountUp
+                      value={d.liabilitiesValue}
+                      format={(n) => formatMoney(n, sym)}
+                      className="font-display text-2xl font-semibold tabular-nums text-negative"
+                    />
+                  </MetricPanel>
+                )}
               </div>
             </div>
           </motion.section>

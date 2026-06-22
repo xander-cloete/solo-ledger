@@ -7,6 +7,9 @@ import type {
   ExpenseItem,
   Portfolio,
   PortfolioBalance,
+  Liability,
+  LiabilityBalance,
+  LiabilityRate,
   Transaction,
   MonthState,
 } from './types'
@@ -28,6 +31,9 @@ export class SoloLedgerDB extends Dexie {
   expenseItems!: Table<ExpenseItem, string>
   portfolios!: Table<Portfolio, string>
   portfolioBalances!: Table<PortfolioBalance, string>
+  liabilities!: Table<Liability, string>
+  liabilityBalances!: Table<LiabilityBalance, string>
+  liabilityRates!: Table<LiabilityRate, string>
   transactions!: Table<Transaction, string>
   monthState!: Table<MonthState, string>
 
@@ -44,6 +50,15 @@ export class SoloLedgerDB extends Dexie {
       portfolioBalances: 'id, portfolioId, date',
       transactions: 'id, month, type',
       monthState: 'month',
+    })
+
+    // Version 2 (Liabilities): three new tables. Purely additive — Dexie carries
+    // every existing table forward untouched, so installs from v1 upgrade in
+    // place with no data loss and nothing to migrate.
+    this.version(2).stores({
+      liabilities: 'id, kind',
+      liabilityBalances: 'id, liabilityId, date',
+      liabilityRates: 'id, liabilityId, effectiveDate',
     })
   }
 }
@@ -66,6 +81,7 @@ export const DEFAULT_SETTINGS: Settings = {
     expenses: { monthSummary: true, list: true, staples: true, sort: 'name-asc' },
     income: { monthSummary: true, streams: true, sort: 'name-asc' },
     investments: { cards: true, list: true, sort: 'name-asc' },
+    liabilities: { cards: true, list: true, sort: 'name-asc' },
   },
 }
 
@@ -79,14 +95,23 @@ export async function ensureSettings(): Promise<Settings> {
     return DEFAULT_SETTINGS
   }
   // Merge defaults under the saved row: any field missing on the old row gets a
-  // sensible default, while everything the user set is preserved. If the saved
-  // row was missing any field we now expect (i.e. it's from an earlier phase),
-  // persist the backfilled version so later code can rely on every field.
-  const merged: Settings = { ...DEFAULT_SETTINGS, ...existing }
-  const wasMissingField = Object.keys(DEFAULT_SETTINGS).some(
+  // sensible default, while everything the user set is preserved. `view` is
+  // merged one level deep so a page added later (e.g. liabilities) backfills its
+  // sub-key instead of being dropped by the shallow spread. If the saved row was
+  // missing any field we now expect (top-level or a view sub-key), persist the
+  // backfilled version so later code can rely on every field.
+  const merged: Settings = {
+    ...DEFAULT_SETTINGS,
+    ...existing,
+    view: { ...DEFAULT_SETTINGS.view, ...existing.view },
+  }
+  const topLevelMissing = Object.keys(DEFAULT_SETTINGS).some(
     (key) => !(key in existing),
   )
-  if (wasMissingField) {
+  const viewKeyMissing = Object.keys(DEFAULT_SETTINGS.view).some(
+    (key) => !existing.view || !(key in existing.view),
+  )
+  if (topLevelMissing || viewKeyMissing) {
     await db.settings.put(merged)
   }
   return merged

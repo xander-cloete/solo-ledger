@@ -11,9 +11,16 @@ export function useSettings(): Settings {
   const settings = useLiveQuery(() => db.settings.get('app'), [])
   // Merge defaults under whatever's saved: a row written before a newer field
   // existed (or seeded externally) still resolves every field, so pages can read
-  // e.g. `settings.view.expenses` without a guard. ensureSettings() persists the
-  // backfill at startup; this keeps reads safe in between.
-  return settings ? { ...DEFAULT_SETTINGS, ...settings } : DEFAULT_SETTINGS
+  // e.g. `settings.view.liabilities` without a guard. `view` is merged one level
+  // deep too, so a page added later (its sub-key missing from an older row) still
+  // gets defaults instead of `undefined`. ensureSettings() persists the backfill
+  // at startup; this keeps reads safe in between.
+  if (!settings) return DEFAULT_SETTINGS
+  return {
+    ...DEFAULT_SETTINGS,
+    ...settings,
+    view: { ...DEFAULT_SETTINGS.view, ...settings.view },
+  }
 }
 
 // A small helper to update part of the settings row.

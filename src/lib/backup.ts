@@ -81,6 +81,11 @@ const portfolioSchema = z.object({
   name: z.string(),
   initialDate: z.string(),
   initialAmount: z.number(),
+  // Phase 11 projection assumptions. Optional so older backups (made before
+  // these existed) still import; without them, Zod would otherwise strip the
+  // fields and silently lose the user's saved rate/contribution overrides.
+  assumedAnnualRate: z.number().optional(),
+  monthlyContribution: z.number().optional(),
 })
 
 const portfolioBalanceSchema = z.object({
@@ -88,6 +93,29 @@ const portfolioBalanceSchema = z.object({
   portfolioId: z.string(),
   date: z.string(),
   balance: z.number(),
+})
+
+const liabilitySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  kind: z.enum(['homeLoan', 'vehicle', 'loan', 'creditCard', 'overdraft', 'other']),
+  openingBalance: z.number(),
+  openingDate: z.string(),
+  monthlyRepayment: z.number().optional(),
+})
+
+const liabilityBalanceSchema = z.object({
+  id: z.string(),
+  liabilityId: z.string(),
+  date: z.string(),
+  balance: z.number(),
+})
+
+const liabilityRateSchema = z.object({
+  id: z.string(),
+  liabilityId: z.string(),
+  effectiveDate: z.string(),
+  annualRate: z.number(),
 })
 
 const transactionSchema = z.object({
@@ -121,6 +149,11 @@ export const backupSchema = z.object({
     expenseItems: z.array(expenseItemSchema),
     portfolios: z.array(portfolioSchema),
     portfolioBalances: z.array(portfolioBalanceSchema),
+    // Optional so backups exported before the Liabilities feature still import
+    // cleanly; restoreBackup defaults each missing array to empty.
+    liabilities: z.array(liabilitySchema).optional(),
+    liabilityBalances: z.array(liabilityBalanceSchema).optional(),
+    liabilityRates: z.array(liabilityRateSchema).optional(),
     transactions: z.array(transactionSchema),
     monthState: z.array(monthStateSchema),
   }),
@@ -140,6 +173,9 @@ const tables = () => [
   db.expenseItems,
   db.portfolios,
   db.portfolioBalances,
+  db.liabilities,
+  db.liabilityBalances,
+  db.liabilityRates,
   db.transactions,
   db.monthState,
 ]
@@ -154,6 +190,9 @@ export async function buildBackup(): Promise<Backup> {
     expenseItems,
     portfolios,
     portfolioBalances,
+    liabilities,
+    liabilityBalances,
+    liabilityRates,
     transactions,
     monthState,
   ] = await Promise.all([
@@ -164,6 +203,9 @@ export async function buildBackup(): Promise<Backup> {
     db.expenseItems.toArray(),
     db.portfolios.toArray(),
     db.portfolioBalances.toArray(),
+    db.liabilities.toArray(),
+    db.liabilityBalances.toArray(),
+    db.liabilityRates.toArray(),
     db.transactions.toArray(),
     db.monthState.toArray(),
   ])
@@ -180,6 +222,9 @@ export async function buildBackup(): Promise<Backup> {
       expenseItems,
       portfolios,
       portfolioBalances,
+      liabilities,
+      liabilityBalances,
+      liabilityRates,
       transactions,
       monthState,
     },
@@ -251,6 +296,9 @@ export async function restoreBackup(backup: Backup): Promise<void> {
       db.expenseItems.bulkAdd(backup.data.expenseItems),
       db.portfolios.bulkAdd(backup.data.portfolios),
       db.portfolioBalances.bulkAdd(backup.data.portfolioBalances),
+      db.liabilities.bulkAdd(backup.data.liabilities ?? []),
+      db.liabilityBalances.bulkAdd(backup.data.liabilityBalances ?? []),
+      db.liabilityRates.bulkAdd(backup.data.liabilityRates ?? []),
       db.transactions.bulkAdd(backup.data.transactions),
       db.monthState.bulkAdd(backup.data.monthState),
     ])

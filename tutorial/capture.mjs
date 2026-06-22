@@ -29,8 +29,9 @@ function seedData() {
       const db = open.result
       const stores = [
         'settings', 'incomeStreams', 'incomeEntries', 'expenses',
-        'expenseItems', 'portfolios', 'portfolioBalances', 'transactions',
-        'monthState',
+        'expenseItems', 'portfolios', 'portfolioBalances',
+        'liabilities', 'liabilityBalances', 'liabilityRates',
+        'transactions', 'monthState',
       ]
       const tx = db.transaction(stores, 'readwrite')
       const put = (s, rec) => tx.objectStore(s).put(rec)
@@ -45,6 +46,7 @@ function seedData() {
           expenses: { monthSummary: true, list: true, staples: true, sort: 'name-asc' },
           income: { monthSummary: true, streams: true, sort: 'name-asc' },
           investments: { cards: true, list: true, sort: 'name-asc' },
+          liabilities: { cards: true, list: true, sort: 'name-asc' },
         },
       })
 
@@ -78,6 +80,17 @@ function seedData() {
       bal.forEach(([pid, date, balance], i) =>
         put('portfolioBalances', { id: `b${i}`, portfolioId: pid, date, balance }))
 
+      // A small, realistic set of debts so the Liabilities page looks lived-in
+      // and the dashboard shows its "Debt" panel — sized to keep net worth
+      // positive. Two rate rows on the card show a repo-rate change in history.
+      put('liabilities', { id: 'l1', name: 'Credit card', kind: 'creditCard', openingBalance: 24000, openingDate: '2025-08-01', monthlyRepayment: 1500 })
+      put('liabilities', { id: 'l2', name: 'Overdraft', kind: 'overdraft', openingBalance: 15000, openingDate: '2025-03-01', monthlyRepayment: 800 })
+      put('liabilityBalances', { id: 'lb0', liabilityId: 'l1', date: '2026-06-01', balance: 18500 })
+      put('liabilityBalances', { id: 'lb1', liabilityId: 'l2', date: '2026-06-01', balance: 11000 })
+      put('liabilityRates', { id: 'lr0', liabilityId: 'l1', effectiveDate: '2025-08-01', annualRate: 20.5 })
+      put('liabilityRates', { id: 'lr1', liabilityId: 'l1', effectiveDate: '2026-03-01', annualRate: 20.0 })
+      put('liabilityRates', { id: 'lr2', liabilityId: 'l2', effectiveDate: '2025-03-01', annualRate: 11.5 })
+
       tx.oncomplete = () => { db.close(); resolve(true) }
       tx.onerror = () => reject(tx.error)
     }
@@ -89,6 +102,7 @@ const routes = [
   ['/income', 'income'],
   ['/expenses', 'expenses'],
   ['/investments', 'investments'],
+  ['/liabilities', 'liabilities'],
   ['/customize', 'customize'],
   ['/settings', 'settings'],
 ]

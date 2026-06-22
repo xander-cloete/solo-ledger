@@ -3,6 +3,7 @@ import { db } from '../db/db'
 import type { MonthKey, Transaction } from '../db/types'
 import { expenseTotalForMonth } from '../lib/expenses'
 import { currentBalance, netCapital, portfolioValueOn } from '../lib/investments'
+import { currentOwed, currentRate, owedOn, projectBalance } from '../lib/liabilities'
 import { deriveAnnualRate, effectiveRate, projectCombined } from '../lib/projections'
 import { addMonthsKey, currentMonthKey, formatMonthShort, monthRange } from '../lib/month'
 import type { ProjectionSeriesPoint } from '../components/NetWorthChart'
@@ -18,11 +19,13 @@ import { useSettings } from './useSettings'
     2) A net-worth time series — net worth at the end of every month from the
        ledger's start to today — so we can draw a growth chart.
 
-  NET WORTH = liquid budget money + total investment value.
+  NET WORTH = liquid budget money + total investment value − total debt.
     • "Liquid" is the rolling-ledger closing balance (the same carry-out the
       Income/Expenses pages show), worked out by walking the months and adding
       each month's income − expenses on top of the starting balance.
     • "Investments" is the sum of each portfolio's value at that point in time.
+    • "Liabilities" is the sum of each debt's outstanding balance then — the only
+      component that pulls net worth DOWN.
 
   Because we walk month by month anyway, the LAST point of the series is exactly
   "today", so the headline numbers fall out of the series for free — no chance of
@@ -35,14 +38,16 @@ export interface NetWorthPoint {
   label: string // short axis label, e.g. 'Jun 26'
   liquid: number // rolling-ledger closing balance that month
   investments: number // total portfolio value at month-end
-  netWorth: number // liquid + investments
+  liabilities: number // total outstanding debt at month-end
+  netWorth: number // liquid + investments − liabilities
 }
 
 export interface DashboardData {
   sym: string // currency symbol, e.g. 'N$'
-  netWorth: number // headline: liquid + investments, today
+  netWorth: number // headline: liquid + investments − liabilities, today
   liquid: number // rolling-ledger closing balance this month
   investmentsValue: number // total portfolio value today
+  liabilitiesValue: number // total outstanding debt today
   investmentsCapital: number // money actually put into investments
   investmentsGain: number // investmentsValue − capital (real growth, all-time)
   investmentsGainPct: number | null // that gain as a % of capital (null if no capital)
@@ -77,6 +82,9 @@ export function useDashboard(): DashboardData {
   const portfolios = useLiveQuery(() => db.portfolios.toArray(), []) ?? []
   const allBalances = useLiveQuery(() => db.portfolioBalances.toArray(), []) ?? []
   const allTxns = useLiveQuery(() => db.transactions.toArray(), []) ?? []
+  const liabilities = useLiveQuery(() => db.liabilities.toArray(), []) ?? []
+  const allLiabBalances = useLiveQuery(() => db.liabilityBalances.toArray(), []) ?? []
+  const allLiabRates = useLiveQuery(() => db.liabilityRates.toArray(), []) ?? []
 
   // Group income and portfolio data by their key so lookups in the loop are cheap.
   const incomeByMonth = new Map<MonthKey, number>()
@@ -97,6 +105,18 @@ export function useDashboard(): DashboardData {
       list.push(t)
       txnsByPortfolio.set(pid, list)
     }
+  }
+  const liabBalancesById = new Map<string, typeof allLiabBalances>()
+  for (const b of allLiabBalances) {
+    const list = liabBalancesById.get(b.liabilityId) ?? []
+    list.push(b)
+    liabBalancesById.set(b.liabilityId, list)
+  }
+  const liabRatesById = new Map<string, typeof allLiabRates>()
+  for (const r of allLiabRates) {
+    const list = liabRatesById.get(r.liabilityId) ?? []
+    list.push(r)
+    liabRatesById.set(r.liabilityId, list)
   }
 
   const current = currentMonthKey()
@@ -120,6 +140,10 @@ export function useDashboard(): DashboardData {
     for (const p of portfolios) {
       investments += portfolioValueOn(p, balancesByPortfolio.get(p.id) ?? [], end)
     }
+    let liabilitiesOwed = 0
+    for (const l of liabilities) {
+      liabilitiesOwed += owedOn(l, liabBalancesById.get(l.id) ?? [], end)
+    }
 
     if (m === current) {
       monthIncome = inc
@@ -130,7 +154,8 @@ export function useDashboard(): DashboardData {
       label: formatMonthShort(m),
       liquid,
       investments,
-      netWorth: liquid + investments,
+      liabilities: liabilitiesOwed,
+      netWorth: liquid + investments - liabilitiesOwed,
     })
   }
 
@@ -142,10 +167,13 @@ export function useDashboard(): DashboardData {
   )
   const investmentsGain = Math.round((last.investments - investmentsCapital) * 100) / 100
 
-  // FORWARD PROJECTION (Phase 11). Investments-only for now: each portfolio
+  // FORWARD PROJECTION (Phase 11, extended for liabilities). Each portfolio
   // compounds at its effective rate (override → derived-from-history → 6%
-  // default) plus any fixed monthly contribution, while the liquid balance is
-  // held flat at today's value. We project 60 months (5 years) for the chart.
+  // default) plus any fixed monthly contribution; each liability shrinks as
+  // interest accrues and its monthly repayment chips it down. The liquid balance
+  // is held flat at today's value. We project 60 months (5 years) for the chart.
+  // Projecting debt too keeps the dashed line continuous with the solid history
+  // at "now" — otherwise net worth would jump up the moment debt stopped counting.
   const PROJECTION_MONTHS = 60
   const round2 = (n: number) => Math.round(n * 100) / 100
   const projectionInputs = portfolios.map((p) => {
@@ -158,6 +186,20 @@ export function useDashboard(): DashboardData {
     }
   })
   const combinedInvest = projectCombined(projectionInputs, PROJECTION_MONTHS)
+
+  // Sum every liability's projected outstanding balance, month by month, so we
+  // can subtract the shrinking debt from projected net worth at each step.
+  const combinedDebt = new Array(PROJECTION_MONTHS + 1).fill(0)
+  for (const l of liabilities) {
+    const line = projectBalance(
+      currentOwed(l, liabBalancesById.get(l.id) ?? []),
+      l.monthlyRepayment ?? 0,
+      currentRate(liabRatesById.get(l.id) ?? []),
+      PROJECTION_MONTHS,
+    )
+    for (let i = 0; i <= PROJECTION_MONTHS; i++) combinedDebt[i] += line[i].value
+  }
+
   const flatLiquid = last.liquid // held constant — we don't model future cash flow yet
   const projSeries: ProjectionSeriesPoint[] = []
   for (let i = 1; i <= PROJECTION_MONTHS; i++) {
@@ -165,12 +207,13 @@ export function useDashboard(): DashboardData {
     projSeries.push({
       month: m,
       label: formatMonthShort(m),
-      projected: round2(flatLiquid + combinedInvest[i]),
+      projected: round2(flatLiquid + combinedInvest[i] - combinedDebt[i]),
     })
   }
-  const horizonValue = (months: number) => round2(flatLiquid + combinedInvest[months])
+  const horizonValue = (months: number) =>
+    round2(flatLiquid + combinedInvest[months] - combinedDebt[months])
   const projection: ProjectionData | null =
-    portfolios.length > 0
+    portfolios.length > 0 || liabilities.length > 0
       ? {
           series: projSeries,
           horizons: [
@@ -186,6 +229,7 @@ export function useDashboard(): DashboardData {
     netWorth: last.netWorth,
     liquid: last.liquid,
     investmentsValue: last.investments,
+    liabilitiesValue: last.liabilities,
     investmentsCapital,
     investmentsGain,
     investmentsGainPct:
@@ -200,6 +244,7 @@ export function useDashboard(): DashboardData {
       entries.length > 0 ||
       expenseDefs.length > 0 ||
       portfolios.length > 0 ||
+      liabilities.length > 0 ||
       settings.startingBalance !== 0,
   }
 }

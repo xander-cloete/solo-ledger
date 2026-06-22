@@ -162,8 +162,8 @@
   <hr class="rule" />
   <p class="lead">The Dashboard is a read-only summary — it invents nothing, it just mirrors everything you've entered elsewhere. It's the first thing you see when you open the app.</p>
   <ol class="steps">
-    <li><b>Net worth</b> is the big number at the top: your liquid balance plus the value of every investment.</li>
-    <li><b>Liquid balance vs. Investments</b> break that total in two — spendable money now, and money that's invested.</li>
+    <li><b>Net worth</b> is the big number at the top: your liquid balance plus the value of every investment, minus what you owe.</li>
+    <li><b>Liquid balance</b>, <b>Investments</b> and <b>Debt</b> break that total into its parts — spendable money now, money that's invested, and what you still owe. (The Debt panel appears once you've added a liability.)</li>
     <li><b>Your progress</b> shows a gentle level, a saving streak, and how much of this month's income you've used. (You can hide this in Customize.)</li>
     <li><b>Net worth over time</b> charts your recent history, then continues past a <b>“now”</b> marker as a dashed <b>projection</b> — with <b>1, 3 and 5-year</b> estimates in the cards beneath.</li>
     <li><b>This month</b> spells out income, expenses, and the difference between them.</li>
@@ -261,6 +261,29 @@
   <div class="pagenum">7</div>
 </section>
 
+<!-- ───────────────────────── LIABILITIES ───────────────────────── -->
+<section class="page">
+  <p class="eyebrow">What you owe</p>
+  <h2>Tracking liabilities</h2>
+  <hr class="rule" />
+  <p class="lead">Net worth isn't only what you own — it's what you own <i>minus what you owe</i>. The Liabilities page tracks your debts so the picture is honest, and lets you keep each interest rate current as the repo rate moves.</p>
+  <ol class="steps">
+    <li><b>Add a liability</b> — give it a name, pick a <b>type</b> (home loan, vehicle, loan, credit card, overdraft), and enter the <b>amount owed</b>, the <b>interest rate</b>, and an optional <b>monthly repayment</b>.</li>
+    <li>As you pay it down, press <b>Update balance</b> to record what's left — the <b>progress bar</b> shows how much you've cleared.</li>
+    <li>When the <b>repo rate changes</b>, press <b>Update rate</b> and set the new rate and the date it took effect. Past rates are kept, so your history stays accurate.</li>
+    <li>Press <b>Project</b> to see <b>when a debt clears</b> and <b>how much interest</b> it'll cost at your current repayment — adjust the repayment to compare.</li>
+    <li>The <b>Total owed</b> panel sums every debt (with a blended rate), and your <b>Dashboard</b> subtracts it from net worth automatically.</li>
+  </ol>
+  <figure>
+    <img class="shot tall" src="shots/liabilities.png" alt="Liabilities page" />
+  </figure>
+  <div class="callout">
+    <b>If a repayment can't cover the interest</b>, Solo Ledger says so — the balance won't shrink until you pay more than the monthly interest.
+  </div>
+  <div class="foot">Solo Ledger · How to use the app</div>
+  <div class="pagenum">8</div>
+</section>
+
 <!-- ───────────────────────── CUSTOMIZE ───────────────────────── -->
 <section class="page">
   <p class="eyebrow">Make it yours</p>
@@ -276,7 +299,7 @@
     <img class="shot tall" src="shots/customize.png" alt="Customize page" />
   </figure>
   <div class="foot">Solo Ledger · How to use the app</div>
-  <div class="pagenum">8</div>
+  <div class="pagenum">9</div>
 </section>
 
 <!-- ───────────────────────── SETTINGS ───────────────────────── -->
@@ -299,7 +322,7 @@
     <b>Back up regularly.</b> Because everything lives only in this browser, clearing your browser data or switching devices will lose it. A backup file is the only way to move or recover your ledger.
   </div>
   <div class="foot">Solo Ledger · How to use the app</div>
-  <div class="pagenum">9</div>
+  <div class="pagenum">10</div>
 </section>
 
 </body>
