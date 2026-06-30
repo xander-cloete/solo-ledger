@@ -1,0 +1,15 @@
+# Keep the Docker build context small and the image clean. None of these are
+# needed to build the app inside the container — they'd just be copied in by the
+# `COPY . .` step and slow the build (or leak local artifacts).
+node_modules
+dist
+dev-dist
+.git
+.remember
+docs
+social
+tutorial
+*.log
+.env
+.env.*
+.DS_Store

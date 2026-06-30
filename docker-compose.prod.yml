@@ -1,0 +1,23 @@
+# Production compose for the home server.
+#
+# Builds the image from the Dockerfile in this repo and runs it as a container
+# named "solo-ledger" on the shared "nginx_default" network. Nginx Proxy Manager
+# lives on that same network, so it can reach this container by name
+# (http://solo-ledger:80) and terminate HTTPS for ledger.cloetehomeserver.com.
+#
+# The published 8383:80 port is just for convenience — testing the container
+# directly from the server (curl localhost:8383) without going through NPM.
+
+services:
+  solo-ledger:
+    build: .
+    image: solo-ledger:latest
+    container_name: solo-ledger
+    restart: unless-stopped
+    ports:
+      - "8383:80"
+
+networks:
+  default:
+    name: nginx_default
+    external: true
